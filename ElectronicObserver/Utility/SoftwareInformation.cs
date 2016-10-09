@@ -17,7 +17,7 @@ namespace ElectronicObserver.Utility {
 		/// </summary>
 		public static string SoftwareNameJapanese {
 			get {
-				return "七四式電子観測儀";
+				return "七四式电子观测仪"; // acturally Chinese - but I'll keep the string name.
 			}
 		}
 
@@ -35,7 +35,7 @@ namespace ElectronicObserver.Utility {
 		/// </summary>
 		public static string VersionJapanese {
 			get {
-				return SoftwareNameJapanese + "二四型改三";
+				return SoftwareNameJapanese + "二四型改三甲"; // "甲" stands for 1st MOD version, usually being the L11N one.
 			}
 		}
 
