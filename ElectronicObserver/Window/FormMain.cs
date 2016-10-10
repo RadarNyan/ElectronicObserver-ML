@@ -1030,7 +1030,7 @@ namespace ElectronicObserver.Window {
 				MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1 )
 				== System.Windows.Forms.DialogResult.Yes ) {
 
-				System.Diagnostics.Process.Start( "https://github.com/andanteyk/ElectronicObserver/wiki" );
+				System.Diagnostics.Process.Start( "https://github.com/radarnyan/ElectronicObserver/wiki" );
 			}
 
 		}
