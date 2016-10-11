@@ -168,19 +168,19 @@ namespace ElectronicObserver.Window {
 		/// </summary>
 		public static IEnumerable<string> GetItemNames() {
 			yield return "提督名";
-			yield return "提督コメント";
-			yield return "司令部Lv";
-			yield return "艦船数";
-			yield return "装備数";
-			yield return "高速修復材";
+			yield return "提督签名";
+			yield return "司令部等级";
+			yield return "舰船数";
+			yield return "装备数";
+			yield return "高速修复材";
 			yield return "高速建造材";
-			yield return "開発資材";
-			yield return "改修資材";
-			yield return "家具コイン";
+			yield return "开发资材";
+			yield return "改修资材";
+			yield return "家具币";
 			yield return "燃料";
-			yield return "弾薬";
-			yield return "鋼材";
-			yield return "ボーキサイト";
+			yield return "弹药";
+			yield return "钢材";
+			yield return "铝土";
 		}
 
 
