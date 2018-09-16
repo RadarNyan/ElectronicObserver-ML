@@ -1974,7 +1974,8 @@
 			this.FormShipGroup_ShipNameSortMethod.FormattingEnabled = true;
 			this.FormShipGroup_ShipNameSortMethod.Items.AddRange(new object[] {
             "図鑑番号順",
-            "あいうえお順"});
+            "あいうえお順",
+            "二期艦ソート"});
 			this.FormShipGroup_ShipNameSortMethod.Location = new System.Drawing.Point(116, 56);
 			this.FormShipGroup_ShipNameSortMethod.Name = "FormShipGroup_ShipNameSortMethod";
 			this.FormShipGroup_ShipNameSortMethod.Size = new System.Drawing.Size(121, 23);

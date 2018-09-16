@@ -832,7 +832,7 @@ namespace ElectronicObserver.Utility
 
 				/// <summary>
 				/// 艦名列のソート方法
-				/// 0 = 図鑑番号順, 1 = あいうえお順
+				/// 0 = 図鑑番号順, 1 = あいうえお順, 2 = 二期艦ソート
 				/// </summary>
 				public int ShipNameSortMethod { get; set; }
 
@@ -840,7 +840,7 @@ namespace ElectronicObserver.Utility
 				{
 					AutoUpdate = true;
 					ShowStatusBar = true;
-					ShipNameSortMethod = 0;
+					ShipNameSortMethod = 2;
 				}
 			}
 			/// <summary>[艦船グループ]ウィンドウ</summary>

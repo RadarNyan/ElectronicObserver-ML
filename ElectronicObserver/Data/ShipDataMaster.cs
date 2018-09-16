@@ -29,6 +29,11 @@ namespace ElectronicObserver.Data
 		public int AlbumNo => !RawData.api_sortno() ? 0 : (int)RawData.api_sortno;
 
 		/// <summary>
+		/// 二期艦ソート
+		/// </summary>
+		public int SortID => (int)RawData.api_sort_id;
+
+		/// <summary>
 		/// 名前
 		/// </summary>
 		public string Name => RawData.api_name;
