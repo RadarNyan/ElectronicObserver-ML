@@ -153,6 +153,11 @@ namespace ElectronicObserver.Utility
 				public string Language { get; set; }
 
 				/// <summary>
+				/// 艦名を翻訳するか
+				/// </summary>
+				public bool TranslateShipNames { get; set; }
+
+				/// <summary>
 				/// メインフォント
 				/// </summary>
 				public SerializableFont MainFont { get; set; }
@@ -247,6 +252,7 @@ namespace ElectronicObserver.Utility
 				{
 					MainFont = new Font("Meiryo UI", 12, FontStyle.Regular, GraphicsUnit.Pixel);
 					SubFont = new Font("Meiryo UI", 10, FontStyle.Regular, GraphicsUnit.Pixel);
+					TranslateShipNames = false;
 					BarColorMorphing = false;
 					IsLayoutFixed = true;
 				}
@@ -1459,6 +1465,7 @@ namespace ElectronicObserver.Utility
 					case "en":
 						_config.UI.MainFont = new Font("Segoe UI", 12, FontStyle.Regular, GraphicsUnit.Pixel);
 						_config.UI.SubFont = new Font("Segoe UI", 10, FontStyle.Regular, GraphicsUnit.Pixel);
+						_config.UI.TranslateShipNames = true;
 						MessageBox.Show(
 							$"Thank you for using {SoftwareInformation.SoftwareNameEnglish}.\r\n" +
 							"For config and usage guide, please check [Help] - [Online Help].\r\n" +

@@ -11,13 +11,89 @@ namespace ElectronicObserver.Data
 	public static class Constants
 	{
 
+		private static string UILanguage = Utility.Configuration.Config.UI.Language;
+
 		#region 艦船・装備
+
+		public static string GetTranslatedShipName(string shipName)
+		{
+			if (!Utility.Configuration.Config.UI.TranslateShipNames)
+				return shipName;
+			switch (UILanguage) {
+				case "zh":
+					switch (shipName) {
+						case "秋月":
+							return "秋月";
+						case "摩耶":
+							return "摩耶";
+						case "五十鈴":
+							return "五十铃";
+						case "霞":
+							return "霞";
+						case "皐月":
+							return "皋月";
+						case "鬼怒":
+							return "鬼怒";
+						case "由良":
+							return "由良";
+						case "文月":
+							return "文月";
+						case "UIT-25":
+							return "UIT-25";
+						case "龍田":
+							return "龙田";
+						case "伊勢":
+							return "伊势";
+						case "武蔵":
+							return "武藏";
+						case "浜風":
+							return "滨风";
+						default:
+							return shipName;
+					}
+				case "en":
+					switch (shipName) {
+						case "秋月":
+							return "Akizuki";
+						case "摩耶":
+							return "Maya";
+						case "五十鈴":
+							return "Isuzu";
+						case "霞":
+							return "Kasumi";
+						case "皐月":
+							return "Satsuki";
+						case "鬼怒":
+							return "Kinu";
+						case "由良":
+							return "Yura";
+						case "文月":
+							return "Fumizuki";
+						case "UIT-25":
+							return "UIT-25";
+						case "龍田":
+							return "Tatsuta";
+						case "伊勢":
+							return "Ise";
+						case "武蔵":
+							return "Musashi";
+						case "浜風":
+							return "Hamakaze";
+						default:
+							return shipName;
+					}
+				default:
+					return shipName;
+			}
+		}
 
 		/// <summary>
 		/// 艦船の速力を表す文字列を取得します。
 		/// </summary>
 		public static string GetSpeed(int value)
 		{
+			switch (UILanguage) {
+			default:
 			switch (value)
 			{
 				case 0:
@@ -33,6 +109,37 @@ namespace ElectronicObserver.Data
 				default:
 					return "不明";
 			}
+			case "zh":
+				switch (value) {
+					case 0:
+						return "陆基";
+					case 5:
+						return "低速";
+					case 10:
+						return "高速";
+					case 15:
+						return "高速+";
+					case 20:
+						return "最速";
+					default:
+						return "不明";
+				}
+			case "en":
+				switch (value) {
+					case 0:
+						return "Land Based";
+					case 5:
+						return "Slow";
+					case 10:
+						return "Fast";
+					case 15:
+						return "Fast+";
+					case 20:
+						return "Fastest";
+					default:
+						return "Unknown";
+				}
+			}
 		}
 
 		/// <summary>
@@ -40,6 +147,8 @@ namespace ElectronicObserver.Data
 		/// </summary>
 		public static string GetRange(int value)
 		{
+			switch (UILanguage) {
+			default:
 			switch (value)
 			{
 				case 0:
@@ -56,6 +165,41 @@ namespace ElectronicObserver.Data
 					return "超長+";
 				default:
 					return "不明";
+			}
+			case "zh":
+				switch (value) {
+					case 0:
+						return "无";
+					case 1:
+						return "短";
+					case 2:
+						return "中";
+					case 3:
+						return "长";
+					case 4:
+						return "超长";
+					case 5:
+						return "超长+";
+					default:
+						return "不明";
+				}
+			case "en":
+				switch (value) {
+					case 0:
+						return "None";
+					case 1:
+						return "Short";
+					case 2:
+						return "Medium";
+					case 3:
+						return "Long";
+					case 4:
+						return "Very Long";
+					case 5:
+						return "Very Long+";
+					default:
+						return "Unknown";
+				}
 			}
 		}
 
@@ -182,7 +326,8 @@ namespace ElectronicObserver.Data
 		/// <returns></returns>
 		public static string GetDamageState(double hprate, bool isPractice = false, bool isLandBase = false, bool isEscaped = false)
 		{
-
+			switch (UILanguage) {
+			default:
 			if (isEscaped)
 				return "退避";
 			else if (hprate <= 0.0)
@@ -198,6 +343,37 @@ namespace ElectronicObserver.Data
 			else
 				return "無傷";
 
+			case "zh":
+				if (isEscaped)
+					return "退避";
+				else if (hprate <= 0.0)
+					return isPractice ? "脱离" : (!isLandBase ? "击沉" : "破坏");
+				else if (hprate <= 0.25)
+					return !isLandBase ? "大破" : "损坏";
+				else if (hprate <= 0.5)
+					return !isLandBase ? "中破" : "损害";
+				else if (hprate <= 0.75)
+					return !isLandBase ? "小破" : "混乱";
+				else if (hprate < 1.0)
+					return "健在";
+				else
+					return "无伤";
+			case "en":
+				if (isEscaped)
+					return "Retreated";
+				else if (hprate <= 0.0)
+					return isPractice ? "Evacuated" : (!isLandBase ? "Sunken" : "Destroyed");
+				else if (hprate <= 0.25)
+					return !isLandBase ? "Heavily Damaged" : "Broken";
+				else if (hprate <= 0.5)
+					return !isLandBase ? "Moderately Damaged" : "Damaged";
+				else if (hprate <= 0.75)
+					return !isLandBase ? "Slightly Damaged" : "Confused";
+				else if (hprate < 1.0)
+					return "Little Damaged";
+				else
+					return "No Damage";
+			}
 		}
 
 
@@ -736,6 +912,8 @@ namespace ElectronicObserver.Data
 		/// </summary>
 		public static string GetDayAttackKind(DayAttackKind id)
 		{
+			switch (UILanguage) {
+			default:
 			switch (id)
 			{
 				case DayAttackKind.NormalAttack:
@@ -779,6 +957,93 @@ namespace ElectronicObserver.Data
 				default:
 					return "不明";
 			}
+			case "zh":
+				switch (id) {
+					case DayAttackKind.NormalAttack:
+						return "普通攻击";
+					case DayAttackKind.Laser:
+						return "激光攻击";
+					case DayAttackKind.DoubleShelling:
+						return "连续射击";
+					case DayAttackKind.CutinMainSub:
+						return "CI（主炮 / 副炮）";
+					case DayAttackKind.CutinMainRadar:
+						return "CI（主炮 / 电探）";
+					case DayAttackKind.CutinMainAP:
+						return "CI（主炮 / 穿甲弹）";
+					case DayAttackKind.CutinMainMain:
+						return "CI（主炮 / 主炮）";
+					case DayAttackKind.CutinAirAttack:
+						return "空母CI";
+					case DayAttackKind.SpecialNelson:
+						return "Nelson Touch";
+					case DayAttackKind.Shelling:
+						return "炮击";
+					case DayAttackKind.AirAttack:
+						return "空袭";
+					case DayAttackKind.DepthCharge:
+						return "爆雷攻击";
+					case DayAttackKind.Torpedo:
+						return "雷击";
+					case DayAttackKind.Rocket:
+						return "火箭炮炮击";
+					case DayAttackKind.LandingDaihatsu:
+						return "登陆攻击（大发动艇）";
+					case DayAttackKind.LandingTokuDaihatsu:
+						return "登陆攻击（特大发动艇）";
+					case DayAttackKind.LandingDaihatsuTank:
+						return "登陆攻击（大发战车）";
+					case DayAttackKind.LandingAmphibious:
+						return "登陆攻击（内火艇）";
+					case DayAttackKind.LandingTokuDaihatsuTank:
+						return "登陆攻击（特大发战车）";
+					default:
+						return "不明";
+				}
+			case "en":
+				switch (id) {
+					case DayAttackKind.NormalAttack:
+						return "Normal Attack";
+					case DayAttackKind.Laser:
+						return "Laser Attack";
+					case DayAttackKind.DoubleShelling:
+						return "Double Attack";
+					case DayAttackKind.CutinMainSub:
+						return "Cut-in(Main/Sub)";
+					case DayAttackKind.CutinMainRadar:
+						return "Cut-in(Main/Radar)";
+					case DayAttackKind.CutinMainAP:
+						return "Cut-in(Main/AP Shell)";
+					case DayAttackKind.CutinMainMain:
+						return "Cut-in(Main/Main)";
+					case DayAttackKind.CutinAirAttack:
+						return "Aircraft Carrier Cut-in";
+					case DayAttackKind.SpecialNelson:
+						return "Nelson Touch";
+					case DayAttackKind.Shelling:
+						return "Shelling";
+					case DayAttackKind.AirAttack:
+						return "Aerial Attack";
+					case DayAttackKind.DepthCharge:
+						return "Depth Charge Attack";
+					case DayAttackKind.Torpedo:
+						return "Torpedo Attack";
+					case DayAttackKind.Rocket:
+						return "Rocket Attack";
+					case DayAttackKind.LandingDaihatsu:
+						return "Landing Attack(Daihatsu)";
+					case DayAttackKind.LandingTokuDaihatsu:
+						return "Landing Attack(Toku Daihatsu)";
+					case DayAttackKind.LandingDaihatsuTank:
+						return "Landing Attack(Daihatsu w/ Tank)";
+					case DayAttackKind.LandingAmphibious:
+						return "Landing Attack(Amphibious Tank)";
+					case DayAttackKind.LandingTokuDaihatsuTank:
+						return "Landing Attack(Toku Daihatsu w/ Tank)";
+					default:
+						return "Unknown";
+				}
+			}
 		}
 
 
@@ -787,6 +1052,8 @@ namespace ElectronicObserver.Data
 		/// </summary>
 		public static string GetNightAttackKind(NightAttackKind id)
 		{
+			switch (UILanguage) {
+			default:
 			switch (id)
 			{
 				case NightAttackKind.NormalAttack:
@@ -832,6 +1099,97 @@ namespace ElectronicObserver.Data
 				default:
 					return "不明";
 			}
+			case "zh":
+				switch (id) {
+					case NightAttackKind.NormalAttack:
+						return "普通攻击";
+					case NightAttackKind.DoubleShelling:
+						return "连续射击";
+					case NightAttackKind.CutinMainTorpedo:
+						return "CI（主炮 / 鱼雷）";
+					case NightAttackKind.CutinTorpedoTorpedo:
+						return "CI（鱼雷 x 2）";
+					case NightAttackKind.CutinMainSub:
+						return "CI（主炮 x 2 / 副炮）";
+					case NightAttackKind.CutinMainMain:
+						return "CI（主炮 x 3）";
+					case NightAttackKind.CutinAirAttack:
+						return "空母CI";
+					case NightAttackKind.CutinTorpedoRadar:
+						return "驱逐CI（主炮 / 鱼雷 / 电探）";
+					case NightAttackKind.CutinTorpedoPicket:
+						return "驱逐CI（鱼雷 / 见张员 / 电探测）";
+					case NightAttackKind.SpecialNelson:
+						return "Nelson Touch";
+					case NightAttackKind.Shelling:
+						return "炮击";
+					case NightAttackKind.AirAttack:
+						return "空袭";
+					case NightAttackKind.DepthCharge:
+						return "爆雷攻击";
+					case NightAttackKind.Torpedo:
+						return "雷击";
+					case NightAttackKind.Rocket:
+						return "火箭炮炮击";
+					case NightAttackKind.LandingDaihatsu:
+						return "登陆攻击（大发动艇）";
+					case NightAttackKind.LandingTokuDaihatsu:
+						return "登陆攻击（特大发动艇）";
+					case NightAttackKind.LandingDaihatsuTank:
+						return "登陆攻击（大发战车）";
+					case NightAttackKind.LandingAmphibious:
+						return "登陆攻击（内火艇）";
+					case NightAttackKind.LandingTokuDaihatsuTank:
+						return "登陆攻击（特大发战车）";
+					default:
+						return "不明";
+				}
+			case "en":
+				switch (id) {
+					case NightAttackKind.NormalAttack:
+						return "Normal Attack";
+					case NightAttackKind.DoubleShelling:
+						return "Double Attack";
+					case NightAttackKind.CutinMainTorpedo:
+						return "Cut-in(Main/Torpedo)";
+					case NightAttackKind.CutinTorpedoTorpedo:
+						return "Cut-in(Torpedo x2)";
+					case NightAttackKind.CutinMainSub:
+						return "Cut-in(Main x2/Sub)";
+					case NightAttackKind.CutinMainMain:
+						return "Cut-in(Main x3)";
+					case NightAttackKind.CutinAirAttack:
+						return "Aircraft Carrier Cut-in";
+					case NightAttackKind.CutinTorpedoRadar:
+						return "Destroyer Cut-in(Main/Torpedo/Radar)";
+					case NightAttackKind.CutinTorpedoPicket:
+						return "Destroyer Cut-in(Torpedo/Lookouts/Radar)";
+					case NightAttackKind.SpecialNelson:
+						return "Nelson Touch";
+					case NightAttackKind.Shelling:
+						return "Shelling";
+					case NightAttackKind.AirAttack:
+						return "Aerial Attack";
+					case NightAttackKind.DepthCharge:
+						return "Depth Charge Attack";
+					case NightAttackKind.Torpedo:
+						return "Torpedo Attack";
+					case NightAttackKind.Rocket:
+						return "Rocket Attack";
+					case NightAttackKind.LandingDaihatsu:
+						return "Landing Attack(Daihatsu)";
+					case NightAttackKind.LandingTokuDaihatsu:
+						return "Landing Attack(Toku Daihatsu)";
+					case NightAttackKind.LandingDaihatsuTank:
+						return "Landing Attack(Daihatsu w/ Tank)";
+					case NightAttackKind.LandingAmphibious:
+						return "Landing Attack(Amphibious Tank)";
+					case NightAttackKind.LandingTokuDaihatsuTank:
+						return "Landing Attack(Toku Daihatsu w/ Tank)";
+					default:
+						return "Unknown";
+				}
+			}
 		}
 
 
@@ -840,6 +1198,8 @@ namespace ElectronicObserver.Data
 		/// </summary>
 		public static string GetAACutinKind(int id)
 		{
+			switch (UILanguage) {
+			default:
 			switch (id)
 			{
 				case 0:
@@ -900,6 +1260,129 @@ namespace ElectronicObserver.Data
 					return "高角砲/電探<浜風>";
 				default:
 					return "不明";
+			}
+			case "zh":
+				switch (id) {
+					case 0:
+						return "无";
+					case 1:
+						return $"高角炮 x 2 / 电探 < {GetTranslatedShipName("秋月")} >";
+					case 2:
+						return $"高角炮 / 电探 < {GetTranslatedShipName("秋月")} >";
+					case 3:
+						return $"高角炮 x 2 < {GetTranslatedShipName("秋月")} >";
+					case 4:
+						return "大口径主炮 / 三式弹 / 高射装置 / 电探";
+					case 5:
+						return "高角炮+高射装置 x 2 / 电探";
+					case 6:
+						return "大口径主炮 / 三式弹 / 高射装置";
+					case 7:
+						return "高角炮 / 高射装置 / 电探";
+					case 8:
+						return "高角炮+高射装置 / 电探";
+					case 9:
+						return "高角炮 / 高射装置";
+					case 10:
+						return $"高角炮 / 集中机枪 / 电探 < {GetTranslatedShipName("摩耶")} >";
+					case 11:
+						return $"高角炮 / 集中机枪 < {GetTranslatedShipName("摩耶")} >";
+					case 12:
+						return "集中机枪 / 机枪 / 电探";
+					case 14:
+						return $"高角炮 / 机枪 / 电探 < {GetTranslatedShipName("五十鈴")} >";
+					case 15:
+						return $"高角炮 / 机枪 < {GetTranslatedShipName("五十鈴")} >";
+					case 16:
+						return $"高角炮 / 机枪 / 电探 < {GetTranslatedShipName("霞")} >";
+					case 17:
+						return $"高角炮 / 机枪 < {GetTranslatedShipName("霞")} >";
+					case 18:
+						return $"集中机枪 < {GetTranslatedShipName("皐月")} >";
+					case 19:
+						return $"高角炮（无高射装置）/ 集中机枪 < {GetTranslatedShipName("鬼怒")} >";
+					case 20:
+						return $"集中机枪 < {GetTranslatedShipName("鬼怒")} >";
+					case 21:
+						return $"高角炮 / 电探 < {GetTranslatedShipName("由良")} >";
+					case 22:
+						return $"集中机枪 < {GetTranslatedShipName("文月")} >";
+					case 23:
+						return $"机枪（非集中）< {GetTranslatedShipName("UIT-25")} >";
+					case 24:
+						return $"高角炮 / 机枪（非集中）< {GetTranslatedShipName("龍田")} >";
+					case 25:
+						return $"喷进炮改二 / 电探 / 三式弹 < {GetTranslatedShipName("伊勢")} >";
+					case 26:
+						return $"高角炮+增设机枪 / 电探 < {GetTranslatedShipName("武蔵")} >";
+					case 28:
+						return $"喷进炮改二 / 电探 < {GetTranslatedShipName("伊勢")} >";
+					case 29:
+						return $"高角炮 / 电探 < {GetTranslatedShipName("浜風")} >";
+					default:
+						return "不明";
+				}
+			case "en":
+				switch (id) {
+					case 0:
+						return "N/A";
+					case 1:
+						return $"High-angle Gun x2 / Radar <{GetTranslatedShipName("秋月")}>";
+					case 2:
+						return $"High-angle Gun / Radar <{GetTranslatedShipName("秋月")}>";
+					case 3:
+						return $"High-angle Gun x2 <{GetTranslatedShipName("秋月")}>";
+					case 4:
+						return "Large Caliber Gun / Type 3 Shell / Anti-Aircraft Fire Director / Radar";
+					case 5:
+						return "High-angle Gun (w/ AAFD) x2 / Radar";
+					case 6:
+						return "Large Caliber Gun / Type 3 Shell / Anti-Aircraft Fire Director";
+					case 7:
+						return "High-angle Gun / Anti-Aircraft Fire Director / Radar";
+					case 8:
+						return "High-angle Gun (w/ AAFD) / Radar";
+					case 9:
+						return "High-angle Gun / Anti-Aircraft Fire Director";
+					case 10:
+						return $"High-angle Gun / Anti-Aircraft Gun (Concentrated) / Radar <{GetTranslatedShipName("摩耶")}>";
+					case 11:
+						return $"High-angle Gun / Anti-Aircraft Gun (Concentrated) <{GetTranslatedShipName("摩耶")}>";
+					case 12:
+						return "Anti-Aircraft Gun (Concentrated) / Anti-Aircraft Gun / Radar";
+					case 14:
+						return $"High-angle Gun / Anti-Aircraft Gun / Radar <{GetTranslatedShipName("五十鈴")}>";
+					case 15:
+						return $"High-angle Gun / Anti-Aircraft Gun <{GetTranslatedShipName("五十鈴")}>";
+					case 16:
+						return $"High-angle Gun / Anti-Aircraft Gun / Radar <{GetTranslatedShipName("霞")}>";
+					case 17:
+						return $"High-angle Gun / Anti-Aircraft Gun <{GetTranslatedShipName("霞")}>";
+					case 18:
+						return $"Anti-Aircraft Gun (Concentrated) <{GetTranslatedShipName("皐月")}>";
+					case 19:
+						return $"High-angle Gunb (w/o AAFD) / Anti-Aircraft Gun (Concentrated) <{GetTranslatedShipName("鬼怒")}>";
+					case 20:
+						return $"Anti-Aircraft Gun (Concentrated) <{GetTranslatedShipName("鬼怒")}>";
+					case 21:
+						return $"High-angle Gun / Radar <{GetTranslatedShipName("由良")}>";
+					case 22:
+						return $"Anti-Aircraft Gun (Concentrated) <{GetTranslatedShipName("文月")}>";
+					case 23:
+						return $"Anti-Aircraft Gun (Not Concentrated) <{GetTranslatedShipName("UIT-25")}>";
+					case 24:
+						return $"High-angle Gun / Anti-Aircraft Gun (Not Concentrated) <{GetTranslatedShipName("龍田")}>";
+					case 25:
+						return $"12cm 30-tube Rocket Launcher Kai Ni / Radar / Type 3 Shell <{GetTranslatedShipName("伊勢")}>";
+					case 26:
+						return $"High-angle Gun (w/ Additional Machine Guns) / Radar <{GetTranslatedShipName("武蔵")}>";
+					case 28:
+						return $"12cm 30-tube Rocket Launcher Kai Ni / Radar <{GetTranslatedShipName("伊勢")}>";
+					case 29:
+						return $"High-angle Gun / Radar <{GetTranslatedShipName("浜風")}>";
+					default:
+						return "Unknown";
+				}
 			}
 		}
 
