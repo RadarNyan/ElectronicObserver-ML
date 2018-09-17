@@ -39,9 +39,104 @@ namespace ElectronicObserver.Window.Dialog
 		private DataTable _dtRightOperand_equipment;
 		#endregion
 
+		private string UILanguage;
+
 		public DialogShipGroupFilter(ShipGroupData group)
 		{
 			InitializeComponent();
+
+			UILanguage = Utility.Configuration.Config.UI.Language;
+
+			#region UI translation
+			switch (UILanguage) {
+				case "zh":
+					ExpressionView_Enabled.HeaderText = "";
+					ExpressionView_Enabled.ToolTipText = "启用/禁用";
+					ExpressionView_ExternalAndOr.HeaderText = "外条件";
+					ExpressionView_Inverse.HeaderText = "非";
+					ExpressionView_Inverse.ToolTipText = "是否反转条件";
+					ExpressionView_InternalAndOr.HeaderText = "内条件";
+					ExpressionView_Expression.HeaderText = "条件";
+					ExpressionView_Up.ToolTipText = "上移";
+					ExpressionView_Down.ToolTipText = "下移";
+					Expression_Delete.Text = "移除";
+					Expression_Add.Text = "添加";
+					ExpressionDetailView_Enabled.HeaderText = "";
+					ExpressionDetailView_Enabled.ToolTipText = "启用/禁用";
+					ExpressionDetailView_LeftOperand.HeaderText = "项";
+					ExpressionDetailView_RightOperand.HeaderText = "值";
+					ExpressionDetailView_Operator.HeaderText = "条件";
+					ExpressionDetail_Delete.Text = "移除";
+					ExpressionDetail_Edit.Text = "更新";
+					ExpressionDetail_Add.Text = "添加";
+					ButtonCancel.Text = "取消";
+					ButtonOK.Text = "确定";
+					tabPage1.Text = "筛选器";
+					tabPage2.Text = "包括/排除列表";
+					label1.Text =
+						"无视过滤器，包括到分组或从分组中排除的舰娘。\r\n" +
+						"请通过舰船分组主窗口的右键菜单来向这些列表中追加舰娘。";
+					OptimizeConstFilter.Text = "优化";
+					toolTip1.SetToolTip(OptimizeConstFilter, "从当前列表中删除不存在的舰娘。");
+					ConvertToExpression.Text = "转换";
+					toolTip1.SetToolTip(ConvertToExpression, "将当前列表转换为筛选器。\r\n注意：无法逆转换。");
+					ClearConstFilter.Text = "清空";
+					toolTip1.SetToolTip(ClearConstFilter, "清空当前列表。");
+					ConstFilterSelector.Items[0] = "包括列表";
+					ConstFilterSelector.Items[1] = "排除列表";
+					ConstFilterView_Name.HeaderText = "艦名";
+					ButtonMenu.Text = "菜单 ▼";
+					SubMenu_ImportFilter.Text = "导入筛选器(&I)";
+					SubMenu_ExportFilter.Text = "导出筛选器(&E)";
+					Text = "筛选器设定";
+					break;
+				case "en":
+					ExpressionView_Enabled.HeaderText = "";
+					ExpressionView_Enabled.ToolTipText = "Enabled/Disabled";
+					ExpressionView_ExternalAndOr.HeaderText = "Outter";
+					ExpressionView_Inverse.HeaderText = "INV";
+					ExpressionView_Inverse.ToolTipText = "Invert Conditions";
+					ExpressionView_InternalAndOr.HeaderText = "Inner";
+					ExpressionView_Expression.HeaderText = "Conditions";
+					ExpressionView_Up.ToolTipText = "Move Up";
+					ExpressionView_Down.ToolTipText = "Move Down";
+					Expression_Delete.Text = "Remove";
+					Expression_Add.Text = "Add";
+					ExpressionDetailView_Enabled.HeaderText = "";
+					ExpressionDetailView_Enabled.ToolTipText = "Enabled/Disabled";
+					ExpressionDetailView_LeftOperand.HeaderText = "Item";
+					ExpressionDetailView_RightOperand.HeaderText = "Value";
+					ExpressionDetailView_Operator.HeaderText = "Condition";
+					ExpressionDetail_Delete.Text = "Remove";
+					ExpressionDetail_Edit.Text = "Update";
+					ExpressionDetail_Add.Text = "Add";
+					ButtonCancel.Text = "Cancel";
+					ButtonOK.Text = "OK";
+					tabPage1.Text = "Filters";
+					tabPage2.Text = "Include/Exclude Lists";
+					label1.Text =
+						"Ships to include/exclude regardless of Filters status.\r\n" +
+						"Use right-click menu from main panel to add ships to those lists.";
+					OptimizeConstFilter.Text = "Optimize";
+					toolTip1.SetToolTip(OptimizeConstFilter, "Delete nonexistent ships from current list.");
+					ConvertToExpression.Text = "Convert";
+					toolTip1.SetToolTip(ConvertToExpression, "Convert current list to Filter.\r\nCaution: This operation can not be reverted.");
+					ClearConstFilter.Text = "Clear";
+					toolTip1.SetToolTip(ClearConstFilter, "Clear current list.");
+					ConstFilterSelector.Items[0] = "Include List";
+					ConstFilterSelector.Items[1] = "Exclude List";
+					ConstFilterView_Name.HeaderText = "Name";
+					ButtonMenu.Text = "Menu ▼";
+					SubMenu_ImportFilter.Text = "&Import Filters";
+					SubMenu_ExportFilter.Text = "&Export Filters";
+					Text = "Filters Setup";
+					break;
+				default:
+					break;
+			}
+			#endregion
+
+			Font = Utility.Configuration.Config.UI.MainFont;
 
 			{
 				// 一部の列ヘッダを中央揃えにする
@@ -69,8 +164,17 @@ namespace ElectronicObserver.Window.Dialog
 				_dtAndOr.Columns.AddRange(new DataColumn[]{
 					new DataColumn( "Value", typeof( bool ) ),
 					new DataColumn( "Display", typeof( string ) ) });
-				_dtAndOr.Rows.Add(true, "And");
-				_dtAndOr.Rows.Add(false, "Or");
+				switch (UILanguage) {
+					case "zh":
+						_dtAndOr.Rows.Add(true, "且");
+						_dtAndOr.Rows.Add(false, "或");
+						break;
+					case "en":
+					default:
+						_dtAndOr.Rows.Add(true, "And");
+						_dtAndOr.Rows.Add(false, "Or");
+						break;
+				}
 				_dtAndOr.AcceptChanges();
 
 				ExpressionView_InternalAndOr.ValueMember = "Value";
@@ -220,10 +324,30 @@ namespace ElectronicObserver.Window.Dialog
 				_dtRightOperand_equipment.Columns.AddRange(new DataColumn[]{
 					new DataColumn( "Value", typeof( int ) ),
 					new DataColumn( "Display", typeof( string ) ) });
-				_dtRightOperand_equipment.Rows.Add(-1, "(なし)");
+				switch (UILanguage) {
+					case "zh":
+						_dtRightOperand_equipment.Rows.Add(-1, "（空）");
+						break;
+					case "en":
+						_dtRightOperand_equipment.Rows.Add(-1, "(Empty)");
+						break;
+					default:
+						_dtRightOperand_equipment.Rows.Add(-1, "(なし)");
+						break;
+				}
 				foreach (var eq in KCDatabase.Instance.MasterEquipments.Values.Where(eq => !eq.IsAbyssalEquipment).OrderBy(eq => eq.CategoryType))
 					_dtRightOperand_equipment.Rows.Add(eq.EquipmentID, eq.Name);
-				_dtRightOperand_equipment.Rows.Add(0, "(未開放)");
+				switch (UILanguage) {
+					case "zh":
+						_dtRightOperand_equipment.Rows.Add(0, "（未开放）");
+						break;
+					case "en":
+						_dtRightOperand_equipment.Rows.Add(0, "(Unopened)");
+						break;
+					default:
+						_dtRightOperand_equipment.Rows.Add(0, "(未開放)");
+						break;
+				}
 				_dtRightOperand_equipment.AcceptChanges();
 			}
 
@@ -351,7 +475,17 @@ namespace ElectronicObserver.Window.Dialog
 				rows[i].CreateCells(ConstFilterView);
 
 				var ship = KCDatabase.Instance.Ships[values[i]];
-				rows[i].SetValues(values[i], ship?.NameWithLevel ?? "(未在籍)");
+				switch (UILanguage) {
+					case "zh":
+						rows[i].SetValues(values[i], ship?.NameWithLevel ?? "（未在籍）");
+						break;
+					case "en":
+						rows[i].SetValues(values[i], ship?.NameWithLevel ?? "(Unavailable)");
+						break;
+					default:
+						rows[i].SetValues(values[i], ship?.NameWithLevel ?? "(未在籍)");
+						break;
+				}
 			}
 
 			ConstFilterView.Rows.AddRange(rows);
@@ -543,7 +677,17 @@ namespace ElectronicObserver.Window.Dialog
 					case ".RepairingDockID":
 						RightOperand_NumericUpDown.Minimum = -1;
 						RightOperand_NumericUpDown.Maximum = 4;
-						Description.Text = "-1=未入渠, 1～4=入渠中(ドック番号)";
+						switch (UILanguage) {
+							case "zh":
+								Description.Text = "-1 = 未入渠, 1~4 = 入渠中（船坞编号）";
+								break;
+							case "en":
+								Description.Text = "-1 = Not in Dock, 1~4 = Docking(Dock Number)";
+								break;
+							default:
+								Description.Text = "-1=未入渠, 1～4=入渠中(ドック番号)";
+								break;
+						}
 						break;
 					case ".RepairTime":
 						RightOperand_NumericUpDown.Minimum = 0;
@@ -755,7 +899,17 @@ namespace ElectronicObserver.Window.Dialog
 
 			if (selectedrow == -1)
 			{
-				MessageBox.Show("対象となる行を選択してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+				switch (UILanguage) {
+					case "zh":
+						MessageBox.Show("请先选择要移除的条件。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+						break;
+					case "en":
+						MessageBox.Show("Please select a Condition you want to remove.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+						break;
+					default:
+						MessageBox.Show("対象となる行を選択してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+						break;
+				}
 				return;
 			}
 
@@ -837,7 +991,26 @@ namespace ElectronicObserver.Window.Dialog
 			int procrow = GetSelectedRow(ExpressionView);
 			if (procrow == -1)
 			{
-				MessageBox.Show("対象となる式(左側)の行を選択してください。\r\n行が存在しない場合は追加してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+				switch (UILanguage) {
+					case "zh":
+						MessageBox.Show(
+							"请先选择要添加到的筛选器（左侧窗口）。\r\n" +
+							"左侧窗口为空的情况请先在左侧添加一行。", "错误",
+							MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+						break;
+					case "en":
+						MessageBox.Show(
+							"Please select which Filter(left window) you want to add to.\r\n" +
+							"If there isn't any, please add a filter first.", "Error",
+							MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+						break;
+					default:
+						MessageBox.Show(
+							"対象となる式(左側)の行を選択してください。\r\n" +
+							"行が存在しない場合は追加してください。", "エラー",
+							MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+						break;
+				}
 				return;
 			}
 
@@ -856,14 +1029,34 @@ namespace ElectronicObserver.Window.Dialog
 			int procrow = GetSelectedRow(ExpressionView);
 			if (procrow == -1)
 			{
-				MessageBox.Show("対象となる式列(左側)を選択してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+				switch (UILanguage) {
+					case "zh":
+						MessageBox.Show("请先选择筛选器（左侧窗口）。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+						break;
+					case "en":
+						MessageBox.Show("Please select a Filter(left window).", "Error", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+						break;
+					default:
+						MessageBox.Show("対象となる式列(左側)を選択してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+						break;
+				}
 				return;
 			}
 
 			int selectedrow = GetSelectedRow(ExpressionDetailView);
 			if (selectedrow == -1)
 			{
-				MessageBox.Show("対象となる行を選択してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+				switch (UILanguage) {
+					case "zh":
+						MessageBox.Show("请先选择要更新的条件。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+						break;
+					case "en":
+						MessageBox.Show("Please select a Condition you want to update.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+						break;
+					default:
+						MessageBox.Show("対象となる行を選択してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+						break;
+				}
 				return;
 			}
 
@@ -883,14 +1076,34 @@ namespace ElectronicObserver.Window.Dialog
 			int procrow = GetSelectedRow(ExpressionView);
 			if (procrow == -1)
 			{
-				MessageBox.Show("対象となる式列(左側)を選択してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+				switch (UILanguage) {
+					case "zh":
+						MessageBox.Show("请先选择筛选器（左侧窗口）。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+						break;
+					case "en":
+						MessageBox.Show("Please select a Filter(left window).", "Error", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+						break;
+					default:
+						MessageBox.Show("対象となる式列(左側)を選択してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+						break;
+				}
 				return;
 			}
 
 			int selectedrow = GetSelectedRow(ExpressionDetailView);
 			if (selectedrow == -1)
 			{
-				MessageBox.Show("対象となる行を選択してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+				switch (UILanguage) {
+					case "zh":
+						MessageBox.Show("请先选择要移除的条件。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+						break;
+					case "en":
+						MessageBox.Show("Please select a Condition you want to remove.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+						break;
+					default:
+						MessageBox.Show("対象となる行を選択してください。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+						break;
+				}
 				return;
 			}
 
@@ -1152,7 +1365,17 @@ namespace ElectronicObserver.Window.Dialog
 						}
 						else
 						{
-							Description.Text = "(未在籍)";
+							switch (UILanguage) {
+								case "zh":
+									Description.Text = "（未在籍）";
+									break;
+								case "en":
+									Description.Text = "(Unavailable)";
+									break;
+								default:
+									Description.Text = "(未在籍)";
+									break;
+							}
 						}
 					}
 					break;
@@ -1166,14 +1389,34 @@ namespace ElectronicObserver.Window.Dialog
 						}
 						else
 						{
-							Description.Text = "(存在せず)";
+							switch (UILanguage) {
+								case "zh":
+									Description.Text = "（不存在）";
+									break;
+								case "en":
+									Description.Text = "(Nonexistence)";
+									break;
+								default:
+									Description.Text = "(存在せず)";
+									break;
+							}
 						}
 					}
 					break;
 
 				case ".RepairTime":
 					{
-						Description.Text = string.Format("(ミリ秒単位) {0}", DateTimeHelper.ToTimeRemainString(DateTimeHelper.FromAPITimeSpan(intvalue)));
+						switch (UILanguage) {
+							case "zh":
+								Description.Text = $"（毫秒） {DateTimeHelper.ToTimeRemainString(DateTimeHelper.FromAPITimeSpan(intvalue))}";
+							break;
+							case "en":
+								Description.Text = $"(Milliseconds) {DateTimeHelper.ToTimeRemainString(DateTimeHelper.FromAPITimeSpan(intvalue))}";
+							break;
+							default:
+								Description.Text = $"(ミリ秒単位) {DateTimeHelper.ToTimeRemainString(DateTimeHelper.FromAPITimeSpan(intvalue))}";
+								break;
+						}
 					}
 					break;
 
@@ -1181,7 +1424,19 @@ namespace ElectronicObserver.Window.Dialog
 					{
 						var ship = KCDatabase.Instance.MasterShips.Values.FirstOrDefault(s => s.AlbumNo == intvalue);
 						if (ship == null)
-							Description.Text = "(存在せず)";
+						{
+							switch (UILanguage) {
+								case "zh":
+									Description.Text = "（不存在）";
+									break;
+								case "en":
+									Description.Text = "(Nonexistence)";
+									break;
+								default:
+									Description.Text = "(存在せず)";
+									break;
+							}
+						}
 						else
 							Description.Text = ship.ShipTypeName + " " + ship.NameWithClass;
 
@@ -1192,13 +1447,35 @@ namespace ElectronicObserver.Window.Dialog
 					{
 						if (intvalue == 0)
 						{
-							Description.Text = "(未改装)";
+							switch (UILanguage) {
+								case "zh":
+									Description.Text = "（未改装）";
+									break;
+								case "en":
+									Description.Text = "(Unremodeled)";
+									break;
+								default:
+									Description.Text = "(未改装)";
+									break;
+							}
 						}
 						else
 						{
 							var ship = KCDatabase.Instance.MasterShips[intvalue];
 							if (ship == null)
-								Description.Text = "(存在せず)";
+							{
+								switch (UILanguage) {
+									case "zh":
+										Description.Text = "（不存在）";
+										break;
+									case "en":
+										Description.Text = "(Nonexistence)";
+										break;
+									default:
+										Description.Text = "(存在せず)";
+										break;
+								}
+							}
 							else
 							{
 								var before = ship.RemodelBeforeShip;
@@ -1212,13 +1489,35 @@ namespace ElectronicObserver.Window.Dialog
 					{
 						if (intvalue == 0)
 						{
-							Description.Text = "(最終改装)";
+							switch (UILanguage) {
+								case "zh":
+									Description.Text = "（最终改装）";
+									break;
+								case "en":
+									Description.Text = "(Fully Remodeled)";
+									break;
+								default:
+									Description.Text = "(最終改装)";
+									break;
+							}
 						}
 						else
 						{
 							var ship = KCDatabase.Instance.MasterShips[intvalue];
 							if (ship == null)
-								Description.Text = "(存在せず)";
+							{
+								switch (UILanguage) {
+									case "zh":
+										Description.Text = "（不存在）";
+										break;
+									case "en":
+										Description.Text = "(Nonexistence)";
+										break;
+									default:
+										Description.Text = "(存在せず)";
+										break;
+								}
+							}
 							else
 							{
 								var after = ship.RemodelAfterShip;
@@ -1277,10 +1576,28 @@ namespace ElectronicObserver.Window.Dialog
 
 		private void ClearConstFilter_Click(object sender, EventArgs e)
 		{
-
-			if (MessageBox.Show(ConstFilterSelector.Text + " を初期化します。\r\nよろしいですか?", "初期化の確認",
-				MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2)
-				== System.Windows.Forms.DialogResult.Yes)
+			DialogResult result;
+			switch (UILanguage) {
+				case "zh":
+					result = MessageBox.Show(
+						$"即将清空{ConstFilterSelector.Text}的内容。\r\n" +
+						"确认清空吗？", "要求确认",
+						MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+					break;
+				case "en":
+					result = MessageBox.Show(
+						$"{ConstFilterSelector.Text} will be cleared.\r\n" +
+						"Confirm to clear?", "Confirmation",
+						MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+					break;
+				default:
+					result = MessageBox.Show(
+						$"{ConstFilterSelector.Text} を初期化します。\r\n" +
+						"よろしいですか?", "初期化の確認",
+						MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+					break;
+			}
+			if (result == DialogResult.Yes)
 			{
 
 				if (ConstFilterSelector.SelectedIndex == 0)
@@ -1299,10 +1616,31 @@ namespace ElectronicObserver.Window.Dialog
 
 		private void ConvertToExpression_Click(object sender, EventArgs e)
 		{
-
-			if (MessageBox.Show("現在の包含/除外リストを式に変換します。\r\n逆変換はできません。\r\nよろしいですか？", "確認",
-					MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
-					== System.Windows.Forms.DialogResult.Yes)
+			DialogResult result;
+			switch (UILanguage) {
+				case "zh":
+					result = MessageBox.Show(
+						"将当前列表转换为筛选器。\r\n" +
+						"转换后无法逆转换。\r\n" +
+						"确认转换吗？", "要求确认",
+						MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+					break;
+				case "en":
+					result = MessageBox.Show(
+						"Convert current list to Filter.\r\n" +
+						"This operation can not be reverted.\r\n" +
+						"Confirm to convert?", "Confirmation",
+						MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+					break;
+				default:
+					result = MessageBox.Show(
+						"現在の包含/除外リストを式に変換します。\r\n" +
+						"逆変換はできません。\r\n" +
+						"よろしいですか？", "確認",
+						MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+					break;
+			}
+			if (result == DialogResult.Yes)
 			{
 
 				if (_group.InclusionFilter.Count > 0)
@@ -1342,19 +1680,58 @@ namespace ElectronicObserver.Window.Dialog
 
 		private void Menu_ImportFilter_Click(object sender, EventArgs e)
 		{
+			DialogResult result;
+			switch (UILanguage) {
+				case "zh":
+					result = MessageBox.Show(
+						"从剪贴板导入筛选器。\r\n" +
+						"现有的筛选器将被移除（包括/排除列表不受影响）\r\n" +
+						"确认导入吗？", "确认导入筛选器",
+						MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+					break;
+				case "en":
+					result = MessageBox.Show(
+						"Import Filters from clipboard.\r\n" +
+						"Current Filters will be removed. (Include/Exclude Lists unaffected)\r\n" +
+						"Confirm to import?", "Confirmation to Import Filters",
+						MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+					break;
+				default:
+					result = MessageBox.Show(
+						"クリップボードからフィルタをインポートします。\r\n" +
+						"現在のフィルタは破棄されます。(包含/除外フィルタは維持されます)\r\n" +
+						"よろしいですか？", "フィルタのインポートの確認",
+						MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+					break;
+			}
 
-
-			if (MessageBox.Show("クリップボードからフィルタをインポートします。\r\n現在のフィルタは破棄されます。(包含/除外フィルタは維持されます)\r\nよろしいですか？\r\n",
-					"フィルタのインポートの確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-				== System.Windows.Forms.DialogResult.No)
+			if (result == DialogResult.No)
 				return;
 
 			string data = Clipboard.GetText();
 
 			if (string.IsNullOrEmpty(data))
 			{
-				MessageBox.Show("クリップボードが空です。\r\nフィルタデータをコピーしたうえで再度選択してください。\r\n",
-					"インポートできません", MessageBoxButtons.OK, MessageBoxIcon.Information);
+				switch (UILanguage) {
+					case "zh":
+						MessageBox.Show(
+							"剪贴板为空。\r\n" +
+							"请将筛选器代码复制到剪贴板后再执行导入命令。",
+							"无法导入", MessageBoxButtons.OK, MessageBoxIcon.Information);
+						break;
+					case "en":
+						MessageBox.Show(
+							"Clipboard is empty.\r\n" +
+							"Please copy Filters code to clipboard before trying to import.",
+							"Unable to Import", MessageBoxButtons.OK, MessageBoxIcon.Information);
+						break;
+					default:
+						MessageBox.Show(
+							"クリップボードが空です。\r\n" +
+							"フィルタデータをコピーしたうえで再度選択してください。",
+							"インポートできません", MessageBoxButtons.OK, MessageBoxIcon.Information);
+						break;
+				}
 				return;
 			}
 
@@ -1365,7 +1742,16 @@ namespace ElectronicObserver.Window.Dialog
 				{
 					var exp = (ExpressionManager)_group.Expressions.Load(str);
 					if (exp == null)
-						throw new ArgumentException("インポートできないデータ形式です。");
+					{
+						switch (UILanguage) {
+							case "zh":
+								throw new ArgumentException("无法导入的数据格式。");
+							case "en":
+								throw new ArgumentException("Invalid data format.");
+							default:
+								throw new ArgumentException("インポートできないデータ形式です。");
+						}
+					}
 					else
 						_group.Expressions = exp;
 				}
@@ -1375,8 +1761,23 @@ namespace ElectronicObserver.Window.Dialog
 			}
 			catch (Exception ex)
 			{
-
-				MessageBox.Show("フィルタのインポートに失敗しました。\r\n" + ex.Message, "インポートできません", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				switch (UILanguage) {
+					case "zh":
+						MessageBox.Show(
+							"导入筛选器失败。\r\n" +
+							ex.Message, "导入失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+					case "en":
+						MessageBox.Show(
+							"Failed to import Filters.\r\n" +
+							ex.Message, "Import Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+					default:
+						MessageBox.Show(
+							"フィルタのインポートに失敗しました。\r\n" +
+							ex.Message, "インポートできません", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+				}
 			}
 
 		}
@@ -1392,14 +1793,50 @@ namespace ElectronicObserver.Window.Dialog
 
 				Clipboard.SetText(str.ToString());
 
-				MessageBox.Show("フィルタをクリップボードにエクスポートしました。\r\n「フィルタのインポート」で取り込んだり、\r\nメモ帳等に貼り付けて保存したりしてください。\r\n",
-					"フィルタのエクスポート", MessageBoxButtons.OK, MessageBoxIcon.Information);
+				switch (UILanguage) {
+					case "zh":
+						MessageBox.Show(
+							"已将筛选器导出到剪贴板。\r\n" +
+							"可通过「导入筛选器」读取，\r\n" +
+							"或粘贴到记事本等编辑器中保存。",
+							"导出筛选器", MessageBoxButtons.OK, MessageBoxIcon.Information);
+						break;
+					case "en":
+						MessageBox.Show(
+							"Exproted Filters to clipboard.\r\n" +
+							"You may use the [Import Filters] command to import,\r\n" +
+							"or paste it into Notepad for saving.",
+							"Filters Exported", MessageBoxButtons.OK, MessageBoxIcon.Information);
+						break;
+					default:
+						MessageBox.Show(
+							"フィルタをクリップボードにエクスポートしました。\r\n" +
+							"「フィルタのインポート」で取り込んだり、\r\n" +
+							"メモ帳等に貼り付けて保存したりしてください。",
+							"フィルタのエクスポート", MessageBoxButtons.OK, MessageBoxIcon.Information);
+						break;
+				}
 
 			}
 			catch (Exception ex)
 			{
-
-				MessageBox.Show("フィルタのエクスポートに失敗しました。\r\n" + ex.Message, "エクスポートできません", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				switch (UILanguage) {
+					case "zh":
+						MessageBox.Show(
+							"导出筛选器失败。\r\n" +
+							ex.Message, "导出失败", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+					case "en":
+						MessageBox.Show(
+							"Failed to export Filters.\r\n" +
+							ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+					default:
+						MessageBox.Show(
+							"フィルタのエクスポートに失敗しました。\r\n" +
+							ex.Message, "エクスポートできません", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+				}
 			}
 
 		}

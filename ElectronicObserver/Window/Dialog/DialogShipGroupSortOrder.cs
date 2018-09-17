@@ -24,6 +24,37 @@ namespace ElectronicObserver.Window.Dialog
 		{
 			InitializeComponent();
 
+			#region UI translation
+			switch (Utility.Configuration.Config.UI.Language) {
+				case "zh":
+					AutoSortFlag.Text = "启用自动排序";
+					EnabledView_Name.HeaderText = "列名";
+					EnabledView_SortDirection.HeaderText = "序";
+					ButtonRightAll.Text = "全部 >>";
+					ButtonLeftAll.Text = "<< 全部";
+					DisabledView_Name.HeaderText = "列名";
+					ButtonOK.Text = "确定";
+					ButtonCancel.Text = "取消";
+					Text = "自动排序设定";
+					break;
+				case "en":
+					AutoSortFlag.Text = "Enable Auto Sort";
+					EnabledView_Name.HeaderText = "Name";
+					EnabledView_SortDirection.HeaderText = "Order";
+					ButtonRightAll.Text = "All >>";
+					ButtonLeftAll.Text = "<< All";
+					DisabledView_Name.HeaderText = "Name";
+					ButtonOK.Text = "OK";
+					ButtonCancel.Text = "Cancel";
+					Text = "Auto Sort Setup";
+					break;
+				default:
+					break;
+			}
+			#endregion
+
+			Font = Utility.Configuration.Config.UI.MainFont;
+
 			var rows_enabled = new LinkedList<DataGridViewRow>();
 			var rows_disabled = new LinkedList<DataGridViewRow>();
 

@@ -22,12 +22,44 @@ namespace ElectronicObserver.Window.Dialog
 		{
 			InitializeComponent();
 
+			string String_All;
+			#region UI translation
+			switch (Utility.Configuration.Config.UI.Language) {
+				case "zh":
+					String_All = "（全部列）";
+					ButtonOK.Text = "确定";
+					ButtonCancel.Text = "取消";
+					ColumnView_Name.HeaderText = "列名";
+					ColumnView_Visible.HeaderText = "显示";
+					ColumnView_AutoSize.HeaderText = "自适应";
+					ColumnView_Width.HeaderText = "宽度";
+					label1.Text = "锁定列：";
+					Text = "显示列设定";
+					break;
+				case "en":
+					String_All = "(All)";
+					ButtonOK.Text = "OK";
+					ButtonCancel.Text = "Cancel";
+					ColumnView_Name.HeaderText = "Name";
+					ColumnView_Visible.HeaderText = "Visible";
+					ColumnView_AutoSize.HeaderText = "Fit";
+					ColumnView_Width.HeaderText = "Width";
+					label1.Text = "ScrollLock:";
+					Text = "Column Visibility Setup";
+					break;
+				default:
+					String_All = "(全て)";
+					break;
+			}
+			#endregion
+
+			Font = Utility.Configuration.Config.UI.MainFont;
 
 			var rows = new LinkedList<DataGridViewRow>();
 			var row = new DataGridViewRow();
 
 			row.CreateCells(ColumnView);
-			row.SetValues("(全て)", null, null, "-");
+			row.SetValues(String_All, null, null, "-");
 			row.Cells[ColumnView_Width.Index].ReadOnly = true;
 			rows.AddLast(row);
 

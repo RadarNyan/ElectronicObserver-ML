@@ -105,6 +105,41 @@ namespace ElectronicObserver.Window.Dialog
 		{
 			InitializeComponent();
 
+			#region UI translation
+			switch (Utility.Configuration.Config.UI.Language) {
+				case "zh":
+					groupBox1.Text = "选项";
+					RadioFormat_Data.Text = "原数据";
+					RadioFormat_User.Text = "可读数据";
+					RadioOutput_VisibleColumnOnly.Text = "仅导出可见列"; // unused?
+					RadioOutput_All.Text = "导出所有列"; // unused?
+					ButtonOK.Text = "确定";
+					ButtonCancel.Text = "取消";
+					groupBox2.Text = "输出目录";
+					Text = "导出 .CSV 文件";
+					DialogSaveCSV.Title = "保存 .CSV 文件";
+					DialogSaveCSV.Filter = "CSV|*.csv|File|*";
+					break;
+				case "en":
+					groupBox1.Text = "Options";
+					RadioFormat_Data.Text = "Raw Data";
+					RadioFormat_User.Text = "Human-readable";
+					RadioOutput_VisibleColumnOnly.Text = "Export Visible Columns Only"; // unused?
+					RadioOutput_All.Text = "Export All Columns"; // unused?
+					ButtonOK.Text = "OK";
+					ButtonCancel.Text = "Cancel";
+					groupBox2.Text = "Output Path";
+					Text = "Export as .CSV File";
+					DialogSaveCSV.Title = "Save .CSV File";
+					DialogSaveCSV.Filter = "CSV|*.csv|File|*";
+					break;
+				default:
+					break;
+			}
+			#endregion
+
+			Font = Utility.Configuration.Config.UI.MainFont;
+
 			DialogSaveCSV.InitialDirectory = Utility.Configuration.Config.Connection.SaveDataPath;
 
 		}

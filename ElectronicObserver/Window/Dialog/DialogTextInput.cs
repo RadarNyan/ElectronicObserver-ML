@@ -29,6 +29,21 @@ namespace ElectronicObserver.Window.Dialog
 		{
 			InitializeComponent();
 
+			switch (Utility.Configuration.Config.UI.Language) {
+				case "zh":
+					ButtonOK.Text = "确定";
+					ButtonCancel.Text = "取消";
+					break;
+				case "en":
+					ButtonOK.Text = "OK";
+					ButtonCancel.Text = "Cancel";
+					break;
+				default:
+					break;
+			}
+
+			Font = Utility.Configuration.Config.UI.MainFont;
+
 			ControlHelper.SetDoubleBuffered(tableLayoutPanel1);
 		}
 
