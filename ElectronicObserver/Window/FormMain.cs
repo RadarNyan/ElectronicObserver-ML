@@ -115,7 +115,17 @@ namespace ElectronicObserver.Window
 			});
 			Utility.Configuration.Instance.ConfigurationChanged += ConfigurationChanged;
 
-			Utility.Logger.Add(2, SoftwareInformation.SoftwareNameJapanese + " を起動しています…");
+			switch (UILanguage) {
+				case "zh":
+					Logger.Add(2, $"{SoftwareInformation.SoftwareNameChinese}正在启动中…");
+					break;
+				case "en":
+					Logger.Add(2, $"Initializing {SoftwareInformation.SoftwareNameEnglish} ...");
+					break;
+				default:
+					Logger.Add(2, $"{SoftwareInformation.SoftwareNameJapanese}を起動しています…");
+					break;
+			}
 
 
 			ResourceManager.Instance.Load();
@@ -213,8 +223,17 @@ namespace ElectronicObserver.Window
 				}
 				catch (Exception ex)
 				{
-
-					Utility.Logger.Add(3, "API読み込みに失敗しました。" + ex.Message);
+					switch (UILanguage) {
+						case "zh":
+							Logger.Add(3, "读取 API 列表失败。" + ex.Message);
+							break;
+						case "en":
+							Logger.Add(3, "Failed to load API list. " + ex.Message);
+							break;
+						default:
+							Logger.Add(3, "API読み込みに失敗しました。" + ex.Message);
+							break;
+					}
 				}
 			}
 
@@ -233,7 +252,17 @@ namespace ElectronicObserver.Window
 			UIUpdateTimer.Start();
 
 
-			Utility.Logger.Add(3, "起動処理が完了しました。");
+			switch (UILanguage) {
+				case "zh":
+					Utility.Logger.Add(3, "启动处理完成。");
+					break;
+				case "en":
+					Utility.Logger.Add(3, "Program initialized.");
+					break;
+				default:
+					Utility.Logger.Add(3, "起動処理が完了しました。");
+					break;
+			}
 
 		}
 
@@ -257,8 +286,139 @@ namespace ElectronicObserver.Window
 
 		private void ConfigurationChanged()
 		{
-
 			var c = Utility.Configuration.Config;
+
+			#region UI translation
+			switch (UILanguage) {
+				case "zh":
+					StripMenu_File.Text = "文件(&F)";
+					StripMenu_File_Record.Text = "记录(&R)";
+					StripMenu_File_Record_Save.Text = "保存(&S)";
+					StripMenu_File_Record_Load.Text = "读取(&L)";
+					StripMenu_File_Layout.Text = "布局(&L)";
+					StripMenu_File_Layout_Load.Text = "读取(&L)";
+					StripMenu_File_Layout_Save.Text = "保存(&S)";
+					StripMenu_File_Layout_Open.Text = "加载布局文件(&O)...";
+					StripMenu_File_Layout_Change.Text = "另存为布局文件(&C)...";
+					StripMenu_File_Layout_LockLayout.Text = "锁定布局(&T)";
+					StripMenu_File_Layout_TopMost.Text = "窗口置顶(&M)";
+					StripMenu_File_Notification.Text = "通知(&N)";
+					StripMenu_File_Notification_MuteAll.Text = "静音所有通知(&M)";
+					StripMenu_File_Configuration.Text = "设置(&C)...";
+					StripMenu_File_Close.Text = "退出(&X)";
+					// -----
+					StripMenu_View.Text = "视图(&V)";
+					StripMenu_View_Fleet.Text = "舰队(&F)";
+					StripMenu_View_FleetOverview.Text = "舰队一览(&O)";
+					StripMenu_View_ShipGroup.Text = "舰船分组(&G)";
+					StripMenu_View_Dock.Text = "入渠(&D)";
+					StripMenu_View_Arsenal.Text = "工厂(&A)";
+					StripMenu_View_BaseAirCorps.Text = "基地航空队(&S)";
+					StripMenu_View_Headquarters.Text = "司令部(&H)";
+					StripMenu_View_Quest.Text = "任务(&Q)";
+					StripMenu_View_Information.Text = "信息(&I)";
+					StripMenu_View_Compass.Text = "罗盘(&C)";
+					StripMenu_View_Battle.Text = "战斗(&B)";
+					StripMenu_View_Browser.Text = "浏览器(&M)";
+					StripMenu_View_Log.Text = "日志(&L)";
+					StripMenu_WindowCapture.Text = "窗口捕获(&W)";
+					StripMenu_WindowCapture_SubWindow.Text = "控制窗口(&C)";
+					StripMenu_WindowCapture_AttachAll.Text = "捕获曾捕获窗口(&S)";
+					StripMenu_WindowCapture_DetachAll.Text = "释放已捕获窗口(&R)";
+					StripMenu_View_Json.Text = "JSON(&J)";
+					// -----
+					StripMenu_Tool.Text = "工具(&T)";
+					StripMenu_Tool_EquipmentList.Text = "装备一览(&Q)";
+					StripMenu_Tool_DropRecord.Text = "掉落记录(&D)";
+					StripMenu_Tool_DevelopmentRecord.Text = "开发记录(&V)";
+					StripMenu_Tool_ConstructionRecord.Text = "建造记录(&R)";
+					StripMenu_Tool_ResourceChart.Text = "资源图标(&C)";
+					StripMenu_Tool_AlbumMasterShip.Text = "舰船图鉴(&S)";
+					StripMenu_Tool_AlbumMasterEquipment.Text = "装备图鉴(&E)";
+					StripMenu_Tool_AntiAirDefense.Text = "对空炮火详情(&A)";
+					StripMenu_Tool_FleetImageGenerator.Text = "输出编成图片(&F)";
+					StripMenu_Tool_BaseAirCorpsSimulation.Text = "基地航空队模拟器(&B)";
+					StripMenu_Tool_ExpChecker.Text = "舰娘经验值计算器(&X)";
+					// -----
+					StripMenu_Debug.Text = "调试(&D)";
+					StripMenu_Debug_LoadAPIFromFile.Text = "从文件读取 API(&L)...";
+					StripMenu_Debug_LoadInitialAPI.Text = "读取 API 列表(&I)...";
+					//StripMenu_Debug_LoadRecordFromOld.Text = "旧 api_start2 からレコードを構築(&O)...";
+					//StripMenu_Debug_DeleteOldAPI.Text = "古いAPIデータを削除(&D)";
+					//StripMenu_Debug_RenameShipResource.Text = "艦船リソースをリネーム(&R)...";
+					//StripMenu_Debug_LoadDataFromOld.Text = "旧 api_start2から深海棲艦を復元(&A)...";
+					// -----
+					StripMenu_Help.Text = "帮助(&H)";
+					StripMenu_Help_Help.Text = "在线帮助(&H)...";
+					StripMenu_Help_Version.Text = "版本信息(&V)";
+					break;
+				case "en":
+					StripMenu_File.Text = "&File";
+					StripMenu_File_Record.Text = "&Record";
+					StripMenu_File_Record_Save.Text = "&Save";
+					StripMenu_File_Record_Load.Text = "&Load";
+					StripMenu_File_Layout.Text = "&Layout";
+					StripMenu_File_Layout_Load.Text = "&Load";
+					StripMenu_File_Layout_Save.Text = "&Save";
+					StripMenu_File_Layout_Open.Text = "Load &from File...";
+					StripMenu_File_Layout_Change.Text = "Save &to File...";
+					StripMenu_File_Layout_LockLayout.Text = "Loc&k Layout";
+					StripMenu_File_Layout_TopMost.Text = "&Always on Top";
+					StripMenu_File_Notification.Text = "&Notifications";
+					StripMenu_File_Notification_MuteAll.Text = "&Mute All Notifications";
+					StripMenu_File_Configuration.Text = "&Config...";
+					StripMenu_File_Close.Text = "E&xit";
+					// -----
+					StripMenu_View.Text = "&View";
+					StripMenu_View_Fleet.Text = "&Fleet";
+					StripMenu_View_FleetOverview.Text = "Fleet &Overview";
+					StripMenu_View_ShipGroup.Text = "Ship &Group";
+					StripMenu_View_Dock.Text = "&Dock";
+					StripMenu_View_Arsenal.Text = "&Arsenal";
+					StripMenu_View_BaseAirCorps.Text = "Land Base Areial &Support";
+					StripMenu_View_Headquarters.Text = "&Headquarters";
+					StripMenu_View_Quest.Text = "&Quest";
+					StripMenu_View_Information.Text = "&Information";
+					StripMenu_View_Compass.Text = "&Compass";
+					StripMenu_View_Battle.Text = "&Battle";
+					StripMenu_View_Browser.Text = "B&rowser";
+					StripMenu_View_Log.Text = "&Log";
+					StripMenu_WindowCapture.Text = "&Window Capture";
+					StripMenu_WindowCapture_SubWindow.Text = "&Control Window";
+					StripMenu_WindowCapture_AttachAll.Text = "&Attach All";
+					StripMenu_WindowCapture_DetachAll.Text = "&Detatch All";
+					StripMenu_View_Json.Text = "&JSON";
+					// -----
+					StripMenu_Tool.Text = "&Tools";
+					StripMenu_Tool_EquipmentList.Text = "Equipment &List";
+					StripMenu_Tool_DropRecord.Text = "&Drop Record";
+					StripMenu_Tool_DevelopmentRecord.Text = "De&velopment Record";
+					StripMenu_Tool_ConstructionRecord.Text = "&Construction Record";
+					StripMenu_Tool_ResourceChart.Text = "&Resource Chart";
+					StripMenu_Tool_AlbumMasterShip.Text = "&Ship Album";
+					StripMenu_Tool_AlbumMasterEquipment.Text = "&Equipment Album";
+					StripMenu_Tool_AntiAirDefense.Text = "&Anit-Air Defense";
+					StripMenu_Tool_FleetImageGenerator.Text = "&Fleet Image Generator";
+					StripMenu_Tool_BaseAirCorpsSimulation.Text = "&Land Base Simulator";
+					StripMenu_Tool_ExpChecker.Text = "E&xperience Calculator";
+					// -----
+					StripMenu_Debug.Text = "&Debug";
+					StripMenu_Debug_LoadAPIFromFile.Text = "&Load API from File...";
+					StripMenu_Debug_LoadInitialAPI.Text = "Load API L&ist...";
+					// -----
+					StripMenu_Help.Text = "&Help";
+					StripMenu_Help_Help.Text = "Online &Help...";
+					StripMenu_Help_Version.Text = "&Version Information";
+					break;
+				default:
+					break;
+			}
+			toolStripSeparator8.Visible =
+			StripMenu_Debug_LoadRecordFromOld.Visible =
+			StripMenu_Debug_DeleteOldAPI.Visible =
+			StripMenu_Debug_RenameShipResource.Visible =
+			StripMenu_Debug_LoadDataFromOld.Visible = false;
+			#endregion
 
 			StripMenu_Debug.Enabled = StripMenu_Debug.Visible =
 			StripMenu_View_Json.Enabled = StripMenu_View_Json.Visible =
@@ -273,7 +433,7 @@ namespace ElectronicObserver.Window
 			ClockFormat = c.Life.ClockFormat;
 
 			Font = c.UI.MainFont;
-			//StripMenu.Font = Font;
+			StripMenu.Font = Font;
 			StripStatus.Font = Font;
 			MainDockPanel.Skin.AutoHideStripSkin.TextFont = Font;
 			MainDockPanel.Skin.DockPaneStripSkin.TextFont = Font;
@@ -414,8 +574,22 @@ namespace ElectronicObserver.Window
 
 			if (Utility.Configuration.Config.Life.ConfirmOnClosing)
 			{
-				if (MessageBox.Show(SoftwareInformation.SoftwareNameJapanese + " を終了しますか？", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
-					== System.Windows.Forms.DialogResult.No)
+				DialogResult result;
+				switch (UILanguage) {
+					case "zh":
+						result = MessageBox.Show($"要退出{SoftwareInformation.SoftwareNameChinese}吗？", "要求确认",
+							MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+						break;
+					case "en":
+						result = MessageBox.Show($"Do you want to exit {SoftwareInformation.SoftwareNameEnglish}?", "Confirmation",
+							MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+						break;
+					default:
+						result = MessageBox.Show($"{SoftwareInformation.SoftwareNameJapanese}を終了しますか？", "確認",
+							MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+						break;
+				}
+				if (result == DialogResult.No)
 				{
 					e.Cancel = true;
 					return;
@@ -423,7 +597,17 @@ namespace ElectronicObserver.Window
 			}
 
 
-			Utility.Logger.Add(2, SoftwareInformation.SoftwareNameJapanese + " を終了しています…");
+			switch (UILanguage) {
+				case "zh":
+					Logger.Add(2, $"{SoftwareInformation.SoftwareNameChinese}正在退出…");
+					break;
+				case "en":
+					Logger.Add(2, $"Exiting {SoftwareInformation.SoftwareNameEnglish} ...");
+					break;
+				default:
+					Logger.Add(2, $"{SoftwareInformation.SoftwareNameJapanese}を終了しています…");
+					break;
+			}
 
 			UIUpdateTimer.Stop();
 
@@ -465,7 +649,17 @@ namespace ElectronicObserver.Window
 			APIObserver.Instance.Stop();
 
 
-			Utility.Logger.Add(2, "終了処理が完了しました。");
+			switch (UILanguage) {
+				case "zh":
+					Logger.Add(2, "退出处理已完成。");
+					break;
+				case "en":
+					Logger.Add(2, "Program exited.");
+					break;
+				default:
+					Logger.Add(2, "終了処理が完了しました。");
+					break;
+			}
 
 			if (Utility.Configuration.Config.Log.SaveLogFlag)
 				Utility.Logger.Save();
@@ -572,8 +766,17 @@ namespace ElectronicObserver.Window
 			}
 			catch (Exception ex)
 			{
-
-				Utility.ErrorReporter.SendErrorReport(ex, "サブウィンドウ レイアウトの復元に失敗しました。");
+				switch (UILanguage) {
+					case "zh":
+						ErrorReporter.SendErrorReport(ex, "还原子窗口布局失败。");
+						break;
+					case "en":
+						ErrorReporter.SendErrorReport(ex, "Failed to restore sub windows layout.");
+						break;
+					default:
+						ErrorReporter.SendErrorReport(ex, "サブウィンドウ レイアウトの復元に失敗しました。");
+						break;
+				}
 			}
 
 		}
@@ -590,8 +793,17 @@ namespace ElectronicObserver.Window
 			}
 			catch (Exception ex)
 			{
-
-				Utility.ErrorReporter.SendErrorReport(ex, "サブウィンドウ レイアウトの保存に失敗しました。");
+				switch (UILanguage) {
+					case "zh":
+						ErrorReporter.SendErrorReport(ex, "保存子窗口布局失败。");
+						break;
+					case "en":
+						ErrorReporter.SendErrorReport(ex, "Failed to save sub windows layout.");
+						break;
+					default:
+						ErrorReporter.SendErrorReport(ex, "サブウィンドウ レイアウトの保存に失敗しました。");
+						break;
+				}
 			}
 
 		}
@@ -611,34 +823,62 @@ namespace ElectronicObserver.Window
 					LoadSubWindowsLayout(archive.GetEntry("SubWindowLayout.xml").Open());
 				}
 
-				Utility.Logger.Add(2, path + " からウィンドウ レイアウトを復元しました。");
-
-			}
-			catch (FileNotFoundException)
-			{
-
-				Utility.Logger.Add(3, string.Format("ウィンドウ レイアウト ファイルは存在しません。"));
-				MessageBox.Show("レイアウトが初期化されました。\r\n「表示」メニューからお好みのウィンドウを追加してください。", "ウィンドウ レイアウト ファイルが存在しません",
-					MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-				fBrowser.Show(MainDockPanel);
-
-			}
-			catch (DirectoryNotFoundException)
-			{
-
-				Utility.Logger.Add(3, string.Format("ウィンドウ レイアウト ファイルは存在しません。"));
-				MessageBox.Show("レイアウトが初期化されました。\r\n「表示」メニューからお好みのウィンドウを追加してください。", "ウィンドウ レイアウト ファイルが存在しません",
-					MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-				fBrowser.Show(MainDockPanel);
+				switch (UILanguage) {
+					case "zh":
+						Logger.Add(2, $"已从 {path} 读取窗口布局。");
+						break;
+					case "en":
+						Logger.Add(2, $"Restored window layout from {path}");
+						break;
+					default:
+						Logger.Add(2, $"{path} からウィンドウ レイアウトを復元しました。");
+						break;
+				}
 
 			}
 			catch (Exception ex)
 			{
-
-				Utility.ErrorReporter.SendErrorReport(ex, "ウィンドウ レイアウトの復元に失敗しました。");
-
+				if (ex is FileNotFoundException || ex is DirectoryNotFoundException) {
+					switch (UILanguage) {
+						case "zh":
+							Logger.Add(3, "未找到窗口布局文件。");
+							MessageBox.Show(
+								"窗口布局已初始化。\r\n" +
+								"请从「视图」菜单中选择你需要的窗口。",
+								"无窗口布局文件",
+								MessageBoxButtons.OK, MessageBoxIcon.Information);
+							break;
+						case "en":
+							Logger.Add(3, "Window layout file not found.");
+							MessageBox.Show(
+								"Window layout has been initialized.\r\n" +
+								"Please add your prefer windows from [View] menu.",
+								"No Window Layout File",
+								MessageBoxButtons.OK, MessageBoxIcon.Information);
+							break;
+						default:
+							Logger.Add(3, "ウィンドウ レイアウト ファイルは存在しません。");
+							MessageBox.Show(
+								"レイアウトが初期化されました。\r\n" +
+								"「表示」メニューからお好みのウィンドウを追加してください。",
+								"ウィンドウ レイアウト ファイルが存在しません",
+								MessageBoxButtons.OK, MessageBoxIcon.Information);
+							break;
+					}
+					fBrowser.Show(MainDockPanel);
+				} else {
+					switch (UILanguage) {
+						case "zh":
+							ErrorReporter.SendErrorReport(ex, "读取窗口据失败。");
+							break;
+						case "en":
+							ErrorReporter.SendErrorReport(ex, "Failed to restore window layout.");
+							break;
+						default:
+							ErrorReporter.SendErrorReport(ex, "ウィンドウ レイアウトの復元に失敗しました。");
+							break;
+					}
+				}
 			}
 			finally
 			{
@@ -670,13 +910,32 @@ namespace ElectronicObserver.Window
 				}
 
 
-				Utility.Logger.Add(2, path + " へウィンドウ レイアウトを保存しました。");
+				switch (UILanguage) {
+					case "zh":
+						Logger.Add(2, $"已保存布局文件 {path}");
+						break;
+					case "en":
+						Logger.Add(2, $"Layout file saved as {path}");
+						break;
+					default:
+						Logger.Add(2, $"{path} へウィンドウ レイアウトを保存しました。");
+						break;
+				}
 
 			}
 			catch (Exception ex)
 			{
-
-				Utility.ErrorReporter.SendErrorReport(ex, "ウィンドウ レイアウトの保存に失敗しました。");
+				switch (UILanguage) {
+					case "zh":
+						ErrorReporter.SendErrorReport(ex, "保存布局文件失败。");
+						break;
+					case "en":
+						ErrorReporter.SendErrorReport(ex, "Failed to save layout file.");
+						break;
+					default:
+						ErrorReporter.SendErrorReport(ex, "ウィンドウ レイアウトの保存に失敗しました。");
+						break;
+				}
 			}
 
 		}
@@ -745,12 +1004,29 @@ namespace ElectronicObserver.Window
 
 		private void StripMenu_File_SaveData_Load_Click(object sender, EventArgs e)
 		{
-
-			if (MessageBox.Show("セーブしていないレコードが失われる可能性があります。\r\nロードしますか？", "確認",
-					MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
-				== System.Windows.Forms.DialogResult.Yes)
+			DialogResult result;
+			switch (UILanguage) {
+				case "zh":
+					result = MessageBox.Show(
+						"未保存的记录将会丢失。\r\n" +
+						"确定载入吗？", "要求确认",
+						MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+					break;
+				case "en":
+					result = MessageBox.Show(
+						"Unsaved data would be lost.\r\n" +
+						"Confirm to load?", "Confirmation",
+						MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+					break;
+				default:
+					result = MessageBox.Show(
+						"セーブしていないレコードが失われる可能性があります。\r\n" +
+						"ロードしますか？", "確認",
+						MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+					break;
+			}
+			if (result == DialogResult.Yes)
 			{
-
 				RecordManager.Instance.Load();
 			}
 
@@ -763,8 +1039,17 @@ namespace ElectronicObserver.Window
 
 			using (OpenFileDialog ofd = new OpenFileDialog())
 			{
-
-				ofd.Title = "APIリストをロード";
+				switch (UILanguage) {
+					case "zh":
+						ofd.Title = "载入 API 列表";
+						break;
+					case "en":
+						ofd.Title = "Load API List";
+						break;
+					default:
+						ofd.Title = "APIリストをロード";
+						break;
+				}
 				ofd.Filter = "API List|*.txt|File|*";
 				ofd.InitialDirectory = Utility.Configuration.Config.Connection.SaveDataPath;
 				if (!string.IsNullOrWhiteSpace(Utility.Configuration.Config.Debug.APIListPath))
@@ -781,10 +1066,20 @@ namespace ElectronicObserver.Window
 					}
 					catch (Exception ex)
 					{
-
-						MessageBox.Show("API読み込みに失敗しました。\r\n" + ex.Message, "エラー",
-							MessageBoxButtons.OK, MessageBoxIcon.Error);
-
+						switch (UILanguage) {
+							case "zh":
+								MessageBox.Show($"读取 API 列表失败。\r\n{ex.Message}", "错误",
+									MessageBoxButtons.OK, MessageBoxIcon.Error);
+								break;
+							case "en":
+								MessageBox.Show($"Failed to load API list.\r\n{ex.Message}", "Error",
+									MessageBoxButtons.OK, MessageBoxIcon.Error);
+								break;
+							default:
+								MessageBox.Show($"API読み込みに失敗しました。\r\n{ex.Message}", "エラー",
+									MessageBoxButtons.OK, MessageBoxIcon.Error);
+								break;
+						}
 					}
 
 				}
@@ -986,8 +1281,17 @@ namespace ElectronicObserver.Window
 
 			if (KCDatabase.Instance.MasterShips.Count == 0)
 			{
-				MessageBox.Show("艦船データが読み込まれていません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
+				switch (UILanguage) {
+					case "zh":
+						MessageBox.Show("尚未读取舰船数据。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+					case "en":
+						MessageBox.Show("Ships data not loaded.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+					default:
+						MessageBox.Show("艦船データが読み込まれていません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+				}
 			}
 			else
 			{
@@ -1003,8 +1307,17 @@ namespace ElectronicObserver.Window
 
 			if (KCDatabase.Instance.MasterEquipments.Count == 0)
 			{
-				MessageBox.Show("装備データが読み込まれていません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
+				switch (UILanguage) {
+					case "zh":
+						MessageBox.Show("尚未读取装备数据。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+					case "en":
+						MessageBox.Show("Equipments data not loaded.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+					default:
+						MessageBox.Show("装備データが読み込まれていません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+				}
 			}
 			else
 			{
@@ -1223,13 +1536,30 @@ namespace ElectronicObserver.Window
 
 		private void StripMenu_Help_Help_Click(object sender, EventArgs e)
 		{
-
-			if (MessageBox.Show("外部ブラウザでオンラインヘルプを開きます。\r\nよろしいですか？", "ヘルプ",
-				MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1)
-				== System.Windows.Forms.DialogResult.Yes)
+			DialogResult result;
+			switch (UILanguage) {
+				case "zh":
+					result = MessageBox.Show(
+						"将使用外部浏览器打开在线帮助。\r\n" +
+						"确认打开吗？", "帮助",
+						MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+					break;
+				case "en":
+					result = MessageBox.Show(
+						"Online Help will be opened in external browser.\r\n" +
+						"Do you want to open it?", "Help",
+						MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+					break;
+				default:
+					result = MessageBox.Show(
+						"外部ブラウザでオンラインヘルプを開きます。\r\n" +
+						"よろしいですか？", "ヘルプ",
+						MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+					break;
+			}
+			if (result == DialogResult.Yes)
 			{
-
-				System.Diagnostics.Process.Start("https://github.com/andanteyk/ElectronicObserver/wiki");
+				System.Diagnostics.Process.Start("https://github.com/RadarNyan/ElectronicObserver-ML/wiki");
 			}
 
 		}
@@ -1261,9 +1591,18 @@ namespace ElectronicObserver.Window
 
 			using (var dialog = new OpenFileDialog())
 			{
-
+				switch (UILanguage) {
+					case "zh":
+						dialog.Title = "打开布局文件";
+						break;
+					case "en":
+						dialog.Title = "Open Layout File";
+						break;
+					default:
+						dialog.Title = "レイアウト ファイルを開く";
+						break;
+				}
 				dialog.Filter = "Layout Archive|*.zip|File|*";
-				dialog.Title = "レイアウト ファイルを開く";
 
 
 				PathHelper.InitOpenFileDialog(Utility.Configuration.Config.Life.LayoutFilePath, dialog);
@@ -1285,9 +1624,18 @@ namespace ElectronicObserver.Window
 
 			using (var dialog = new SaveFileDialog())
 			{
-
+				switch (UILanguage) {
+					case "zh":
+						dialog.Title = "保存布局文件";
+						break;
+					case "en":
+						dialog.Title = "Save Layout File";
+						break;
+					default:
+						dialog.Title = "レイアウト ファイルの保存";
+						break;
+				}
 				dialog.Filter = "Layout Archive|*.zip|File|*";
-				dialog.Title = "レイアウト ファイルの保存";
 
 
 				PathHelper.InitSaveFileDialog(Utility.Configuration.Config.Life.LayoutFilePath, dialog);
@@ -1313,18 +1661,46 @@ namespace ElectronicObserver.Window
 
 		}
 
+		private void MsgBoxNoMasterData()
+		{
+			switch (UILanguage) {
+				case "zh":
+					MessageBox.Show("请等待「艦これ」读取完成后再打开。", "暂无主数据",
+						MessageBoxButtons.OK, MessageBoxIcon.Error);
+					break;
+				case "en":
+					MessageBox.Show("Please open after KanColle is loaded.", "No Masterdata",
+						MessageBoxButtons.OK, MessageBoxIcon.Error);
+					break;
+				default:
+					MessageBox.Show("艦これを読み込んでから開いてください。", "マスターデータがありません",
+						MessageBoxButtons.OK, MessageBoxIcon.Error);
+					break;
+			}
+		}
+
 		private void StripMenu_Tool_DropRecord_Click(object sender, EventArgs e)
 		{
 
 			if (KCDatabase.Instance.MasterShips.Count == 0)
 			{
-				MessageBox.Show("艦これを読み込んでから開いてください。", "マスターデータがありません", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MsgBoxNoMasterData();
 				return;
 			}
 
 			if (RecordManager.Instance.ShipDrop.Record.Count == 0)
 			{
-				MessageBox.Show("ドロップレコードがありません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				switch (UILanguage) {
+					case "zh":
+						MessageBox.Show("还没有掉落记录。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+					case "en":
+						MessageBox.Show("No drop recrods found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+					default:
+						MessageBox.Show("ドロップレコードがありません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+				}
 				return;
 			}
 
@@ -1338,13 +1714,23 @@ namespace ElectronicObserver.Window
 
 			if (KCDatabase.Instance.MasterShips.Count == 0)
 			{
-				MessageBox.Show("艦これを読み込んでから開いてください。", "マスターデータがありません", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MsgBoxNoMasterData();
 				return;
 			}
 
 			if (RecordManager.Instance.Development.Record.Count == 0)
 			{
-				MessageBox.Show("開発レコードがありません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				switch (UILanguage) {
+					case "zh":
+						MessageBox.Show("还没有开发记录。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+					case "en":
+						MessageBox.Show("No development recrods found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+					default:
+						MessageBox.Show("開発レコードがありません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+				}
 				return;
 			}
 
@@ -1357,13 +1743,23 @@ namespace ElectronicObserver.Window
 
 			if (KCDatabase.Instance.MasterShips.Count == 0)
 			{
-				MessageBox.Show("艦これを読み込んでから開いてください。", "マスターデータがありません", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MsgBoxNoMasterData();
 				return;
 			}
 
 			if (RecordManager.Instance.Construction.Record.Count == 0)
 			{
-				MessageBox.Show("建造レコードがありません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				switch (UILanguage) {
+					case "zh":
+						MessageBox.Show("还没有建造记录。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+					case "en":
+						MessageBox.Show("No construction recrods found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+					default:
+						MessageBox.Show("建造レコードがありません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+				}
 				return;
 			}
 
