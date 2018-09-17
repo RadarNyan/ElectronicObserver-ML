@@ -1111,6 +1111,8 @@ namespace ElectronicObserver.Data
 		/// </summary>
 		public static string GetEngagementForm(int id)
 		{
+			switch (UILanguage) {
+			default:
 			switch (id)
 			{
 				case 1:
@@ -1123,6 +1125,33 @@ namespace ElectronicObserver.Data
 					return "T字不利";
 				default:
 					return "不明";
+			}
+			case "zh":
+				switch (id) {
+					case 1:
+						return "同航战";
+					case 2:
+						return "反航战";
+					case 3:
+						return "T字有利";
+					case 4:
+						return "T字不利";
+					default:
+						return "不明";
+				}
+			case "en":
+				switch (id) {
+					case 1:
+						return "Parallel";
+					case 2:
+						return "Head-on";
+					case 3:
+						return "Green T";
+					case 4:
+						return "Red T";
+					default:
+						return "不明";
+				}
 			}
 		}
 
@@ -1155,6 +1184,8 @@ namespace ElectronicObserver.Data
 		/// </summary>
 		public static string GetSearchingResultShort(int id)
 		{
+			switch (UILanguage) {
+			default:
 			switch (id)
 			{
 				case 1:
@@ -1172,6 +1203,41 @@ namespace ElectronicObserver.Data
 				default:
 					return "不明";
 			}
+			case "zh":
+				switch (id) {
+					case 1:
+						return "成功";
+					case 2:
+						return "成功△";
+					case 3:
+						return "未返回";
+					case 4:
+						return "失败";
+					case 5:
+						return "成功";
+					case 6:
+						return "失败";
+					default:
+						return "不明";
+				}
+			case "en":
+				switch (id) {
+					case 1:
+						return "Success";
+					case 2:
+						return "Success △";
+					case 3:
+						return "Lost";
+					case 4:
+						return "Fail";
+					case 5:
+						return "Success";
+					case 6:
+						return "Fail";
+					default:
+						return "Unknown";
+				}
+			}
 		}
 
 		/// <summary>
@@ -1179,6 +1245,8 @@ namespace ElectronicObserver.Data
 		/// </summary>
 		public static string GetAirSuperiority(int id)
 		{
+			switch (UILanguage) {
+			default:
 			switch (id)
 			{
 				case 0:
@@ -1193,6 +1261,37 @@ namespace ElectronicObserver.Data
 					return "制空権喪失";
 				default:
 					return "不明";
+			}
+			case "zh":
+				switch (id) {
+					case 0:
+						return "航空均衡";
+					case 1:
+						return "制空权确保";
+					case 2:
+						return "航空优势";
+					case 3:
+						return "航空劣势";
+					case 4:
+						return "制空权丧失";
+					default:
+						return "不明";
+				}
+			case "en":
+				switch (id) {
+					case 0:
+						return "Air Parity";
+					case 1:
+						return "Air Supremacy";
+					case 2:
+						return "Air Superiority";
+					case 3:
+						return "Air Denial";
+					case 4:
+						return "Air Incapability";
+					default:
+						return "Unknown";
+				}
 			}
 		}
 
