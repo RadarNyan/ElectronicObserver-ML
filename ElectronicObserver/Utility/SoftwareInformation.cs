@@ -21,6 +21,12 @@ namespace ElectronicObserver.Utility
 
 
 		/// <summary>
+		/// ソフトウェア名(中国語)
+		/// </summary>
+		public static string SoftwareNameChinese => "七四式电子观测仪";
+
+
+		/// <summary>
 		/// ソフトウェア名(英語)
 		/// </summary>
 		public static string SoftwareNameEnglish => "ElectronicObserver";
@@ -30,6 +36,12 @@ namespace ElectronicObserver.Utility
 		/// バージョン(日本語, ソフトウェア名を含みます)
 		/// </summary>
 		public static string VersionJapanese => SoftwareNameJapanese + "四〇型改二";
+
+
+		/// <summary>
+		/// バージョン(中国語, ソフトウェア名を含みます)
+		/// </summary>
+		public static string VersionChinese => $"{SoftwareNameChinese}四〇型改二";
 
 
 		/// <summary>
@@ -48,7 +60,7 @@ namespace ElectronicObserver.Utility
 
 
 		private static System.Net.WebClient client;
-		private static readonly Uri uri = new Uri("https://www.dropbox.com/s/vk073iw1wvktq4d/version.txt?dl=1");
+		private static readonly Uri uri = new Uri("https://raw.githubusercontent.com/RadarNyan/ElectronicObserver-ML/master/VERSION");
 
 		public static void CheckUpdate()
 		{
@@ -114,7 +126,7 @@ namespace ElectronicObserver.Utility
 						if (result == System.Windows.Forms.DialogResult.Yes)
 						{
 
-							System.Diagnostics.Process.Start("http://electronicobserver.blog.fc2.com/");
+							System.Diagnostics.Process.Start("https://github.com/RadarNyan/ElectronicObserver-ML/releases");
 
 						}
 						else if (result == System.Windows.Forms.DialogResult.Cancel)

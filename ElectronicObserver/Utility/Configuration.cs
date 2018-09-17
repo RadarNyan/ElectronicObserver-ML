@@ -148,6 +148,11 @@ namespace ElectronicObserver.Utility
 			{
 
 				/// <summary>
+				/// UIの言語
+				/// </summary>
+				public string Language { get; set; }
+
+				/// <summary>
 				/// メインフォント
 				/// </summary>
 				public SerializableFont MainFont { get; set; }
@@ -335,7 +340,7 @@ namespace ElectronicObserver.Utility
 					LogLevel = 2;
 					SaveLogFlag = true;
 					SaveErrorReport = true;
-					FileEncodingID = 4;
+					FileEncodingID = 1;
 					ShowSpoiler = true;
 					PlayTime = 0;
 					PlayTimeIgnoreInterval = 10 * 60;
@@ -1430,7 +1435,7 @@ namespace ElectronicObserver.Utility
 		}
 
 
-		public void Load(Form mainForm)
+		public void Load(Form mainForm, string lang)
 		{
 			var temp = (ConfigurationData)_config.Load(SaveFileName);
 			if (temp != null)
@@ -1441,10 +1446,35 @@ namespace ElectronicObserver.Utility
 			}
 			else
 			{
-				MessageBox.Show(SoftwareInformation.SoftwareNameJapanese + " をご利用いただきありがとうございます。\r\n設定や使用方法については「ヘルプ」→「オンラインヘルプ」を参照してください。\r\nご使用の前に必ずご一読ください。",
-					"初回起動メッセージ", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+				switch (lang) {
+					case "zh":
+						_config.UI.MainFont = new Font("Microsoft YaHei", 12, FontStyle.Regular, GraphicsUnit.Pixel);
+						_config.UI.SubFont = new Font("Microsoft YaHei", 10, FontStyle.Regular, GraphicsUnit.Pixel);
+						MessageBox.Show(
+							$"欢迎使用{SoftwareInformation.SoftwareNameChinese}。\r\n" +
+							"如需配置或使用上的教程，请选择「帮助」→「在线帮助」。\r\n" +
+							"建议使用前阅读在线帮助信息。",
+							"初次启动信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
+						break;
+					case "en":
+						_config.UI.MainFont = new Font("Segoe UI", 12, FontStyle.Regular, GraphicsUnit.Pixel);
+						_config.UI.SubFont = new Font("Segoe UI", 10, FontStyle.Regular, GraphicsUnit.Pixel);
+						MessageBox.Show(
+							$"Thank you for using {SoftwareInformation.SoftwareNameEnglish}.\r\n" +
+							"For config and usage guide, please check [Help] - [Online Help].\r\n" +
+							"Please read the guide before using this program.",
+							"First Run Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+						break;
+					default:
+						MessageBox.Show(
+							$"{SoftwareInformation.SoftwareNameJapanese}をご利用いただきありがとうございます。\r\n" +
+							"設定や使用方法については「ヘルプ」→「オンラインヘルプ」を参照してください。\r\n" +
+							"ご使用の前に必ずご一読ください。",
+							"初回起動メッセージ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+						break;
+				}
 			}
+			_config.UI.Language = lang;
 		}
 
 		public void Save()

@@ -533,6 +533,12 @@
     <Compile Include="Window\Dialog\DialogWhitecap.Designer.cs">
       <DependentUpon>DialogWhitecap.cs</DependentUpon>
     </Compile>
+    <Compile Include="Window\FormStartup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Window\FormStartup.Designer.cs">
+      <DependentUpon>FormStartup.cs</DependentUpon>
+    </Compile>
     <Compile Include="Window\FormArsenal.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -760,6 +766,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Window\Dialog\DialogWhitecap.resx">
       <DependentUpon>DialogWhitecap.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Window\FormStartup.resx">
+      <DependentUpon>FormStartup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Window\FormArsenal.resx">
       <DependentUpon>FormArsenal.cs</DependentUpon>

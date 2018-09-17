@@ -69,11 +69,24 @@ namespace ElectronicObserver.Window
 
 
 
-		public FormMain()
+		public string UILanguage;
+
+		public FormMain(string lang)
 		{
 			InitializeComponent();
 
-			this.Text = SoftwareInformation.VersionJapanese;
+			switch (lang) {
+				case "zh":
+					Text = SoftwareInformation.VersionChinese;
+					break;
+				case "en":
+					Text = $"{SoftwareInformation.SoftwareNameEnglish} {SoftwareInformation.VersionEnglish}";
+					break;
+				default:
+					Text = SoftwareInformation.VersionJapanese;
+					break;
+			}
+			UILanguage = lang;
 		}
 
 		private async void FormMain_Load(object sender, EventArgs e)
@@ -83,7 +96,7 @@ namespace ElectronicObserver.Window
 				Directory.CreateDirectory("Settings");
 
 
-			Utility.Configuration.Instance.Load(this);
+			Utility.Configuration.Instance.Load(this, UILanguage);
 
 
 			Utility.Logger.Instance.LogAdded += new Utility.LogAddedEventHandler((Utility.Logger.LogData data) =>
