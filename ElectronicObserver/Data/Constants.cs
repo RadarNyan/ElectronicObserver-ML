@@ -427,6 +427,8 @@ namespace ElectronicObserver.Data
 		/// </summary>
 		public static string GetBaseAirCorpsActionKind(int value)
 		{
+			switch (UILanguage) {
+			default:
 			switch (value)
 			{
 				case 0:
@@ -441,6 +443,37 @@ namespace ElectronicObserver.Data
 					return "休息";
 				default:
 					return "不明";
+			}
+			case "zh":
+				switch (value) {
+					case 0:
+						return "待机";
+					case 1:
+						return "出击";
+					case 2:
+						return "防空";
+					case 3:
+						return "退避";
+					case 4:
+						return "休息";
+					default:
+						return "不明";
+				}
+			case "en":
+				switch (value) {
+					case 0:
+						return "Standby";
+					case 1:
+						return "Sortie";
+					case 2:
+						return "Air Defense";
+					case 3:
+						return "Retreat";
+					case 4:
+						return "Rest";
+					default:
+						return "Unknown";
+				}
 			}
 		}
 

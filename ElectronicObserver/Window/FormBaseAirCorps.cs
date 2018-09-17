@@ -28,10 +28,14 @@ namespace ElectronicObserver.Window
 
 			public ToolTip ToolTipInfo;
 
+			private string UILanguage;
+
 			public TableBaseAirCorpsControl(FormBaseAirCorps parent)
 			{
 
 				#region Initialize
+
+				UILanguage = parent.UILanguage;
 
 				Name = new ImageLabel
 				{
@@ -151,9 +155,21 @@ namespace ElectronicObserver.Window
 					var sb = new StringBuilder();
 
 
-					string areaName = KCDatabase.Instance.MapArea.ContainsKey(corps.MapAreaID) ? KCDatabase.Instance.MapArea[corps.MapAreaID].Name : "バミューダ海域";
-
-					sb.AppendLine("所属海域: " + areaName);
+					string areaName;
+					switch (UILanguage) {
+						case "zh":
+							areaName = KCDatabase.Instance.MapArea.ContainsKey(corps.MapAreaID) ? KCDatabase.Instance.MapArea[corps.MapAreaID].Name : "百慕大海域";
+							sb.AppendLine("所属海域：" + areaName);
+							break;
+						case "en":
+							areaName = KCDatabase.Instance.MapArea.ContainsKey(corps.MapAreaID) ? KCDatabase.Instance.MapArea[corps.MapAreaID].Name : "Bermuda Waters";
+							sb.AppendLine("Located in: " + areaName);
+							break;
+						default:
+							areaName = KCDatabase.Instance.MapArea.ContainsKey(corps.MapAreaID) ? KCDatabase.Instance.MapArea[corps.MapAreaID].Name : "バミューダ海域";
+							sb.AppendLine("所属海域: " + areaName);
+							break;
+					}
 
 					// state 
 
@@ -166,15 +182,33 @@ namespace ElectronicObserver.Window
 						{
 							Name.ImageAlign = ContentAlignment.MiddleRight;
 							Name.ImageIndex = (int)ResourceManager.IconContent.ConditionTired;
-							sb.AppendLine("疲労");
-
+							switch (UILanguage) {
+								case "zh":
+									sb.AppendLine("疲劳");
+									break;
+								case "en":
+									sb.AppendLine("Tired");
+									break;
+								default:
+									sb.AppendLine("疲労");
+									break;
+							}
 						}
 						else
 						{
 							Name.ImageAlign = ContentAlignment.MiddleRight;
 							Name.ImageIndex = (int)ResourceManager.IconContent.ConditionVeryTired;
-							sb.AppendLine("過労");
-
+							switch (UILanguage) {
+								case "zh":
+									sb.AppendLine("过劳");
+									break;
+								case "en":
+									sb.AppendLine("Very Tired");
+									break;
+								default:
+									sb.AppendLine("過労");
+									break;
+							}
 						}
 
 					}
@@ -183,8 +217,17 @@ namespace ElectronicObserver.Window
 						// 未補給
 						Name.ImageAlign = ContentAlignment.MiddleRight;
 						Name.ImageIndex = (int)ResourceManager.IconContent.FleetNotReplenished;
-						sb.AppendLine("未補給");
-
+						switch (UILanguage) {
+							case "zh":
+								sb.AppendLine("未补给");
+								break;
+							case "en":
+								sb.AppendLine("Need Replenish");
+								break;
+							default:
+								sb.AppendLine("未補給");
+								break;
+						}
 					}
 					else
 					{
@@ -212,12 +255,29 @@ namespace ElectronicObserver.Window
 							AirSuperiority.Text = airSuperiority.ToString();
 						}
 
-						ToolTipInfo.SetToolTip(AirSuperiority,
-							string.Format("確保: {0}\r\n優勢: {1}\r\n均衡: {2}\r\n劣勢: {3}\r\n",
-							(int)(airSuperiority / 3.0),
-							(int)(airSuperiority / 1.5),
-							Math.Max((int)(airSuperiority * 1.5 - 1), 0),
-							Math.Max((int)(airSuperiority * 3.0 - 1), 0)));
+						switch (UILanguage) {
+							case "zh":
+								ToolTipInfo.SetToolTip(AirSuperiority,
+									$"确保：{(int)(airSuperiority / 3.0)}\r\n" +
+									$"优势：{(int)(airSuperiority / 1.5)}\r\n" +
+									$"均衡：{Math.Max((int)(airSuperiority * 1.5 - 1), 0)}\r\n" +
+									$"劣势：{Math.Max((int)(airSuperiority * 3.0 - 1), 0)}");
+								break;
+							case "en":
+								ToolTipInfo.SetToolTip(AirSuperiority,
+									$"Air Supremacy: {(int)(airSuperiority / 3.0)}\r\n" +
+									$"Air Superiority: {(int)(airSuperiority / 1.5)}\r\n" +
+									$"Air Parity: {Math.Max((int)(airSuperiority * 1.5 - 1), 0)}\r\n" +
+									$"Air Denial: {Math.Max((int)(airSuperiority * 3.0 - 1), 0)}");
+								break;
+							default:
+								ToolTipInfo.SetToolTip(AirSuperiority,
+									$"確保: {(int)(airSuperiority / 3.0)}\r\n" +
+									$"優勢: {(int)(airSuperiority / 1.5)}\r\n" +
+									$"均衡: {Math.Max((int)(airSuperiority * 1.5 - 1), 0)}\r\n" +
+									$"劣勢: {Math.Max((int)(airSuperiority * 3.0 - 1), 0)}");
+								break;
+						}
 					}
 
 					Distance.Text = corps.Distance.ToString();
@@ -263,7 +323,16 @@ namespace ElectronicObserver.Window
 				var sb = new StringBuilder();
 
 				if (corps == null)
-					return "(未開放)\r\n";
+				{
+					switch (UILanguage) {
+						case "zh":
+							return "（未开放）\r\n";
+						case "en":
+							return "(Unopened)\r\n";
+						default:
+							return "(未開放)\r\n";
+					}
+				}
 
 				foreach (var squadron in corps.Squadrons.Values)
 				{
@@ -276,7 +345,17 @@ namespace ElectronicObserver.Window
 					{
 						case 0:     // 未配属
 						default:
-							sb.AppendLine("(なし)");
+							switch (UILanguage) {
+								case "zh":
+									sb.AppendLine("（空）");
+									break;
+								case "en":
+									sb.AppendLine("(Empty)");
+									break;
+								default:
+									sb.AppendLine("(なし)");
+									break;
+							}
 							break;
 
 						case 1:     // 配属済み
@@ -292,19 +371,58 @@ namespace ElectronicObserver.Window
 								default:
 									break;
 								case 2:
-									sb.Append("[疲労] ");
+									switch (UILanguage) {
+										case "zh":
+											sb.Append("[疲劳] ");
+											break;
+										case "en":
+											sb.Append("[Tired] ");
+											break;
+										default:
+											sb.Append("[疲労] ");
+											break;
+									}
 									break;
 								case 3:
-									sb.Append("[過労] ");
+									switch (UILanguage) {
+										case "zh":
+											sb.Append("[过劳] ");
+											break;
+										case "en":
+											sb.Append("[Very Tired] ");
+											break;
+										default:
+											sb.Append("[過労] ");
+											break;
+									}
 									break;
 							}
 
-							sb.AppendFormat("{0} (半径: {1})\r\n", eq.NameWithLevel, eq.MasterEquipment.AircraftDistance);
+							switch (UILanguage) {
+								case "zh":
+									sb.AppendLine($"{eq.NameWithLevel}（半径：{eq.MasterEquipment.AircraftDistance}）");
+									break;
+								case "en":
+									sb.AppendLine($"{eq.NameWithLevel} (Range: {eq.MasterEquipment.AircraftDistance})");
+									break;
+								default:
+									sb.AppendLine($"{eq.NameWithLevel} (半径: {eq.MasterEquipment.AircraftDistance})");
+									break;
+							}
 							break;
 
 						case 2:     // 配置転換中
-							sb.AppendFormat("配置転換中 (開始時刻: {0})\r\n",
-								DateTimeHelper.TimeToCSVString(squadron.RelocatedTime));
+							switch (UILanguage) {
+								case "zh":
+									sb.AppendLine($"配置转换中（开始于：{DateTimeHelper.TimeToCSVString(squadron.RelocatedTime)}）");
+									break;
+								case "en":
+									sb.AppendLine($"Relocating (Began at: {DateTimeHelper.TimeToCSVString(squadron.RelocatedTime)})");
+									break;
+								default:
+									sb.AppendLine($"配置転換中 (開始時刻: {DateTimeHelper.TimeToCSVString(squadron.RelocatedTime)})");
+									break;
+							}
 							break;
 					}
 				}
@@ -325,9 +443,28 @@ namespace ElectronicObserver.Window
 
 		private TableBaseAirCorpsControl[] ControlMember;
 
+		private string UILanguage;
+
 		public FormBaseAirCorps(FormMain parent)
 		{
 			InitializeComponent();
+
+			UILanguage = parent.UILanguage;
+
+			switch (UILanguage) {
+				case "zh":
+					ContextMenuBaseAirCorps_CopyOrganization.Text = "复制到剪贴板(&C)";
+					ContextMenuBaseAirCorps_DisplayRelocatedEquipments.Text = "查看配置转换中的装备(&R)";
+					Text = "基地航空队";
+					break;
+				case "en":
+					ContextMenuBaseAirCorps_CopyOrganization.Text = "&Copy to Clipboard";
+					ContextMenuBaseAirCorps_DisplayRelocatedEquipments.Text = "Check &Relocating Aircrafts";
+					Text = "Land Base";
+					break;
+				default:
+					break;
+			}
 
 
 			ControlMember = new TableBaseAirCorpsControl[9];
@@ -463,14 +600,39 @@ namespace ElectronicObserver.Window
 
 			foreach (var corps in baseaircorps)
 			{
+				string areaName;
+				switch (UILanguage) {
+					case "zh":
+						areaName = KCDatabase.Instance.MapArea.ContainsKey(corps.MapAreaID) ? KCDatabase.Instance.MapArea[corps.MapAreaID].Name : "百慕大海域";
+						break;
+					case "en":
+						areaName = KCDatabase.Instance.MapArea.ContainsKey(corps.MapAreaID) ? KCDatabase.Instance.MapArea[corps.MapAreaID].Name : "Bermuda Waters";
+						break;
+					default:
+						areaName = KCDatabase.Instance.MapArea.ContainsKey(corps.MapAreaID) ? KCDatabase.Instance.MapArea[corps.MapAreaID].Name : "バミューダ海域";
+						break;
+				}
 
-				string areaName = KCDatabase.Instance.MapArea.ContainsKey(corps.MapAreaID) ? KCDatabase.Instance.MapArea[corps.MapAreaID].Name : "バミューダ海域";
-
-				sb.AppendFormat("{0}\t[{1}] 制空戦力{2}/戦闘行動半径{3}\r\n",
-					(areaid == -1 ? (areaName + "：") : "") + corps.Name,
-					Constants.GetBaseAirCorpsActionKind(corps.ActionKind),
-					Calculator.GetAirSuperiority(corps),
-					corps.Distance);
+				switch (UILanguage) {
+					case "zh":
+						sb.AppendLine(
+							$"{(areaid == -1 ? (areaName + "：") : "") + corps.Name}\t" +
+							$"[{Constants.GetBaseAirCorpsActionKind(corps.ActionKind)}]" +
+							$" 制空战力 {Calculator.GetAirSuperiority(corps)} / 战斗行动半径 {corps.Distance}");
+						break;
+					case "en":
+						sb.AppendLine(
+							$"{(areaid == -1 ? (areaName + "：") : "") + corps.Name}\t" +
+							$"[{Constants.GetBaseAirCorpsActionKind(corps.ActionKind)}]" +
+							$" Fighter Power {Calculator.GetAirSuperiority(corps)} / Combat Radius {corps.Distance}");
+						break;
+					default:
+						sb.AppendLine(
+							$"{(areaid == -1 ? (areaName + "：") : "") + corps.Name}\t" +
+							$"[{Constants.GetBaseAirCorpsActionKind(corps.ActionKind)}]" +
+							$" 制空戦力{Calculator.GetAirSuperiority(corps)}/戦闘行動半径{corps.Distance}");
+						break;
+				}
 
 				var sq = corps.Squadrons.Values.ToArray();
 
@@ -481,27 +643,67 @@ namespace ElectronicObserver.Window
 
 					if (sq[i] == null)
 					{
-						sb.Append("(消息不明)");
+						switch (UILanguage) {
+							case "zh":
+								sb.Append("（去向不明）");
+								break;
+							case "en":
+								sb.Append("(Whereabouts unknown)");
+								break;
+							default:
+								sb.Append("(消息不明)");
+								break;
+						}
 						continue;
 					}
 
 					switch (sq[i].State)
 					{
 						case 0:
-							sb.Append("(未配属)");
+							switch (UILanguage) {
+								case "zh":
+									sb.Append("（未分配）");
+									break;
+								case "en":
+									sb.Append("(Unassigned)");
+									break;
+								default:
+									sb.Append("(未配属)");
+									break;
+							}
 							break;
 						case 1:
 							{
 								var eq = sq[i].EquipmentInstance;
 
-								sb.Append(eq?.NameWithLevel ?? "(なし)");
+								switch (UILanguage) {
+									case "zh":
+										sb.Append(eq?.NameWithLevel ?? "（空）");
+										break;
+									case "en":
+										sb.Append(eq?.NameWithLevel ?? "(Empty)");
+										break;
+									default:
+										sb.Append(eq?.NameWithLevel ?? "(なし)");
+										break;
+								}
 
 								if (sq[i].AircraftCurrent < sq[i].AircraftMax)
 									sb.AppendFormat("[{0}/{1}]", sq[i].AircraftCurrent, sq[i].AircraftMax);
 							}
 							break;
 						case 2:
-							sb.Append("(配置転換中)");
+							switch (UILanguage) {
+								case "zh":
+									sb.Append("（配置转换中）");
+									break;
+								case "en":
+									sb.Append("(Relocating)");
+									break;
+								default:
+									sb.Append("(配置転換中)");
+									break;
+							}
 							break;
 					}
 				}
@@ -520,9 +722,31 @@ namespace ElectronicObserver.Window
 				.Select(eq => string.Format("{0} ({1}～)", eq.EquipmentInstance.NameWithLevel, DateTimeHelper.TimeToCSVString(eq.RelocatedTime))));
 
 			if (message.Length == 0)
-				message = "現在配置転換中の装備はありません。";
+			{
+				switch (UILanguage) {
+					case "zh":
+						message = "目前没有配置转换中的装备。";
+						break;
+					case "en":
+						message = "No aircrafts being relocated at the moment.";
+						break;
+					default:
+						message = "現在配置転換中の装備はありません。";
+						break;
+				}
+			}
 
-			MessageBox.Show(message, "配置転換中装備", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			switch (UILanguage) {
+				case "zh":
+					MessageBox.Show(message, "配置转换中装备", MessageBoxButtons.OK, MessageBoxIcon.Information);
+					break;
+				case "en":
+					MessageBox.Show(message, "Relocating Aircrafts", MessageBoxButtons.OK, MessageBoxIcon.Information);
+					break;
+				default:
+					MessageBox.Show(message, "配置転換中装備", MessageBoxButtons.OK, MessageBoxIcon.Information);
+					break;
+			}
 		}
 
 
