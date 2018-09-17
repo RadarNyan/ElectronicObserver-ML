@@ -82,9 +82,24 @@ namespace ElectronicObserver.Window
 
 
 
+		private string UILanguage;
+
 		public FormBrowserHost(FormMain parent)
 		{
 			InitializeComponent();
+
+			UILanguage = parent.UILanguage;
+
+			switch (UILanguage) {
+				case "zh":
+					Text = "浏览器";
+					break;
+				case "en":
+					Text = "Browser";
+					break;
+				default:
+					break;
+			}
 
 			Icon = ResourceManager.ImageToIcon(ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormBrowser]);
 		}
@@ -123,9 +138,26 @@ namespace ElectronicObserver.Window
 			}
 			catch (Exception ex)
 			{
-				Utility.ErrorReporter.SendErrorReport(ex, "ブラウザプロセスの起動に失敗しました。");
-				MessageBox.Show("ブラウザプロセスの起動に失敗しました。\r\n" + ex.Message,
-					"エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				switch (UILanguage) {
+					case "zh":
+						Utility.ErrorReporter.SendErrorReport(ex, "启动浏览器进程失败。");
+						MessageBox.Show(
+							"启动浏览器进程失败。\r\n" + ex.Message,
+							"错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+					case "en":
+						Utility.ErrorReporter.SendErrorReport(ex, "Failed to start browser process.");
+						MessageBox.Show(
+							"Failed to start browser process.\r\n" + ex.Message,
+							"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+					default:
+						Utility.ErrorReporter.SendErrorReport(ex, "ブラウザプロセスの起動に失敗しました。");
+						MessageBox.Show(
+							"ブラウザプロセスの起動に失敗しました。\r\n" + ex.Message,
+							"エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						break;
+				}
 			}
 		}
 
@@ -317,8 +349,24 @@ namespace ElectronicObserver.Window
 
 		public void RequestNavigation(string baseurl)
 		{
+			string dialogTitle;
+			string dialogDescrption;
+			switch (UILanguage) {
+				case "zh":
+					dialogTitle = "输入网址";
+					dialogDescrption = "请输入想要转到的网址。";
+					break;
+				case "en":
+					dialogTitle = "Input Url";
+					dialogDescrption = "Please enter the url you want to navigate to.";
+					break;
+				default:
+					dialogTitle = "移動先の入力";
+					dialogDescrption = "移動先の URL を入力してください。";
+					break;
+			}
 
-			using (var dialog = new Window.Dialog.DialogTextInput("移動先の入力", "移動先の URL を入力してください。"))
+			using (var dialog = new Dialog.DialogTextInput(dialogTitle, dialogDescrption))
 			{
 				dialog.InputtedText = baseurl;
 
