@@ -118,9 +118,13 @@ namespace ElectronicObserver.Window
 		private ImageLabel AnchorageRepairingTimer;
 
 
+		private string UILanguage;
+
 		public FormFleetOverview(FormMain parent)
 		{
 			InitializeComponent();
+
+			UILanguage = parent.UILanguage;
 
 			ControlHelper.SetDoubleBuffered(TableFleet);
 
@@ -215,6 +219,18 @@ namespace ElectronicObserver.Window
 
 		void ConfigurationChanged()
 		{
+			#region UI translation
+			switch (UILanguage) {
+				case "zh":
+					Text = "舰队";
+					break;
+				case "en":
+					Text = "Fleets";
+					break;
+				default:
+					break;
+			}
+			#endregion
 
 			TableFleet.SuspendLayout();
 
@@ -264,17 +280,41 @@ namespace ElectronicObserver.Window
 				var landing = members.Select(s => s.AllSlotInstanceMaster.Count(eq => eq?.CategoryType == EquipmentTypes.LandingCraft || eq?.CategoryType == EquipmentTypes.SpecialAmphibiousTank));
 
 
-				ToolTipInfo.SetToolTip(CombinedTag, string.Format("ドラム缶搭載: {0}個\r\n大発動艇搭載: {1}個\r\n輸送量(TP): S {2} / A {3}\r\n\r\n制空戦力合計: {4}\r\n索敵能力合計: {5:f2}\r\n新判定式(33):\r\n　分岐点係数1: {6:f2}\r\n　分岐点係数3: {7:f2}\r\n　分岐点係数4: {8:f2}",
-					transport.Sum(),
-					landing.Sum(),
-					tp,
-					(int)Math.Floor(tp * 0.7),
-					Calculator.GetAirSuperiority(fleet1) + Calculator.GetAirSuperiority(fleet2),
-					Math.Floor(fleet1.GetSearchingAbility() * 100) / 100 + Math.Floor(fleet2.GetSearchingAbility() * 100) / 100,
-					Math.Floor(Calculator.GetSearchingAbility_New33(fleet1, 1) * 100) / 100 + Math.Floor(Calculator.GetSearchingAbility_New33(fleet2, 1) * 100) / 100,
-					Math.Floor(Calculator.GetSearchingAbility_New33(fleet1, 3) * 100) / 100 + Math.Floor(Calculator.GetSearchingAbility_New33(fleet2, 3) * 100) / 100,
-					Math.Floor(Calculator.GetSearchingAbility_New33(fleet1, 4) * 100) / 100 + Math.Floor(Calculator.GetSearchingAbility_New33(fleet2, 4) * 100) / 100
-					));
+				switch (UILanguage) {
+					case "zh":
+						ToolTipInfo.SetToolTip(CombinedTag,
+							$"载有运输桶：{transport.Sum()} 个\r\n" +
+							$"载有大发动艇：{landing.Sum()} 个\r\n" +
+							$"运输量(TP)：S {tp} / A {(int)Math.Floor(tp * 0.7)}\r\n\r\n" +
+							$"制空战力合计：{Calculator.GetAirSuperiority(fleet1) + Calculator.GetAirSuperiority(fleet2)}\r\n" +
+							$"索敌能力合计（33式）：\r\n" +
+							$"　分歧点系数1：{Math.Floor(Calculator.GetSearchingAbility_New33(fleet1, 1) * 100) / 100 + Math.Floor(Calculator.GetSearchingAbility_New33(fleet2, 1) * 100) / 100:f2}\r\n" +
+							$"　分歧点系数3：{Math.Floor(Calculator.GetSearchingAbility_New33(fleet1, 3) * 100) / 100 + Math.Floor(Calculator.GetSearchingAbility_New33(fleet2, 3) * 100) / 100:f2}\r\n" +
+							$"　分歧点系数4：{Math.Floor(Calculator.GetSearchingAbility_New33(fleet1, 4) * 100) / 100 + Math.Floor(Calculator.GetSearchingAbility_New33(fleet2, 4) * 100) / 100:f2}");
+						break;
+					case "en":
+						ToolTipInfo.SetToolTip(CombinedTag,
+							$"Drum Canisters Equipped: {transport.Sum()}\r\n" +
+							$"Daihatsu Landing Crafts Equipped: {landing.Sum()}\r\n" +
+							$"Transport(TP): S {tp} / A {(int)Math.Floor(tp * 0.7)}\r\n\r\n" +
+							$"Total Fighter Power: {Calculator.GetAirSuperiority(fleet1) + Calculator.GetAirSuperiority(fleet2)}\r\n" +
+							$"Total LOS (Formula 33):\r\n" +
+							$"  Node Factor 1: {Math.Floor(Calculator.GetSearchingAbility_New33(fleet1, 1) * 100) / 100 + Math.Floor(Calculator.GetSearchingAbility_New33(fleet2, 1) * 100) / 100:f2}\r\n" +
+							$"  Node Factor 3: {Math.Floor(Calculator.GetSearchingAbility_New33(fleet1, 3) * 100) / 100 + Math.Floor(Calculator.GetSearchingAbility_New33(fleet2, 3) * 100) / 100:f2}\r\n" +
+							$"  Node Factor 4: {Math.Floor(Calculator.GetSearchingAbility_New33(fleet1, 4) * 100) / 100 + Math.Floor(Calculator.GetSearchingAbility_New33(fleet2, 4) * 100) / 100:f2}");
+						break;
+					default:
+						ToolTipInfo.SetToolTip(CombinedTag,
+							$"ドラム缶搭載: {transport.Sum()}個\r\n" +
+							$"大発動艇搭載: {landing.Sum()}個\r\n" +
+							$"輸送量(TP): S {tp} / A {(int)Math.Floor(tp * 0.7)}\r\n\r\n" +
+							$"制空戦力合計: {Calculator.GetAirSuperiority(fleet1) + Calculator.GetAirSuperiority(fleet2)}\r\n" +
+							$"索敵能力合計 (33式):\r\n" +
+							$"　分岐点係数1: {Math.Floor(Calculator.GetSearchingAbility_New33(fleet1, 1) * 100) / 100 + Math.Floor(Calculator.GetSearchingAbility_New33(fleet2, 1) * 100) / 100:f2}\r\n" +
+							$"　分岐点係数3: {Math.Floor(Calculator.GetSearchingAbility_New33(fleet1, 3) * 100) / 100 + Math.Floor(Calculator.GetSearchingAbility_New33(fleet2, 3) * 100) / 100:f2}\r\n" +
+							$"　分岐点係数4: {Math.Floor(Calculator.GetSearchingAbility_New33(fleet1, 4) * 100) / 100 + Math.Floor(Calculator.GetSearchingAbility_New33(fleet2, 4) * 100) / 100:f2}");
+						break;
+				}
 
 
 				CombinedTag.Visible = true;
@@ -288,7 +328,26 @@ namespace ElectronicObserver.Window
 			{
 				AnchorageRepairingTimer.Text = DateTimeHelper.ToTimeElapsedString(KCDatabase.Instance.Fleet.AnchorageRepairingTimer);
 				AnchorageRepairingTimer.Tag = KCDatabase.Instance.Fleet.AnchorageRepairingTimer;
-				ToolTipInfo.SetToolTip(AnchorageRepairingTimer, "泊地修理タイマ\r\n開始: " + DateTimeHelper.TimeToCSVString(KCDatabase.Instance.Fleet.AnchorageRepairingTimer) + "\r\n回復: " + DateTimeHelper.TimeToCSVString(KCDatabase.Instance.Fleet.AnchorageRepairingTimer.AddMinutes(20)));
+				switch (UILanguage) {
+					case "zh":
+						ToolTipInfo.SetToolTip(AnchorageRepairingTimer,
+							"泊地修理计时器\r\n" +
+							$"开始：{DateTimeHelper.TimeToCSVString(KCDatabase.Instance.Fleet.AnchorageRepairingTimer)}\r\n" +
+							$"恢复：{DateTimeHelper.TimeToCSVString(KCDatabase.Instance.Fleet.AnchorageRepairingTimer.AddMinutes(20))}");
+						break;
+					case "en":
+						ToolTipInfo.SetToolTip(AnchorageRepairingTimer,
+							"Anchorage Repair Timer\r\n" +
+							$"Begins at: {DateTimeHelper.TimeToCSVString(KCDatabase.Instance.Fleet.AnchorageRepairingTimer)}\r\n" +
+							$"Recovers at: {DateTimeHelper.TimeToCSVString(KCDatabase.Instance.Fleet.AnchorageRepairingTimer.AddMinutes(20))}");
+						break;
+					default:
+						ToolTipInfo.SetToolTip(AnchorageRepairingTimer,
+							"泊地修理タイマ\r\n" +
+							$"開始: {DateTimeHelper.TimeToCSVString(KCDatabase.Instance.Fleet.AnchorageRepairingTimer)}\r\n" +
+							$"回復: {DateTimeHelper.TimeToCSVString(KCDatabase.Instance.Fleet.AnchorageRepairingTimer.AddMinutes(20))}");
+						break;
+				}
 			}
 
 
