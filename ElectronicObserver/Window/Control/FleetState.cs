@@ -147,9 +147,13 @@ namespace ElectronicObserver.Window.Control
 		private List<StateLabel> StateLabels;
 
 
+		private string UILanguage;
+
 		public FleetState()
 		{
 			InitializeComponent();
+
+			UILanguage = Utility.Configuration.Config.UI.Language;
 
 			StateLabels = new List<StateLabel>();
 		}
@@ -197,7 +201,17 @@ namespace ElectronicObserver.Window.Control
 			{
 				var state = GetStateLabel(index);
 
-				state.SetInformation(FleetStates.NoShip, "所属艦なし", "", (int)ResourceManager.IconContent.FleetNoShip);
+				switch (UILanguage) {
+					case "zh":
+						state.SetInformation(FleetStates.NoShip, "无所属舰", "", (int)ResourceManager.IconContent.FleetNoShip);
+						break;
+					case "en":
+						state.SetInformation(FleetStates.NoShip, "No Ships", "", (int)ResourceManager.IconContent.FleetNoShip);
+						break;
+					default:
+						state.SetInformation(FleetStates.NoShip, "所属艦なし", "", (int)ResourceManager.IconContent.FleetNoShip);
+						break;
+				}
 				tooltip.SetToolTip(state.Label, null);
 
 				emphasizesSubFleetInPort = false;
@@ -215,7 +229,17 @@ namespace ElectronicObserver.Window.Control
 					{
 						var state = GetStateLabel(index);
 
-						state.SetInformation(FleetStates.SortieDamaged, "！！大破進撃中！！", "！！大破進撃中！！", (int)ResourceManager.IconContent.FleetSortieDamaged, colorDanger);
+						switch (UILanguage) {
+							case "zh":
+								state.SetInformation(FleetStates.SortieDamaged, "！！大破进击中！！", "！！大破进击中！！", (int)ResourceManager.IconContent.FleetSortieDamaged, colorDanger);
+								break;
+							case "en":
+								state.SetInformation(FleetStates.SortieDamaged, "!! HEAVILY DAMAGED !!", "!! HEAVILY DAMAGED !!", (int)ResourceManager.IconContent.FleetSortieDamaged, colorDanger);
+								break;
+							default:
+								state.SetInformation(FleetStates.SortieDamaged, "！！大破進撃中！！", "！！大破進撃中！！", (int)ResourceManager.IconContent.FleetSortieDamaged, colorDanger);
+								break;
+						}
 						tooltip.SetToolTip(state.Label, null);
 
 						index++;
@@ -225,7 +249,17 @@ namespace ElectronicObserver.Window.Control
 					{   //出撃中
 						var state = GetStateLabel(index);
 
-						state.SetInformation(FleetStates.Sortie, "出撃中", "", (int)ResourceManager.IconContent.FleetSortie);
+						switch (UILanguage) {
+							case "zh":
+								state.SetInformation(FleetStates.Sortie, "出击中", "", (int)ResourceManager.IconContent.FleetSortie);
+								break;
+							case "en":
+								state.SetInformation(FleetStates.Sortie, "On Sortie", "", (int)ResourceManager.IconContent.FleetSortie);
+								break;
+							default:
+								state.SetInformation(FleetStates.Sortie, "出撃中", "", (int)ResourceManager.IconContent.FleetSortie);
+								break;
+						}
 						tooltip.SetToolTip(state.Label, null);
 
 						index++;
@@ -240,15 +274,45 @@ namespace ElectronicObserver.Window.Control
 					var state = GetStateLabel(index);
 
 					state.Timer = fleet.ExpeditionTime;
-					state.SetInformation(FleetStates.Expedition,
-						"遠征中 " + DateTimeHelper.ToTimeRemainString(state.Timer),
-						DateTimeHelper.ToTimeRemainString(state.Timer),
-						(int)ResourceManager.IconContent.FleetExpedition);
+					switch (UILanguage) {
+						case "zh":
+							state.SetInformation(FleetStates.Expedition,
+								"远征中 " + DateTimeHelper.ToTimeRemainString(state.Timer),
+								DateTimeHelper.ToTimeRemainString(state.Timer),
+								(int)ResourceManager.IconContent.FleetExpedition);
+							break;
+						case "en":
+							state.SetInformation(FleetStates.Expedition,
+								"On Expedition " + DateTimeHelper.ToTimeRemainString(state.Timer),
+								DateTimeHelper.ToTimeRemainString(state.Timer),
+								(int)ResourceManager.IconContent.FleetExpedition);
+							break;
+						default:
+							state.SetInformation(FleetStates.Expedition,
+								"遠征中 " + DateTimeHelper.ToTimeRemainString(state.Timer),
+								DateTimeHelper.ToTimeRemainString(state.Timer),
+								(int)ResourceManager.IconContent.FleetExpedition);
+							break;
+					}
 
 					var dest = db.Mission[fleet.ExpeditionDestination];
-					tooltip.SetToolTip(state.Label,
-						string.Format("{0} : {1}\r\n完了日時 : {2}",
-						dest.ID, dest.Name, DateTimeHelper.TimeToCSVString(state.Timer)));
+					switch (UILanguage) {
+						case "zh":
+							tooltip.SetToolTip(state.Label,
+								$"{dest.ID}：{dest.Name}\r\n" +
+								$"完成时间：{DateTimeHelper.TimeToCSVString(state.Timer)}");
+							break;
+						case "en":
+							tooltip.SetToolTip(state.Label,
+								$"{dest.ID}: {dest.Name}\r\n" +
+								$"ETR: {DateTimeHelper.TimeToCSVString(state.Timer)}");
+							break;
+						default:
+							tooltip.SetToolTip(state.Label,
+								$"{dest.ID} : {dest.Name}\r\n" +
+								$"完了日時 : {DateTimeHelper.TimeToCSVString(state.Timer)}");
+							break;
+					}
 
 					emphasizesSubFleetInPort = false;
 					index++;
@@ -259,7 +323,17 @@ namespace ElectronicObserver.Window.Control
 				{
 					var state = GetStateLabel(index);
 
-					state.SetInformation(FleetStates.Damaged, "大破艦あり！", "大破艦あり！", (int)ResourceManager.IconContent.FleetDamaged, colorDanger);
+					switch (UILanguage) {
+						case "zh":
+							state.SetInformation(FleetStates.Damaged, "有大破舰！", "有大破舰！", (int)ResourceManager.IconContent.FleetDamaged, colorDanger);
+							break;
+						case "en":
+							state.SetInformation(FleetStates.Damaged, "HEAVILY DAMAGED!", "HEAVILY DAMAGED!", (int)ResourceManager.IconContent.FleetDamaged, colorDanger);
+							break;
+						default:
+							state.SetInformation(FleetStates.Damaged, "大破艦あり！", "大破艦あり！", (int)ResourceManager.IconContent.FleetDamaged, colorDanger);
+							break;
+					}
 					tooltip.SetToolTip(state.Label, null);
 
 					emphasizesSubFleetInPort = false;
@@ -272,15 +346,40 @@ namespace ElectronicObserver.Window.Control
 					var state = GetStateLabel(index);
 
 					state.Timer = db.Fleet.AnchorageRepairingTimer;
-					state.SetInformation(FleetStates.AnchorageRepairing,
-						"泊地修理中 " + DateTimeHelper.ToTimeElapsedString(state.Timer),
-						DateTimeHelper.ToTimeElapsedString(state.Timer),
-						(int)ResourceManager.IconContent.FleetAnchorageRepairing);
+					switch (UILanguage) {
+						case "zh":
+							state.SetInformation(FleetStates.AnchorageRepairing,
+								"修理中 " + DateTimeHelper.ToTimeElapsedString(state.Timer),
+								DateTimeHelper.ToTimeElapsedString(state.Timer),
+								(int)ResourceManager.IconContent.FleetAnchorageRepairing);
+							break;
+						case "en":
+							state.SetInformation(FleetStates.AnchorageRepairing,
+								"Repairing " + DateTimeHelper.ToTimeElapsedString(state.Timer),
+								DateTimeHelper.ToTimeElapsedString(state.Timer),
+								(int)ResourceManager.IconContent.FleetAnchorageRepairing);
+							break;
+						default:
+							state.SetInformation(FleetStates.AnchorageRepairing,
+								"泊地修理中 " + DateTimeHelper.ToTimeElapsedString(state.Timer),
+								DateTimeHelper.ToTimeElapsedString(state.Timer),
+								(int)ResourceManager.IconContent.FleetAnchorageRepairing);
+							break;
+					}
 
 
 					StringBuilder sb = new StringBuilder();
-					sb.AppendFormat("開始日時 : {0}\r\n修理時間 :\r\n",
-						DateTimeHelper.TimeToCSVString(db.Fleet.AnchorageRepairingTimer));
+					switch (UILanguage) {
+						case "zh":
+							sb.Append($"开始时间：{DateTimeHelper.TimeToCSVString(db.Fleet.AnchorageRepairingTimer)}\r\n修理时间：\r\n");
+							break;
+						case "en":
+							sb.Append($"Begins at: {DateTimeHelper.TimeToCSVString(db.Fleet.AnchorageRepairingTimer)}\r\nTime of Repair:\r\n");
+							break;
+						default:
+							sb.Append($"開始日時 : {DateTimeHelper.TimeToCSVString(db.Fleet.AnchorageRepairingTimer)}\r\n修理時間 :\r\n");
+							break;
+					}
 
 					for (int i = 0; i < fleet.Members.Count; i++)
 					{
@@ -317,12 +416,29 @@ namespace ElectronicObserver.Window.Control
 						var state = GetStateLabel(index);
 
 						state.Timer = new DateTime(ntime);
-						state.SetInformation(FleetStates.Docking,
-							 "入渠中 " + DateTimeHelper.ToTimeRemainString(state.Timer),
-							 DateTimeHelper.ToTimeRemainString(state.Timer),
-							 (int)ResourceManager.IconContent.FleetDocking);
-
-						tooltip.SetToolTip(state.Label, "完了日時 : " + DateTimeHelper.TimeToCSVString(state.Timer));
+						switch (UILanguage) {
+							case "zh":
+								state.SetInformation(FleetStates.Docking,
+									 "入渠中 " + DateTimeHelper.ToTimeRemainString(state.Timer),
+									 DateTimeHelper.ToTimeRemainString(state.Timer),
+									 (int)ResourceManager.IconContent.FleetDocking);
+								tooltip.SetToolTip(state.Label, "完成时间：" + DateTimeHelper.TimeToCSVString(state.Timer));
+								break;
+							case "en":
+								state.SetInformation(FleetStates.Docking,
+									 "Docking " + DateTimeHelper.ToTimeRemainString(state.Timer),
+									 DateTimeHelper.ToTimeRemainString(state.Timer),
+									 (int)ResourceManager.IconContent.FleetDocking);
+								tooltip.SetToolTip(state.Label, "ETC: " + DateTimeHelper.TimeToCSVString(state.Timer));
+								break;
+							default:
+								state.SetInformation(FleetStates.Docking,
+									 "入渠中 " + DateTimeHelper.ToTimeRemainString(state.Timer),
+									 DateTimeHelper.ToTimeRemainString(state.Timer),
+									 (int)ResourceManager.IconContent.FleetDocking);
+								tooltip.SetToolTip(state.Label, "完了日時 : " + DateTimeHelper.TimeToCSVString(state.Timer));
+								break;
+						}
 
 						emphasizesSubFleetInPort = false;
 						index++;
@@ -343,8 +459,29 @@ namespace ElectronicObserver.Window.Control
 					{
 						var state = GetStateLabel(index);
 
-						state.SetInformation(FleetStates.NotReplenished, "未補給", "", (int)ResourceManager.IconContent.FleetNotReplenished, colorInPort);
-						tooltip.SetToolTip(state.Label, string.Format("燃 : {0}\r\n弾 : {1}\r\nボ : {2} ({3}機)", fuel, ammo, bauxite, aircraft));
+						switch (UILanguage) {
+							case "zh":
+								state.SetInformation(FleetStates.NotReplenished, "未补给", "", (int)ResourceManager.IconContent.FleetNotReplenished, colorInPort);
+								tooltip.SetToolTip(state.Label,
+									$"油：{fuel}\r\n" +
+									$"弹：{ammo}\r\n" +
+									$"铝：{bauxite}（舰载机 {aircraft} 架）");
+								break;
+							case "en":
+								state.SetInformation(FleetStates.NotReplenished, "Need Replenish", "", (int)ResourceManager.IconContent.FleetNotReplenished, colorInPort);
+								tooltip.SetToolTip(state.Label,
+									$"Fuel: {fuel}\r\n" +
+									$"Ammo: {ammo}\r\n" +
+									$"Bauxite: {bauxite} ({aircraft} Aircrafts)");
+								break;
+							default:
+								state.SetInformation(FleetStates.NotReplenished, "未補給", "", (int)ResourceManager.IconContent.FleetNotReplenished, colorInPort);
+								tooltip.SetToolTip(state.Label,
+									$"燃 : {fuel}\r\n" +
+									$"弾 : {ammo}\r\n" +
+									$"ボ : {bauxite} ({aircraft}機)");
+								break;
+						}
 
 						index++;
 					}
@@ -367,14 +504,38 @@ namespace ElectronicObserver.Window.Control
 							iconIndex = (int)ResourceManager.IconContent.ConditionLittleTired;
 
 						state.Timer = (DateTime)fleet.ConditionTime;
-						state.SetInformation(FleetStates.Tired,
-							"疲労 " + DateTimeHelper.ToTimeRemainString(state.Timer),
-							DateTimeHelper.ToTimeRemainString(state.Timer),
-							iconIndex,
-							colorInPort);
-
-						tooltip.SetToolTip(state.Label, string.Format("回復目安日時: {0}\r\n(予測誤差: {1})",
-							DateTimeHelper.TimeToCSVString(state.Timer), DateTimeHelper.ToTimeRemainString(TimeSpan.FromSeconds(db.Fleet.ConditionBorderAccuracy))));
+						switch (UILanguage) {
+							case "zh":
+								state.SetInformation(FleetStates.Tired,
+									"疲劳 " + DateTimeHelper.ToTimeRemainString(state.Timer),
+									DateTimeHelper.ToTimeRemainString(state.Timer),
+									iconIndex,
+									colorInPort);
+								tooltip.SetToolTip(state.Label,
+									$"预计恢复时间：{DateTimeHelper.TimeToCSVString(state.Timer)}\r\n" +
+									$"（预估误差：{DateTimeHelper.ToTimeRemainString(TimeSpan.FromSeconds(db.Fleet.ConditionBorderAccuracy))}）");
+								break;
+							case "en":
+								state.SetInformation(FleetStates.Tired,
+									"Tired " + DateTimeHelper.ToTimeRemainString(state.Timer),
+									DateTimeHelper.ToTimeRemainString(state.Timer),
+									iconIndex,
+									colorInPort);
+								tooltip.SetToolTip(state.Label,
+									$"Estimated time of recover: {DateTimeHelper.TimeToCSVString(state.Timer)}\r\n" +
+									$"(Margin of error: {DateTimeHelper.ToTimeRemainString(TimeSpan.FromSeconds(db.Fleet.ConditionBorderAccuracy))})");
+								break;
+							default:
+								state.SetInformation(FleetStates.Tired,
+									"疲労 " + DateTimeHelper.ToTimeRemainString(state.Timer),
+									DateTimeHelper.ToTimeRemainString(state.Timer),
+									iconIndex,
+									colorInPort);
+								tooltip.SetToolTip(state.Label,
+									$"回復目安日時: {DateTimeHelper.TimeToCSVString(state.Timer)}\r\n" +
+									$"(予測誤差: {DateTimeHelper.ToTimeRemainString(TimeSpan.FromSeconds(db.Fleet.ConditionBorderAccuracy))})");
+								break;
+						}
 
 						index++;
 
@@ -383,8 +544,20 @@ namespace ElectronicObserver.Window.Control
 					{       //戦意高揚
 						var state = GetStateLabel(index);
 
-						state.SetInformation(FleetStates.Sparkled, "戦意高揚！", "", (int)ResourceManager.IconContent.ConditionSparkle, colorInPort);
-						tooltip.SetToolTip(state.Label, string.Format("最低cond: {0}\r\nあと {1} 回遠征可能", cond, Math.Ceiling((cond - 49) / 3.0)));
+						switch (UILanguage) {
+							case "zh":
+								state.SetInformation(FleetStates.Sparkled, "战意高扬！", "", (int)ResourceManager.IconContent.ConditionSparkle, colorInPort);
+								tooltip.SetToolTip(state.Label, $"最低士气：{cond}\r\n还可以远征 {Math.Ceiling((cond - 49) / 3.0)} 次");
+								break;
+							case "en":
+								state.SetInformation(FleetStates.Sparkled, "High Morale", "", (int)ResourceManager.IconContent.ConditionSparkle, colorInPort);
+								tooltip.SetToolTip(state.Label, $"Lowest morale: {cond}\r\nCan go expedition {Math.Ceiling((cond - 49) / 3.0)} times");
+								break;
+							default:
+								state.SetInformation(FleetStates.Sparkled, "戦意高揚！", "", (int)ResourceManager.IconContent.ConditionSparkle, colorInPort);
+								tooltip.SetToolTip(state.Label, $"最低cond: {cond}\r\nあと {Math.Ceiling((cond - 49) / 3.0)} 回遠征可能");
+								break;
+						}
 
 						index++;
 					}
@@ -395,8 +568,17 @@ namespace ElectronicObserver.Window.Control
 				if (index == 0)
 				{
 					var state = GetStateLabel(index);
-
-					state.SetInformation(FleetStates.Ready, "出撃可能！", "", (int)ResourceManager.IconContent.FleetReady, colorInPort);
+					switch (UILanguage) {
+						case "zh":
+							state.SetInformation(FleetStates.Ready, "可以出击", "", (int)ResourceManager.IconContent.FleetReady, colorInPort);
+							break;
+						case "en":
+							state.SetInformation(FleetStates.Ready, "Stand By", "", (int)ResourceManager.IconContent.FleetReady, colorInPort);
+							break;
+						default:
+							state.SetInformation(FleetStates.Ready, "出撃可能！", "", (int)ResourceManager.IconContent.FleetReady, colorInPort);
+							break;
+					}
 					tooltip.SetToolTip(state.Label, null);
 
 					index++;
@@ -472,7 +654,17 @@ namespace ElectronicObserver.Window.Control
 
 					case FleetStates.Docking:
 						state.ShortenedText = DateTimeHelper.ToTimeRemainString(state.Timer);
-						state.Text = "入渠中 " + state.ShortenedText;
+						switch (UILanguage) {
+							case "zh":
+								state.Text = "入渠中 " + state.ShortenedText;
+								break;
+							case "en":
+								state.Text = "Docking " + state.ShortenedText;
+								break;
+							default:
+								state.Text = "入渠中 " + state.ShortenedText;
+								break;
+						}
 						state.UpdateText();
 						if (Utility.Configuration.Config.FormFleet.BlinkAtCompletion && (state.Timer - DateTime.Now).TotalMilliseconds <= Utility.Configuration.Config.NotifierRepair.AccelInterval)
 							state.Label.BackColor = DateTime.Now.Second % 2 == 0 ? Color.LightGreen : Color.Transparent;
@@ -480,7 +672,17 @@ namespace ElectronicObserver.Window.Control
 
 					case FleetStates.Expedition:
 						state.ShortenedText = DateTimeHelper.ToTimeRemainString(state.Timer);
-						state.Text = "遠征中 " + state.ShortenedText;
+						switch (UILanguage) {
+							case "zh":
+								state.Text = "远征中 " + state.ShortenedText;
+								break;
+							case "en":
+								state.Text = "On Expedition " + state.ShortenedText;
+								break;
+							default:
+								state.Text = "遠征中 " + state.ShortenedText;
+								break;
+						}
 						state.UpdateText();
 						if (Utility.Configuration.Config.FormFleet.BlinkAtCompletion && (state.Timer - DateTime.Now).TotalMilliseconds <= Utility.Configuration.Config.NotifierExpedition.AccelInterval)
 							state.Label.BackColor = DateTime.Now.Second % 2 == 0 ? Color.LightGreen : Color.Transparent;
@@ -488,7 +690,17 @@ namespace ElectronicObserver.Window.Control
 
 					case FleetStates.Tired:
 						state.ShortenedText = DateTimeHelper.ToTimeRemainString(state.Timer);
-						state.Text = "疲労 " + state.ShortenedText;
+						switch (UILanguage) {
+							case "zh":
+								state.Text = "疲劳 " + state.ShortenedText;
+								break;
+							case "en":
+								state.Text = "Tired " + state.ShortenedText;
+								break;
+							default:
+								state.Text = "疲労 " + state.ShortenedText;
+								break;
+						}
 						state.UpdateText();
 						if (Utility.Configuration.Config.FormFleet.BlinkAtCompletion && (state.Timer - DateTime.Now).TotalMilliseconds <= 0)
 							state.Label.BackColor = DateTime.Now.Second % 2 == 0 ? Color.LightGreen : Color.Transparent;
@@ -496,7 +708,17 @@ namespace ElectronicObserver.Window.Control
 
 					case FleetStates.AnchorageRepairing:
 						state.ShortenedText = DateTimeHelper.ToTimeElapsedString(KCDatabase.Instance.Fleet.AnchorageRepairingTimer);
-						state.Text = "泊地修理中 " + state.ShortenedText;
+						switch (UILanguage) {
+							case "zh":
+								state.Text = "修理中 " + state.ShortenedText;
+								break;
+							case "en":
+								state.Text = "Repairing " + state.ShortenedText;
+								break;
+							default:
+								state.Text = "泊地修理中 " + state.ShortenedText;
+								break;
+						}
 						state.UpdateText();
 						break;
 
