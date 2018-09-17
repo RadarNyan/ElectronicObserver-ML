@@ -58,9 +58,13 @@ namespace ElectronicObserver.Window
 		private int _shipNameSortMethod;
 
 
+		private string UILanguage;
+
 		public FormShipGroup(FormMain parent)
 		{
 			InitializeComponent();
+
+			UILanguage = parent.UILanguage;
 
 			ControlHelper.SetDoubleBuffered(ShipView);
 
@@ -126,6 +130,7 @@ namespace ElectronicObserver.Window
 
 
 			ShipView.DefaultCellStyle = CSDefaultRight;
+			ShipView_ShipType.DefaultCellStyle = CSDefaultLeft;
 			ShipView_Name.DefaultCellStyle = CSDefaultLeft;
 			ShipView_Slot1.DefaultCellStyle = CSDefaultLeft;
 			ShipView_Slot2.DefaultCellStyle = CSDefaultLeft;
@@ -150,11 +155,36 @@ namespace ElectronicObserver.Window
 			// 空(≒初期状態)の時、おなじみ全所属艦を追加
 			if (groups.ShipGroups.Count == 0)
 			{
-
-				Utility.Logger.Add(3, "ShipGroup: グループが見つかりませんでした。デフォルトに戻すには、一旦終了後 " + ShipGroupManager.DefaultFilePath + " を削除してください。");
+				switch (UILanguage) {
+					case "zh":
+						Logger.Add(3,
+							$"ShipGroup: 未找到分组。" +
+							$"若想恢复默认分组，请退出后删除 {ShipGroupManager.DefaultFilePath} 文件再启动。");
+						break;
+					case "en":
+						Logger.Add(3,
+							$"ShipGroup: No groups found." +
+							$"If you want to revert to default groups, please exit and delete {ShipGroupManager.DefaultFilePath} before restart.");
+						break;
+					default:
+						Logger.Add(3,
+							$"ShipGroup: グループが見つかりませんでした。" +
+							$"デフォルトに戻すには、一旦終了後 {ShipGroupManager.DefaultFilePath} を削除してください。");
+						break;
+				}
 
 				var group = KCDatabase.Instance.ShipGroup.Add();
-				group.Name = "全所属艦";
+				switch (UILanguage) {
+					case "zh":
+						group.Name = "全所属舰";
+						break;
+					case "en":
+						group.Name = "All Ships";
+						break;
+					default:
+						group.Name = "全所属艦";
+						break;
+				}
 
 				for (int i = 0; i < ShipView.Columns.Count; i++)
 				{
@@ -203,6 +233,162 @@ namespace ElectronicObserver.Window
 
 		void ConfigurationChanged()
 		{
+			#region UI translation
+			switch (UILanguage) {
+				case "zh":
+					MenuMember_AddToGroup.Text = "追加到分组(&A)...";
+					MenuMember_CreateGroup.Text = "创建新分组(&N)...";
+					MenuMember_Exclude.Text = "从本组排除(&E)";
+					MenuMember_Filter.Text = "筛选器设定(&F)...";
+					MenuMember_ColumnFilter.Text = "显示列设定(&C)...";
+					MenuMember_SortOrder.Text = "自动排序设定(&S)...";
+					MenuMember_CSVOutput.Text = "导出 .CSV 文件(&O)...";
+					MenuGroup_Add.Text = "添加分组(&A)";
+					MenuGroup_Copy.Text = "创建副本(&C)";
+					MenuGroup_Rename.Text = "重命名分组(&R)...";
+					MenuGroup_Delete.Text = "删除分组(&D)";
+					MenuGroup_AutoUpdate.Text = "自动更新";
+					MenuGroup_ShowStatusBar.Text = "显示状态栏";
+					Text = "舰船分组";
+					ShipView_ID.HeaderText = "ID";
+					ShipView_ShipType.HeaderText = "舰种";
+					ShipView_Name.HeaderText = "舰名";
+					ShipView_Level.HeaderText = "Lv";
+					ShipView_Exp.HeaderText = "Exp";
+					ShipView_Next.HeaderText = "next";
+					ShipView_NextRemodel.HeaderText = "距离改装";
+					ShipView_HP.HeaderText = "HP";
+					ShipView_Condition.HeaderText = "Cond";
+					ShipView_Fuel.HeaderText = "燃料";
+					ShipView_Ammo.HeaderText = "弹药";
+					ShipView_Slot1.HeaderText = "装备1";
+					ShipView_Slot2.HeaderText = "装备2";
+					ShipView_Slot3.HeaderText = "装备3";
+					ShipView_Slot4.HeaderText = "装备4";
+					ShipView_Slot5.HeaderText = "装备5";
+					ShipView_ExpansionSlot.HeaderText = "补强装备";
+					ShipView_Aircraft1.HeaderText = "搭载1";
+					ShipView_Aircraft2.HeaderText = "搭载2";
+					ShipView_Aircraft3.HeaderText = "搭载3";
+					ShipView_Aircraft4.HeaderText = "搭载4";
+					ShipView_Aircraft5.HeaderText = "搭载5";
+					ShipView_AircraftTotal.HeaderText = "搭载合计";
+					ShipView_Fleet.HeaderText = "舰队";
+					ShipView_RepairTime.HeaderText = "入渠时间";
+					ShipView_RepairSteel.HeaderText = "入渠钢材";
+					ShipView_RepairFuel.HeaderText = "入渠燃料";
+					ShipView_Firepower.HeaderText = "火力";
+					ShipView_FirepowerRemain.HeaderText = "剩余火力改修";
+					ShipView_FirepowerTotal.HeaderText = "火力合计";
+					ShipView_Torpedo.HeaderText = "雷装";
+					ShipView_TorpedoRemain.HeaderText = "剩余雷装改修";
+					ShipView_TorpedoTotal.HeaderText = "雷装合计";
+					ShipView_AA.HeaderText = "对空";
+					ShipView_AARemain.HeaderText = "剩余对空改修";
+					ShipView_AATotal.HeaderText = "对空合计";
+					ShipView_Armor.HeaderText = "装甲";
+					ShipView_ArmorRemain.HeaderText = "剩余装甲改修";
+					ShipView_ArmorTotal.HeaderText = "装甲合计";
+					ShipView_ASW.HeaderText = "对潜";
+					ShipView_ASWTotal.HeaderText = "对潜合计";
+					ShipView_Evasion.HeaderText = "回避";
+					ShipView_EvasionTotal.HeaderText = "回避合计";
+					ShipView_LOS.HeaderText = "索敌";
+					ShipView_LOSTotal.HeaderText = "索敌合计";
+					ShipView_Luck.HeaderText = "运";
+					ShipView_LuckRemain.HeaderText = "剩余运改修";
+					ShipView_LuckTotal.HeaderText = "运合计";
+					ShipView_Speed.HeaderText = "速度";
+					ShipView_Range.HeaderText = "射程";
+					ShipView_AirBattlePower.HeaderText = "航空战威力";
+					ShipView_ShellingPower.HeaderText = "炮击威力";
+					ShipView_AircraftPower.HeaderText = "空袭威力";
+					ShipView_BomberTotal.HeaderText = "爆装合计";
+					ShipView_AntiSubmarinePower.HeaderText = "对潜威力";
+					ShipView_TorpedoPower.HeaderText = "雷击威力";
+					ShipView_NightBattlePower.HeaderText = "夜战威力";
+					ShipView_Locked.HeaderText = "锁定";
+					ShipView_SallyArea.HeaderText = "活动标签";
+					break;
+				case "en":
+					MenuMember_AddToGroup.Text = "&Add to Group...";
+					MenuMember_CreateGroup.Text = "Add to &New Group...";
+					MenuMember_Exclude.Text = "&Exclude from Current Group";
+					MenuMember_Filter.Text = "&Filters Setup...";
+					MenuMember_ColumnFilter.Text = "&Column Visibility Setup...";
+					MenuMember_SortOrder.Text = "Auto &Sort Setup...";
+					MenuMember_CSVOutput.Text = "Exp&ort as .CSV File...";
+					MenuGroup_Add.Text = "&Add Group";
+					MenuGroup_Copy.Text = "&Create Copy";
+					MenuGroup_Rename.Text = "&Rename Group...";
+					MenuGroup_Delete.Text = "&Delete Group";
+					MenuGroup_AutoUpdate.Text = "Auto Update";
+					MenuGroup_ShowStatusBar.Text = "Show Status Bar";
+					Text = "Ship Groups";
+					ShipView_ID.HeaderText = "ID";
+					ShipView_ShipType.HeaderText = "Type";
+					ShipView_Name.HeaderText = "Name";
+					ShipView_Level.HeaderText = "Lv";
+					ShipView_Exp.HeaderText = "Exp";
+					ShipView_Next.HeaderText = "next";
+					ShipView_NextRemodel.HeaderText = "to Remodel";
+					ShipView_HP.HeaderText = "HP";
+					ShipView_Condition.HeaderText = "Cond";
+					ShipView_Fuel.HeaderText = "Fuel";
+					ShipView_Ammo.HeaderText = "Ammo";
+					ShipView_Slot1.HeaderText = "Slot 1";
+					ShipView_Slot2.HeaderText = "Slot 2";
+					ShipView_Slot3.HeaderText = "Slot 3";
+					ShipView_Slot4.HeaderText = "Slot 4";
+					ShipView_Slot5.HeaderText = "Slot 5";
+					ShipView_ExpansionSlot.HeaderText = "Ex Slot";
+					ShipView_Aircraft1.HeaderText = "Space 1";
+					ShipView_Aircraft2.HeaderText = "Space 2";
+					ShipView_Aircraft3.HeaderText = "Space 3";
+					ShipView_Aircraft4.HeaderText = "Space 4";
+					ShipView_Aircraft5.HeaderText = "Space 5";
+					ShipView_AircraftTotal.HeaderText = "Space Total";
+					ShipView_Fleet.HeaderText = "Fleet";
+					ShipView_RepairTime.HeaderText = "Repair Time";
+					ShipView_RepairSteel.HeaderText = "Repair Steel";
+					ShipView_RepairFuel.HeaderText = "Repair Fuel";
+					ShipView_Firepower.HeaderText = "Firepower";
+					ShipView_FirepowerRemain.HeaderText = "Firepower Remain";
+					ShipView_FirepowerTotal.HeaderText = "Firepower Total";
+					ShipView_Torpedo.HeaderText = "Torpedo";
+					ShipView_TorpedoRemain.HeaderText = "Torpedo Remain";
+					ShipView_TorpedoTotal.HeaderText = "Torpedo Total";
+					ShipView_AA.HeaderText = "AA";
+					ShipView_AARemain.HeaderText = "AA Remain";
+					ShipView_AATotal.HeaderText = "AA Total";
+					ShipView_Armor.HeaderText = "Armor";
+					ShipView_ArmorRemain.HeaderText = "Armor Remain";
+					ShipView_ArmorTotal.HeaderText = "Armor Total";
+					ShipView_ASW.HeaderText = "ASW";
+					ShipView_ASWTotal.HeaderText = "ASW Total";
+					ShipView_Evasion.HeaderText = "Evasion";
+					ShipView_EvasionTotal.HeaderText = "Evasion Total";
+					ShipView_LOS.HeaderText = "LOS";
+					ShipView_LOSTotal.HeaderText = "LOS Total";
+					ShipView_Luck.HeaderText = "Luck";
+					ShipView_LuckRemain.HeaderText = "Luck Remain";
+					ShipView_LuckTotal.HeaderText = "Luck Total";
+					ShipView_Speed.HeaderText = "Speed";
+					ShipView_Range.HeaderText = "Range";
+					ShipView_AirBattlePower.HeaderText = "Aerial Power";
+					ShipView_ShellingPower.HeaderText = "Shelling Power";
+					ShipView_AircraftPower.HeaderText = "Aircraft Power";
+					ShipView_BomberTotal.HeaderText = "Bomber Power";
+					ShipView_AntiSubmarinePower.HeaderText = "ASW Power";
+					ShipView_TorpedoPower.HeaderText = "Torpedo Power";
+					ShipView_NightBattlePower.HeaderText = "Night Battle Power";
+					ShipView_Locked.HeaderText = "Locked";
+					ShipView_SallyArea.HeaderText = "Event Tag";
+					break;
+				default:
+					break;
+			}
+			#endregion
 
 			var config = Utility.Configuration.Config;
 
@@ -391,12 +577,12 @@ namespace ElectronicObserver.Window
 				ship.LuckBase,
 				ship.LuckRemain,
 				ship.LuckTotal,
-				ship.BomberTotal,
 				ship.Speed,
 				ship.Range,
 				ship.AirBattlePower,
 				ship.ShellingPower,
 				ship.AircraftPower,
+				ship.BomberTotal,
 				ship.AntiSubmarinePower,
 				ship.TorpedoPower,
 				ship.NightBattlePower,
@@ -558,9 +744,23 @@ namespace ElectronicObserver.Window
 			//status bar
 			if (KCDatabase.Instance.Ships.Count > 0)
 			{
-				Status_ShipCount.Text = string.Format("所属: {0}隻", group.Members.Count);
-				Status_LevelTotal.Text = string.Format("合計Lv: {0}", group.MembersInstance.Where(s => s != null).Sum(s => s.Level));
-				Status_LevelAverage.Text = string.Format("平均Lv: {0:F2}", group.Members.Count > 0 ? group.MembersInstance.Where(s => s != null).Average(s => s.Level) : 0);
+				switch (UILanguage) {
+					case "zh":
+						Status_ShipCount.Text = $"所属：{group.Members.Count} 只";
+						Status_LevelTotal.Text = $"合计Lv：{group.MembersInstance.Where(s => s != null).Sum(s => s.Level)}";
+						Status_LevelAverage.Text = $"平均Lv：{(group.Members.Count > 0 ? group.MembersInstance.Where(s => s != null).Average(s => s.Level) : 0):F2}";
+						break;
+					case "en":
+						Status_ShipCount.Text = $"In group: {group.Members.Count} ships";
+						Status_LevelTotal.Text = $"Total Lv: {group.MembersInstance.Where(s => s != null).Sum(s => s.Level)}";
+						Status_LevelAverage.Text = $"Average Lv: {(group.Members.Count > 0 ? group.MembersInstance.Where(s => s != null).Average(s => s.Level) : 0):F2}";
+						break;
+					default:
+						Status_ShipCount.Text = $"所属: {group.Members.Count}隻";
+						Status_LevelTotal.Text = $"合計Lv: {group.MembersInstance.Where(s => s != null).Sum(s => s.Level)}";
+						Status_LevelAverage.Text = $"平均Lv: {(group.Members.Count > 0 ? group.MembersInstance.Where(s => s != null).Average(s => s.Level) : 0):F2}";
+						break;
+				}
 			}
 		}
 
@@ -582,7 +782,17 @@ namespace ElectronicObserver.Window
 
 			if (group == null)
 			{
-				Utility.Logger.Add(3, "エラー：存在しないグループを参照しようとしました。開発者に連絡してください");
+				switch (UILanguage) {
+					case "zh":
+						Logger.Add(3, "错误：尝试切换到不存在的分组，请提交 BUG 报告。");
+						break;
+					case "en":
+						Logger.Add(3, "Error: Trying to switch to an non-exist group, please file a bug report.");
+						break;
+					default:
+						Logger.Add(3, "エラー：存在しないグループを参照しようとしました。開発者に連絡してください");
+						break;
+				}
 				return;
 			}
 
@@ -645,18 +855,28 @@ namespace ElectronicObserver.Window
 
 		private string GetEquipmentString(ShipData ship, int index)
 		{
-
+			string EmptySlot;
+			switch (UILanguage) {
+				case "zh":
+					EmptySlot = "（空）";
+					break;
+				case "en":
+					EmptySlot = "(Empty)";
+					break;
+				default:
+					EmptySlot = "(なし)";
+					break;
+			}
 			if (index < 5)
 			{
 				return (index >= ship.SlotSize && ship.Slot[index] == -1) ? "" :
-					ship.SlotInstance[index]?.NameWithLevel ?? "(なし)";
+					ship.SlotInstance[index]?.NameWithLevel ?? EmptySlot;
 			}
 			else
 			{
 				return ship.ExpansionSlot == 0 ? "" :
-					ship.ExpansionSlotInstance?.NameWithLevel ?? "(なし)";
+					ship.ExpansionSlotInstance?.NameWithLevel ?? EmptySlot;
 			}
-
 		}
 
 
@@ -687,17 +907,43 @@ namespace ElectronicObserver.Window
 				if (ShipView.Rows.GetRowCount(DataGridViewElementStates.Selected) >= 2)
 				{
 					var levels = ShipView.SelectedRows.Cast<DataGridViewRow>().Select(r => (int)r.Cells[ShipView_Level.Index].Value);
-					Status_ShipCount.Text = string.Format("選択: {0} / {1}隻", ShipView.Rows.GetRowCount(DataGridViewElementStates.Selected), group.Members.Count);
-					Status_LevelTotal.Text = string.Format("合計Lv: {0}", levels.Sum());
-					Status_LevelAverage.Text = string.Format("平均Lv: {0:F2}", levels.Average());
-
-
+					switch (UILanguage) {
+						case "zh":
+							Status_ShipCount.Text = $"选中：{ShipView.Rows.GetRowCount(DataGridViewElementStates.Selected)} / {group.Members.Count} 只";
+							Status_LevelTotal.Text = $"合计Lv：{levels.Sum()}";
+							Status_LevelAverage.Text = $"平均Lv：{levels.Average():F2}";
+							break;
+						case "en":
+							Status_ShipCount.Text = $"Selected: {ShipView.Rows.GetRowCount(DataGridViewElementStates.Selected)} / {group.Members.Count} ships";
+							Status_LevelTotal.Text = $"Total Lv: {levels.Sum()}";
+							Status_LevelAverage.Text = $"Average Lv: {levels.Average():F2}";
+							break;
+						default:
+							Status_ShipCount.Text = $"選択: {ShipView.Rows.GetRowCount(DataGridViewElementStates.Selected)} / {group.Members.Count}隻";
+							Status_LevelTotal.Text = $"合計Lv: {levels.Sum()}";
+							Status_LevelAverage.Text = $"平均Lv: {levels.Average():F2}";
+							break;
+					}
 				}
 				else
 				{
-					Status_ShipCount.Text = string.Format("所属: {0}隻", group.Members.Count);
-					Status_LevelTotal.Text = string.Format("合計Lv: {0}", group.MembersInstance.Where(s => s != null).Sum(s => s.Level));
-					Status_LevelAverage.Text = string.Format("平均Lv: {0:F2}", group.Members.Count > 0 ? group.MembersInstance.Where(s => s != null).Average(s => s.Level) : 0);
+					switch (UILanguage) {
+						case "zh":
+							Status_ShipCount.Text = $"所属：{group.Members.Count} 只";
+							Status_LevelTotal.Text = $"合计Lv：{group.MembersInstance.Where(s => s != null).Sum(s => s.Level)}";
+							Status_LevelAverage.Text = $"平均Lv：{(group.Members.Count > 0 ? group.MembersInstance.Where(s => s != null).Average(s => s.Level) : 0):F2}";
+							break;
+						case "en":
+							Status_ShipCount.Text = $"In group: {group.Members.Count} ships";
+							Status_LevelTotal.Text = $"Total Lv: {group.MembersInstance.Where(s => s != null).Sum(s => s.Level)}";
+							Status_LevelAverage.Text = $"Average Lv: {(group.Members.Count > 0 ? group.MembersInstance.Where(s => s != null).Average(s => s.Level) : 0):F2}";
+							break;
+						default:
+							Status_ShipCount.Text = $"所属: {group.Members.Count}隻";
+							Status_LevelTotal.Text = $"合計Lv: {group.MembersInstance.Where(s => s != null).Sum(s => s.Level)}";
+							Status_LevelAverage.Text = $"平均Lv: {(group.Members.Count > 0 ? group.MembersInstance.Where(s => s != null).Average(s => s.Level) : 0):F2}";
+							break;
+					}
 				}
 
 			}
@@ -731,7 +977,17 @@ namespace ElectronicObserver.Window
 
 				if ((int)e.Value < 0)
 				{
-					e.Value = "入渠 #" + ((int)e.Value + 1000);
+					switch (UILanguage) {
+						case "zh":
+							e.Value = $"入渠 #{(int)e.Value + 1000}";
+							break;
+						case "en":
+							e.Value = $"Dock #{(int)e.Value + 1000}";
+							break;
+						default:
+							e.Value = $"入渠 #{(int)e.Value + 1000}";
+							break;
+					}
 				}
 				else
 				{
@@ -950,8 +1206,23 @@ namespace ElectronicObserver.Window
 
 		private void MenuGroup_Add_Click(object sender, EventArgs e)
 		{
-
-			using (var dialog = new DialogTextInput("グループを追加", "グループ名を入力してください："))
+			string dialogTitle;
+			string dialogMessage;
+			switch (UILanguage) {
+				case "zh":
+					dialogTitle = "添加分组";
+					dialogMessage = "请输入分组名：";
+					break;
+				case "en":
+					dialogTitle = "Add Group";
+					dialogMessage = "Please enter group name:";
+					break;
+				default:
+					dialogTitle = "グループを追加";
+					dialogMessage = "グループ名を入力してください：";
+					break;
+			}
+			using (var dialog = new DialogTextInput(dialogTitle, dialogMessage))
 			{
 
 				if (dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
@@ -985,7 +1256,23 @@ namespace ElectronicObserver.Window
 			if (senderLabel == null)
 				return;     //想定外
 
-			using (var dialog = new DialogTextInput("グループをコピー", "グループ名を入力してください："))
+			string dialogTitle;
+			string dialogMessage;
+			switch (UILanguage) {
+				case "zh":
+					dialogTitle = "创建副本";
+					dialogMessage = "请输入分组名：";
+					break;
+				case "en":
+					dialogTitle = "Create Copy";
+					dialogMessage = "Please enter group name:";
+					break;
+				default:
+					dialogTitle = "グループをコピー";
+					dialogMessage = "グループ名を入力してください：";
+					break;
+			}
+			using (var dialog = new DialogTextInput(dialogTitle, dialogMessage))
 			{
 
 				if (dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
@@ -1016,9 +1303,28 @@ namespace ElectronicObserver.Window
 
 			if (group != null)
 			{
-				if (MessageBox.Show(string.Format("グループ [{0}] を削除しますか？\r\nこの操作は元に戻せません。", group.Name), "確認",
-					MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
-					== System.Windows.Forms.DialogResult.Yes)
+				DialogResult dialogResult;
+				switch (UILanguage) {
+					case "zh":
+						dialogResult = MessageBox.Show(
+							$"确认删除 [{group.Name}] 分组吗？\r\n" +
+							$"此操作无法撤销。", "要求确认",
+							MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+						break;
+					case "en":
+						dialogResult = MessageBox.Show(
+							$"Are you sure to delete group [{group.Name}] ?\r\n" +
+							$"This operation can not be reverted.", "Confirmation",
+							MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+						break;
+					default:
+						dialogResult = MessageBox.Show(
+							$"グループ [{group.Name}] を削除しますか？\r\n" +
+							$"この操作は元に戻せません。", "確認",
+							MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+						break;
+				}
+				if (dialogResult == DialogResult.Yes)
 				{
 
 					if (SelectedTab == senderLabel)
@@ -1034,7 +1340,17 @@ namespace ElectronicObserver.Window
 			}
 			else
 			{
-				MessageBox.Show("このグループは削除できません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				switch (UILanguage) {
+					case "zh":
+						MessageBox.Show("此分组无法删除。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+						break;
+					case "en":
+						MessageBox.Show("This group can not be deleted.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+						break;
+					default:
+						MessageBox.Show("このグループは削除できません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+						break;
+				}
 			}
 		}
 
@@ -1048,8 +1364,23 @@ namespace ElectronicObserver.Window
 
 			if (group != null)
 			{
-
-				using (var dialog = new DialogTextInput("グループ名の変更", "グループ名を入力してください："))
+				string dialogTitle;
+				string dialogMessage;
+				switch (UILanguage) {
+					case "zh":
+						dialogTitle = "重命名分组";
+						dialogMessage = "请输入新分组名：";
+						break;
+					case "en":
+						dialogTitle = "Rename Group";
+						dialogMessage = "Please enter new group name:";
+						break;
+					default:
+						dialogTitle = "グループ名の変更";
+						dialogMessage = "グループ名を入力してください：";
+						break;
+				}
+				using (var dialog = new DialogTextInput(dialogTitle, dialogMessage))
 				{
 
 					dialog.InputtedText = group.Name;
@@ -1065,7 +1396,17 @@ namespace ElectronicObserver.Window
 			}
 			else
 			{
-				MessageBox.Show("このグループの名前を変更することはできません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+				switch (UILanguage) {
+					case "zh":
+						MessageBox.Show("此分组不可重命名。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+						break;
+					case "en":
+						MessageBox.Show("This group can not be renamed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+						break;
+					default:
+						MessageBox.Show("このグループの名前を変更することはできません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+						break;
+				}
 			}
 
 		}
@@ -1154,7 +1495,17 @@ namespace ElectronicObserver.Window
 
 			if (group == null)
 			{
-				MessageBox.Show("このグループは変更できません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+				switch (UILanguage) {
+					case "zh":
+						MessageBox.Show("无法修改此分组。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+						break;
+					case "en":
+						MessageBox.Show("This group can not be modified.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+						break;
+					default:
+						MessageBox.Show("このグループは変更できません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+						break;
+				}
 				return;
 			}
 
@@ -1179,8 +1530,17 @@ namespace ElectronicObserver.Window
 			}
 			catch (Exception ex)
 			{
-
-				Utility.ErrorReporter.SendErrorReport(ex, "ShipGroup: 列の設定ダイアログでエラーが発生しました。");
+				switch (UILanguage) {
+					case "zh":
+						ErrorReporter.SendErrorReport(ex, "ShipGroup: 显示列设定窗口发生异常。");
+						break;
+					case "en":
+						ErrorReporter.SendErrorReport(ex, "ShipGroup: An error occurred in Column Visibility Setup dialog.");
+						break;
+					default:
+						ErrorReporter.SendErrorReport(ex, "ShipGroup: 列の設定ダイアログでエラーが発生しました。");
+						break;
+				}
 			}
 		}
 
@@ -1221,8 +1581,17 @@ namespace ElectronicObserver.Window
 				}
 				catch (Exception ex)
 				{
-
-					Utility.ErrorReporter.SendErrorReport(ex, "ShipGroup: フィルタダイアログでエラーが発生しました。");
+					switch (UILanguage) {
+						case "zh":
+							ErrorReporter.SendErrorReport(ex, "ShipGroup: 筛选器设定窗口发生异常。");
+							break;
+						case "en":
+							ErrorReporter.SendErrorReport(ex, "ShipGroup: An error occurred in Filters Setup dialog.");
+							break;
+						default:
+							ErrorReporter.SendErrorReport(ex, "ShipGroup: フィルタダイアログでエラーが発生しました。");
+							break;
+					}
 				}
 
 			}
@@ -1286,8 +1655,17 @@ namespace ElectronicObserver.Window
 				}
 				catch (Exception ex)
 				{
-
-					Utility.ErrorReporter.SendErrorReport(ex, "ShipGroup: 自動ソート順設定ダイアログでエラーが発生しました。");
+					switch (UILanguage) {
+						case "zh":
+							ErrorReporter.SendErrorReport(ex, "ShipGroup: 自动排序设定窗口发生异常。");
+							break;
+						case "en":
+							ErrorReporter.SendErrorReport(ex, "ShipGroup: An error occurred in Auto Sort Setup dialog.");
+							break;
+						default:
+							ErrorReporter.SendErrorReport(ex, "ShipGroup: 自動ソート順設定ダイアログでエラーが発生しました。");
+							break;
+					}
 				}
 			}
 
@@ -1320,8 +1698,23 @@ namespace ElectronicObserver.Window
 
 		private void MenuMember_AddToGroup_Click(object sender, EventArgs e)
 		{
-
-			using (var dialog = new DialogTextSelect("グループの選択", "追加するグループを選択してください：",
+			string dialogTitle;
+			string dialogMessage;
+			switch (UILanguage) {
+				case "zh":
+					dialogTitle = "选择分组";
+					dialogMessage = "请选择要追加到的分组：";
+					break;
+				case "en":
+					dialogTitle = "Select Group";
+					dialogMessage = "Please select the group to add ships to:";
+					break;
+				default:
+					dialogTitle = "グループの選択";
+					dialogMessage = "追加するグループを選択してください：";
+					break;
+			}
+			using (var dialog = new DialogTextSelect(dialogTitle, dialogMessage,
 				KCDatabase.Instance.ShipGroup.ShipGroups.Values.ToArray()))
 			{
 
@@ -1349,7 +1742,23 @@ namespace ElectronicObserver.Window
 			if (ships.Count() == 0)
 				return;
 
-			using (var dialog = new DialogTextInput("グループの追加", "グループ名を入力してください："))
+			string dialogTitle;
+			string dialogMessage;
+			switch (UILanguage) {
+				case "zh":
+					dialogTitle = "创建新分组";
+					dialogMessage = "请输入分组名：";
+					break;
+				case "en":
+					dialogTitle = "Add to New Group";
+					dialogMessage = "Please enter group name:";
+					break;
+				default:
+					dialogTitle = "グループの追加";
+					dialogMessage = "グループ名を入力してください：";
+					break;
+			}
+			using (var dialog = new DialogTextInput(dialogTitle, dialogMessage))
 			{
 
 				if (dialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
@@ -1439,8 +1848,90 @@ namespace ElectronicObserver.Window
 
 						using (StreamWriter sw = new StreamWriter(dialog.OutputPath, false, Utility.Configuration.Config.Log.FileEncoding))
 						{
-
-							string header = dialog.OutputFormat == DialogShipGroupCSVOutput.OutputFormatConstants.User ? ShipCSVHeaderUser : ShipCSVHeaderData;
+							string header;
+							#region CSV header translation
+							switch (UILanguage) {
+								case "zh":
+									if (dialog.OutputFormat == DialogShipGroupCSVOutput.OutputFormatConstants.User) {
+										header =
+											"唯一ID,舰种,舰名,Lv,Exp,next,距离改装," +
+											"当前耐久,最大耐久,Cond,燃料,弹药," +
+											"装备1,装备2,装备3,装备4,装备5,补强装备," +
+											"入渠时间," +
+											"火力,火力改修,火力合计," +
+											"雷装,雷装改修,雷装合计," +
+											"对空,对空改修,对空合计," +
+											"装甲,装甲改修,装甲合计," +
+											"对潜,对潜合计," +
+											"回避,回避合计," +
+											"索敌,索敌合计," +
+											"运,运改修,运合计," +
+											"射程,速度,锁定,活动标签," +
+											"航空战威力,炮击威力,空袭威力,对潜威力,雷击威力,夜战威力";
+									} else {
+										header =
+											"唯一ID,舰种,舰名,舰船ID,Lv,Exp,next,距离改装," +
+											"当前耐久,最大耐久,Cond,燃料,弹药," +
+											"装备1,装备2,装备3,装备4,装备5,补强装备,装备1ID,装备2ID,装备3ID,装备4ID,装备5ID,补强装备ID," +
+											"舰载机1,舰载机2,舰载机3,舰载机4,舰载机5," +
+											"入渠时间,入渠燃料,入渠钢材," +
+											"火力,火力改修,火力合计," +
+											"雷装,雷装改修,雷装合计," +
+											"对空,对空改修,对空合计," +
+											"装甲,装甲改修,装甲合计," +
+											"对潜,对潜合计," +
+											"回避,回避合计," +
+											"索敌,索敌合计," +
+											"运,运改修,运合计," +
+											"射程,速度,锁定,活动标签," +
+											"航空战威力,炮击威力,空袭威力,对潜威力,雷击威力,夜战威力";
+									}
+									break;
+								case "en":
+									if (dialog.OutputFormat == DialogShipGroupCSVOutput.OutputFormatConstants.User) {
+										header =
+											"Unique ID,Type,Name,Lv,Exp,next,to Remodel," +
+											"Current HP,Max HP,Cond,Fuel,Ammo," +
+											"Equipment1,Equipment2,Equipment3,Equipment4,Equipment5,Ex.Equipment," +
+											"Repair Time," +
+											"Firepower,Firepower Remain,Firepower Total," +
+											"Tropedo,Tropedo Remain,Tropedo Total," +
+											"AA,AA Remain,AA Total," +
+											"Armor,Armor Remain,Armor Total," +
+											"ASW,ASW Total," +
+											"Evasion,Evasion Total," +
+											"LOS,LOS Total," +
+											"Luck,Luck Remain,Luck Total," +
+											"Range,Speed,Locked,Event Tag," +
+											"Aerial Power,Shelling Power,Aircraft Power,ASW Power,Torpedo Power,Night Battle Power";
+									} else {
+										header =
+											"Unique ID,Type,Name,Ship ID,Lv,Exp,next,to Remodel," +
+											"Current HP,Max HP,Cond,Fuel,Ammo," +
+											"Equipment1,Equipment2,Equipment3,Equipment4,Equipment5,EX.Equipment,Equipment1 ID,Equipment2 ID,Equipment3 ID,Equipment4 ID,Equipment5 ID,Ex.Equipment ID," +
+											"Aircraft1,Aircraft2,Aircraft3,Aircraft4,Aircraft5," +
+											"Repair Time,Repair Fuel,Repair Steel," +
+											"Firepower,Firepower Remain,Firepower Total," +
+											"Tropedo,Tropedo Remain,Tropedo Total," +
+											"AA,AA Remain,AA Total," +
+											"Armor,Armor Remain,Armor Total," +
+											"ASW,ASW Total," +
+											"Evasion,Evasion Total," +
+											"LOS,LOS Total," +
+											"Luck,Luck Remain,Luck Total," +
+											"Range,Speed,Locked,Event Tag," +
+											"Aerial Power,Shelling Power,Aircraft Power,ASW Power,Torpedo Power,Night Battle Power";
+									}
+									break;
+								default:
+									if (dialog.OutputFormat == DialogShipGroupCSVOutput.OutputFormatConstants.User) {
+										header = ShipCSVHeaderUser;
+									} else {
+										header = ShipCSVHeaderData;
+									}
+									break;
+							}
+							#endregion
 							sw.WriteLine(header);
 
 
@@ -1580,13 +2071,35 @@ namespace ElectronicObserver.Window
 
 						}
 
-						Utility.Logger.Add(2, "艦船グループ CSVを " + dialog.OutputPath + " に保存しました。");
+						switch (UILanguage) {
+							case "zh":
+								Logger.Add(2, $"已将舰船分组导出为 {dialog.OutputPath}");
+								break;
+							case "en":
+								Logger.Add(2, $"Ship Groups exported as {dialog.OutputPath}");
+								break;
+							default:
+								Logger.Add(2, $"艦船グループ CSVを {dialog.OutputPath} に保存しました。");
+								break;
+						}
 
 					}
 					catch (Exception ex)
 					{
-						Utility.ErrorReporter.SendErrorReport(ex, "艦船グループ CSV の出力に失敗しました。");
-						MessageBox.Show("艦船グループ CSVの出力に失敗しました。\r\n" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+						switch (UILanguage) {
+							case "zh":
+								ErrorReporter.SendErrorReport(ex, "导出舰船分组为 .CSV 文件失败。");
+								MessageBox.Show("导出舰船分组为 .CSV 文件失败。\r\n" + ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+								break;
+							case "en":
+								ErrorReporter.SendErrorReport(ex, "Failed to export Ship Groups as .CSV file.");
+								MessageBox.Show("Failed to export Ship Groups as .CSV file.\r\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+								break;
+							default:
+								ErrorReporter.SendErrorReport(ex, "艦船グループ CSV の出力に失敗しました。");
+								MessageBox.Show("艦船グループ CSVの出力に失敗しました。\r\n" + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+								break;
+						}
 					}
 
 				}

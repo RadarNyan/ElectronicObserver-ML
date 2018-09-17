@@ -71,9 +71,19 @@ namespace ElectronicObserver.Data
 
 		public ShipGroupManager Load()
 		{
-
-			ResourceManager.CopyFromArchive(DefaultFilePath.Replace("\\", "/"), DefaultFilePath, true, false);
-
+			string SourceFilePath;
+			switch (Utility.Configuration.Config.UI.Language) {
+				case "zh":
+					SourceFilePath = @"Settings/ShipGroups.zh.xml";
+					break;
+				case "en":
+					SourceFilePath = @"Settings/ShipGroups.en.xml";
+					break;
+				default:
+					SourceFilePath = @"Settings/ShipGroups.xml"; // DefaultFilePath.Replace("\\", "/");
+					break;
+			}
+			ResourceManager.CopyFromArchive(SourceFilePath, DefaultFilePath, true, false);
 			return (ShipGroupManager)Load(DefaultFilePath);
 		}
 
