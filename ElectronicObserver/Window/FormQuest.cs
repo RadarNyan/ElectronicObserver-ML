@@ -24,9 +24,68 @@ namespace ElectronicObserver.Window
 		private DataGridViewCellStyle[] CSCategories;
 		private bool IsLoaded = false;
 
+		private string UILanguage;
+
 		public FormQuest(FormMain parent)
 		{
 			InitializeComponent();
+
+			UILanguage = parent.UILanguage;
+
+			#region UI translation
+			switch (UILanguage) {
+				case "zh":
+					QuestView_Type.HeaderText = "种";
+					QuestView_Category.HeaderText = "类别";
+					QuestView_Name.HeaderText = "任务名";
+					QuestView_Progress.HeaderText = "进度";
+					MenuProgress_Increment.Text = "进度 +1(&I)";
+					MenuProgress_Decrement.Text = "进度 -1(&D)";
+					MenuProgress_Reset.Text = "重置进度(&R)";
+					MenuMain_ColumnFilter.Text = "显示列(&C)";
+					MenuMain_ColumnFilter_State.Text = "进行中(&S)";
+					MenuMain_ColumnFilter_Type.Text = "种(&T)";
+					MenuMain_ColumnFilter_Category.Text = "类别(&C)";
+					MenuMain_ColumnFilter_Name.Text = "任务名(&N)";
+					MenuMain_ColumnFilter_Progress.Text = "进度(&P)";
+					MenuMain_Initialize.Text = "初始化(&I)";
+					MenuMain_QuestFilter.Text = "显示过滤器(&Q)";
+					MenuMain_ShowRunningOnly.Text = "只显示进行中任务(&R)";
+					MenuMain_ShowOnce.Text = "显示单次任务(&O)";
+					MenuMain_ShowDaily.Text = "显示日常(&D)";
+					MenuMain_ShowWeekly.Text = "显示周常(&W)";
+					MenuMain_ShowMonthly.Text = "显示月常(&M)";
+					MenuMain_ShowOther.Text = "显示其它任务(&R)";
+					Text = "任务";
+					break;
+				case "en":
+					QuestView_Type.HeaderText = "Type";
+					QuestView_Category.HeaderText = "Category";
+					QuestView_Name.HeaderText = "Name";
+					QuestView_Progress.HeaderText = "Progress";
+					MenuProgress_Increment.Text = "&Increase Progress (+1)";
+					MenuProgress_Decrement.Text = "&Decrease Progress (-1)";
+					MenuProgress_Reset.Text = "&Reset Progress";
+					MenuMain_ColumnFilter.Text = "&Column Visibility";
+					MenuMain_ColumnFilter_State.Text = "&State";
+					MenuMain_ColumnFilter_Type.Text = "&Type";
+					MenuMain_ColumnFilter_Category.Text = "&Category";
+					MenuMain_ColumnFilter_Name.Text = "&Name";
+					MenuMain_ColumnFilter_Progress.Text = "&Progress";
+					MenuMain_Initialize.Text = "&Initialize";
+					MenuMain_QuestFilter.Text = "&Quest Filter";
+					MenuMain_ShowRunningOnly.Text = "Show &Active Quests Only";
+					MenuMain_ShowOnce.Text = "Show &One-time Quests";
+					MenuMain_ShowDaily.Text = "Show &Daily Quests";
+					MenuMain_ShowWeekly.Text = "Show &Weekly Quests";
+					MenuMain_ShowMonthly.Text = "Show &Monthly Quests";
+					MenuMain_ShowOther.Text = "Show Othe&r Quests";
+					Text = "Quests";
+					break;
+				default:
+					break;
+			}
+			#endregion
 
 			ControlHelper.SetDoubleBuffered(QuestView);
 
@@ -287,7 +346,17 @@ namespace ElectronicObserver.Window
 
 					if (q.State == 3)
 					{
-						value = "達成！";
+						switch (UILanguage) {
+							case "zh":
+								value = "完成！";
+								break;
+							case "en":
+								value = "Completed!";
+								break;
+							default:
+								value = "達成！";
+								break;
+						}
 						tag = 1.0;
 
 					}
@@ -312,11 +381,31 @@ namespace ElectronicObserver.Window
 									tag = 0.0;
 									break;
 								case 1:
-									value = "50%以上";
+									switch (UILanguage) {
+										case "zh":
+											value = "50% 以上";
+											break;
+										case "en":
+											value = "More than 50%";
+											break;
+										default:
+											value = "50%以上";
+											break;
+									}
 									tag = 0.5;
 									break;
 								case 2:
-									value = "80%以上";
+									switch (UILanguage) {
+										case "zh":
+											value = "80% 以上";
+											break;
+										case "en":
+											value = "More than 80%";
+											break;
+										default:
+											value = "80%以上";
+											break;
+									}
 									tag = 0.8;
 									break;
 								default:
@@ -339,14 +428,34 @@ namespace ElectronicObserver.Window
 			{
 				int index = QuestView.Rows.Add();
 				QuestView.Rows[index].Cells[QuestView_State.Index].Value = null;
-				QuestView.Rows[index].Cells[QuestView_Name.Index].Value = string.Format("(未取得の任務 x {0})", (KCDatabase.Instance.Quest.Count - KCDatabase.Instance.Quest.Quests.Count));
+				switch (UILanguage) {
+					case "zh":
+						QuestView.Rows[index].Cells[QuestView_Name.Index].Value = $"（未获取任务 x {KCDatabase.Instance.Quest.Count - KCDatabase.Instance.Quest.Quests.Count}）";
+						break;
+					case "en":
+						QuestView.Rows[index].Cells[QuestView_Name.Index].Value = $"(Unretrieved quests x {KCDatabase.Instance.Quest.Count - KCDatabase.Instance.Quest.Quests.Count})";
+						break;
+					default:
+						QuestView.Rows[index].Cells[QuestView_Name.Index].Value = $"(未取得の任務 x {KCDatabase.Instance.Quest.Count - KCDatabase.Instance.Quest.Quests.Count})";
+						break;
+				}
 			}
 
 			if (KCDatabase.Instance.Quest.Quests.Count == 0)
 			{
 				int index = QuestView.Rows.Add();
 				QuestView.Rows[index].Cells[QuestView_State.Index].Value = null;
-				QuestView.Rows[index].Cells[QuestView_Name.Index].Value = "(任務完遂！)";
+				switch (UILanguage) {
+					case "zh":
+						QuestView.Rows[index].Cells[QuestView_Name.Index].Value = "（任务全部完成！）";
+						break;
+					case "en":
+						QuestView.Rows[index].Cells[QuestView_Name.Index].Value = "(All Quests Completed!)";
+						break;
+					default:
+						QuestView.Rows[index].Cells[QuestView_Name.Index].Value = "(任務完遂！)";
+						break;
+				}
 			}
 
 			//更新時にソートする
@@ -515,9 +624,31 @@ namespace ElectronicObserver.Window
 
 		private void MenuMain_Initialize_Click(object sender, EventArgs e)
 		{
-
-			if (MessageBox.Show("任務データを初期化します。\r\nデータに齟齬が生じている場合以外での使用は推奨しません。\r\nよろしいですか？", "任務初期化の確認",
-				MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.Yes)
+			DialogResult result;
+			switch (UILanguage) {
+				case "zh":
+					result = MessageBox.Show(
+						"初始化任务数据。\r\n" +
+						"除非数据出现异常，否则不建议使用。\r\n" +
+						"确认初始化吗？", "要求确认",
+						MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+					break;
+				case "en":
+					result = MessageBox.Show(
+						"Initialize Quests Data.\r\n" +
+						"This is not recommended unless you have data inconsistency.\r\n" +
+						"Confirm to initialize?", "Confirmation",
+						MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+					break;
+				default:
+					result = MessageBox.Show(
+						"任務データを初期化します。\r\n" +
+						"データに齟齬が生じている場合以外での使用は推奨しません。\r\n" +
+						"よろしいですか？", "任務初期化の確認",
+						MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+					break;
+			}
+			if (result == DialogResult.Yes)
 			{
 
 				KCDatabase.Instance.Quest.Clear();
@@ -536,7 +667,17 @@ namespace ElectronicObserver.Window
 			{
 				DataGridViewRow row = new DataGridViewRow();
 				row.CreateCells(QuestView);
-				row.SetValues(null, null, null, "(未取得)", null);
+				switch (UILanguage) {
+					case "zh":
+						row.SetValues(null, null, null, "（未获取）", null);
+						break;
+					case "en":
+						row.SetValues(null, null, null, "(Unretrieved)", null);
+						break;
+					default:
+						row.SetValues(null, null, null, "(未取得)", null);
+						break;
+				}
 				QuestView.Rows.Add(row);
 			}
 
@@ -607,7 +748,17 @@ namespace ElectronicObserver.Window
 				}
 				catch (Exception)
 				{
-					Utility.Logger.Add(3, string.Format("任務『{0}』の進捗を変更することはできません。", quest.Name));
+					switch (UILanguage) {
+						case "zh":
+							Logger.Add(3, $"无法修改任务『{quest.Name}』的进度。");
+							break;
+						case "en":
+							Logger.Add(3, $"Can't modify progress of Quest: {quest.Name}");
+							break;
+						default:
+							Logger.Add(3, $"任務『{quest.Name}』の進捗を変更することはできません。");
+							break;
+					}
 					System.Media.SystemSounds.Hand.Play();
 				}
 			}
@@ -631,7 +782,17 @@ namespace ElectronicObserver.Window
 				}
 				catch (Exception)
 				{
-					Utility.Logger.Add(3, string.Format("任務『{0}』の進捗を変更することはできません。", quest.Name));
+					switch (UILanguage) {
+						case "zh":
+							Logger.Add(3, $"无法修改任务『{quest.Name}』的进度。");
+							break;
+						case "en":
+							Logger.Add(3, $"Can't modify progress of Quest: {quest.Name}");
+							break;
+						default:
+							Logger.Add(3, $"任務『{quest.Name}』の進捗を変更することはできません。");
+							break;
+					}
 					System.Media.SystemSounds.Hand.Play();
 				}
 			}
@@ -647,9 +808,31 @@ namespace ElectronicObserver.Window
 
 			if (id != -1 && (quest != null || progress != null))
 			{
-
-				if (MessageBox.Show("任務" + (quest != null ? ("『" + quest.Name + "』") : ("ID: " + id.ToString() + " ")) + "を一覧から削除し、進捗をリセットします。\r\nよろしいですか？\r\n(艦これ本体の任務画面を開くと正しく更新されます。)", "任務削除の確認",
-					MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
+				DialogResult result;
+				switch (UILanguage) {
+					case "zh":
+						result = MessageBox.Show(
+							$"从列表中删除任务{(quest != null ? $"『{quest.Name}』" : $"ID: {id} ")}并重制其进度。\r\n" +
+							"确认删除吗？\r\n" +
+							"（打开「艦これ」游戏内任务画面会重新读取任务进度）", "要求确认",
+							MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+						break;
+					case "en":
+						result = MessageBox.Show(
+							$"Delete Quest {(quest != null ? $"\"{quest.Name}\"" : $"ID: {id} ")} and reset its progress.\r\n" +
+							"Confirm to Delete?\r\n" +
+							"(Quest progress would be reloaded when opening in-game Quests panel)", "Confirmation",
+							MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+						break;
+					default:
+						result = MessageBox.Show(
+							$"任務{(quest != null ? $"『{quest.Name}』" : $"ID: {id} ")}を一覧から削除し、進捗をリセットします。\r\n" +
+							"よろしいですか？\r\n" +
+							"(艦これ本体の任務画面を開くと正しく更新されます。)", "任務削除の確認",
+							MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+						break;
+				}
+				if (result == DialogResult.Yes)
 				{
 
 					if (quest != null)
@@ -706,12 +889,32 @@ namespace ElectronicObserver.Window
 			if (quest != null)
 			{
 				MenuMain_GoogleQuest.Enabled = true;
-				MenuMain_GoogleQuest.Text = string.Format("『{0}』でGoogle検索(&G)", quest.Name);
+				switch (UILanguage) {
+					case "zh":
+						MenuMain_GoogleQuest.Text = $"使用 Google 搜索『{quest.Name}』(&G)";
+						break;
+					case "en":
+						MenuMain_GoogleQuest.Text = $"&Google Search \"{quest.Name}\"";
+						break;
+					default:
+						MenuMain_GoogleQuest.Text = $"『{quest.Name}』でGoogle検索(&G)";
+						break;
+				}
 			}
 			else
 			{
 				MenuMain_GoogleQuest.Enabled = false;
-				MenuMain_GoogleQuest.Text = "任務名でGoogle検索(&G)";
+				switch (UILanguage) {
+					case "zh":
+						MenuMain_GoogleQuest.Text = "使用 Google 搜索任务名(&G)";
+						break;
+					case "en":
+						MenuMain_GoogleQuest.Text = "&Google Search Quest Name";
+						break;
+					default:
+						MenuMain_GoogleQuest.Text = "任務名でGoogle検索(&G)";
+						break;
+				}
 			}
 		}
 
@@ -730,7 +933,17 @@ namespace ElectronicObserver.Window
 				}
 				catch (Exception ex)
 				{
-					Utility.ErrorReporter.SendErrorReport(ex, "任務名の Google 検索に失敗しました。");
+					switch (UILanguage) {
+						case "zh":
+							ErrorReporter.SendErrorReport(ex, "尝试调用 Google 搜索失败。");
+							break;
+						case "en":
+							ErrorReporter.SendErrorReport(ex, "Failed to open Google Search.");
+							break;
+						default:
+							ErrorReporter.SendErrorReport(ex, "任務名の Google 検索に失敗しました。");
+							break;
+					}
 				}
 			}
 
