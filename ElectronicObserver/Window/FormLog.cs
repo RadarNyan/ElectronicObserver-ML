@@ -17,9 +17,26 @@ namespace ElectronicObserver.Window
 	{
 
 
+		private string UILanguage;
+
 		public FormLog(FormMain parent)
 		{
 			InitializeComponent();
+
+			UILanguage = parent.UILanguage;
+
+			switch (UILanguage) {
+				case "zh":
+					ContextMenuLog_Clear.Text = "清空(&C)";
+					Text = "日志";
+					break;
+				case "en":
+					ContextMenuLog_Clear.Text = "&Clear";
+					Text = "Log";
+					break;
+				default:
+					break;
+			}
 
 			ConfigurationChanged();
 		}
