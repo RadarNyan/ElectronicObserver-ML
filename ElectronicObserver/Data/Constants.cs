@@ -643,10 +643,10 @@ namespace ElectronicObserver.Data
 		/// </summary>
 		public static string GetMapEventID(int value)
 		{
-
+			switch (UILanguage) {
+			default:
 			switch (value)
 			{
-
 				case 0:
 					return "初期位置";
 				case 1:
@@ -670,6 +670,57 @@ namespace ElectronicObserver.Data
 				default:
 					return "不明";
 			}
+			case "zh":
+				switch (value) {
+					case 0:
+						return "初始位置";
+					case 1:
+						return "无事件";
+					case 2:
+						return "资源";
+					case 3:
+						return "漩涡";
+					case 4:
+						return "普通战斗";
+					case 5:
+						return "BOSS战";
+					case 6:
+						return "是错觉";
+					case 7:
+						return "航空战";
+					case 8:
+						return "舰队护航成功";
+					case 9:
+						return "登陆地点";
+					default:
+						return "不明";
+				}
+			case "en":
+				switch (value) {
+					case 0:
+						return "Start Position";
+					case 1:
+						return "No Events";
+					case 2:
+						return "Resource";
+					case 3:
+						return "Whirlpool";
+					case 4:
+						return "Normal Battle";
+					case 5:
+						return "Boss Battle";
+					case 6:
+						return "Just Imagination";
+					case 7:
+						return "Air Battle";
+					case 8:
+						return "Fleet Escort Succeeded";
+					case 9:
+						return "Landing Point";
+					default:
+						return "Unknown";
+				}
+			}
 		}
 
 		/// <summary>
@@ -677,7 +728,8 @@ namespace ElectronicObserver.Data
 		/// </summary>
 		public static string GetMapEventKind(int value)
 		{
-
+			switch (UILanguage) {
+			default:
 			switch (value)
 			{
 				case 0:
@@ -698,6 +750,49 @@ namespace ElectronicObserver.Data
 					return "夜昼戦";       // 対連合
 				default:
 					return "不明";
+			}
+			case "zh":
+				switch (value) {
+					case 0:
+						return "非战斗";
+					case 1:
+						return "昼夜战";
+					case 2:
+						return "夜战";
+					case 3:
+						return "夜昼战";
+					case 4:
+						return "航空战";
+					case 5:
+						return "敌联合";
+					case 6:
+						return "空袭战";
+					case 7:
+						return "夜昼战";
+					default:
+						return "不明";
+				}
+			case "en":
+				switch (value) {
+					case 0:
+						return "No Battle";
+					case 1:
+						return "Day-Night Battle";
+					case 2:
+						return "Night Battle";
+					case 3:
+						return "Night-Day Battle";
+					case 4:
+						return "Aerial Battle";
+					case 5:
+						return "Enemy Combined Fleet";
+					case 6:
+						return "Air Raid Battle";
+					case 7:
+						return "Night-Day Battle";
+					default:
+						return "Unknown";
+				}
 			}
 		}
 
@@ -792,6 +887,8 @@ namespace ElectronicObserver.Data
 		/// </summary>
 		public static string GetAirRaidDamage(int value)
 		{
+			switch (UILanguage) {
+			default:
 			switch (value)
 			{
 				case 1:
@@ -804,6 +901,33 @@ namespace ElectronicObserver.Data
 					return "損害なし";
 				default:
 					return "発生せず";
+			}
+			case "zh":
+				switch (value) {
+					case 1:
+						return "资源损失";
+					case 2:
+						return "资源、航空队损失";
+					case 3:
+						return "航空队损失";
+					case 4:
+						return "未受损";
+					default:
+						return "未发生";
+				}
+			case "en":
+				switch (value) {
+					case 1:
+						return "Resource Lost";
+					case 2:
+						return "Resource Lost, Aircrafts Damaged";
+					case 3:
+						return "Aircrafts Damaged";
+					case 4:
+						return "No Damage";
+					default:
+						return "N/A";
+				}
 			}
 		}
 
@@ -902,6 +1026,8 @@ namespace ElectronicObserver.Data
 		/// </summary>
 		public static string GetFormationShort(int id)
 		{
+			switch (UILanguage) {
+			default:
 			switch (id)
 			{
 				case 1:
@@ -926,6 +1052,57 @@ namespace ElectronicObserver.Data
 					return "第四警戒";
 				default:
 					return "不明";
+			}
+			case "zh":
+				switch (id) {
+					case 1:
+						return "单纵阵";
+					case 2:
+						return "复纵阵";
+					case 3:
+						return "轮形阵";
+					case 4:
+						return "梯形阵";
+					case 5:
+						return "单横阵";
+					case 6:
+						return "警戒阵";
+					case 11:
+						return "第一警戒";
+					case 12:
+						return "第二警戒";
+					case 13:
+						return "第三警戒";
+					case 14:
+						return "第四警戒";
+					default:
+						return "不明";
+				}
+			case "en":
+				switch (id) {
+					case 1:
+						return "Line Ahead";
+					case 2:
+						return "Double Line";
+					case 3:
+						return "Diamond";
+					case 4:
+						return "Echelon";
+					case 5:
+						return "Line Abreast";
+					case 6:
+						return "Vanguard";
+					case 11:
+						return "Cruising 1";
+					case 12:
+						return "Cruising 2";
+					case 13:
+						return "Cruising 3";
+					case 14:
+						return "Cruising 4";
+					default:
+						return "Unknown";
+				}
 			}
 		}
 
@@ -1565,7 +1742,8 @@ namespace ElectronicObserver.Data
 		/// <returns>資源の名前。</returns>
 		public static string GetMaterialName(int materialID)
 		{
-
+			switch (UILanguage) {
+			default:
 			switch (materialID)
 			{
 				case 1:
@@ -1587,6 +1765,49 @@ namespace ElectronicObserver.Data
 				default:
 					return "不明";
 			}
+			case "zh":
+				switch (materialID) {
+					case 1:
+						return "燃料";
+					case 2:
+						return "弹药";
+					case 3:
+						return "钢材";
+					case 4:
+						return "铝土";
+					case 5:
+						return "高速建造材";
+					case 6:
+						return "高速修复材";
+					case 7:
+						return "开发资材";
+					case 8:
+						return "改修资材";
+					default:
+						return "不明";
+				}
+			case "en":
+				switch (materialID) {
+					case 1:
+						return "Fuel";
+					case 2:
+						return "Ammo";
+					case 3:
+						return "Steel";
+					case 4:
+						return "Bauxite";
+					case 5:
+						return "Instant Construction Materials";
+					case 6:
+						return "Instant Repair Materials";
+					case 7:
+						return "Development Materials";
+					case 8:
+						return "Improvement Materials";
+					default:
+						return "Unknown";
+				}
+			}
 		}
 
 
@@ -1595,6 +1816,8 @@ namespace ElectronicObserver.Data
 		/// </summary>
 		public static string GetAdmiralRank(int id)
 		{
+			switch (UILanguage) {
+			default:
 			switch (id)
 			{
 				case 1:
@@ -1619,6 +1842,57 @@ namespace ElectronicObserver.Data
 					return "新米少佐";
 				default:
 					return "提督";
+			}
+			case "zh":
+				switch (id) {
+					case 1:
+						return "元帅";
+					case 2:
+						return "大将";
+					case 3:
+						return "中将";
+					case 4:
+						return "少将";
+					case 5:
+						return "大佐";
+					case 6:
+						return "中佐";
+					case 7:
+						return "新米中佐";
+					case 8:
+						return "少佐";
+					case 9:
+						return "中坚少佐";
+					case 10:
+						return "新米少佐";
+					default:
+						return "提督";
+				}
+			case "en":
+				switch (id) {
+					case 1:
+						return "Marshal Admiral";
+					case 2:
+						return "Admiral";
+					case 3:
+						return "Vice-Admiral";
+					case 4:
+						return "Rear-Admiral";
+					case 5:
+						return "Captain";
+					case 6:
+						return "Commander";
+					case 7:
+						return "Commander (Novice)";
+					case 8:
+						return "Lieutenant-Commander";
+					case 9:
+						return "Vice Lieutenant-Commander";
+					case 10:
+						return "Lieutenant-Commander (Novice)";
+					default:
+						return "Admiral";
+				}
 			}
 		}
 
