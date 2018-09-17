@@ -23,9 +23,24 @@ namespace ElectronicObserver.Window
 
 		private Form _parentForm;
 
+		private static string UILanguage;
+
 		public FormHeadquarters(FormMain parent)
 		{
 			InitializeComponent();
+
+			UILanguage = parent.UILanguage;
+
+			switch (UILanguage) {
+				case "zh":
+					Text = "司令部";
+					break;
+				case "en":
+					Text = "HQ";
+					break;
+				default:
+					break;
+			}
 
 			_parentForm = parent;
 
@@ -181,7 +196,18 @@ namespace ElectronicObserver.Window
 		/// <summary>
 		/// 各表示項目の名称を返します。
 		/// </summary>
-		public static IEnumerable<string> GetItemNames()
+		public static IEnumerable<string> GetItemNames() {
+			switch (UILanguage) {
+				case "zh":
+					return GetItemNames_zh();
+				case "en":
+					return GetItemNames_en();
+				default:
+					return GetItemNames_ja();
+			}
+		}
+
+		private static IEnumerable<string> GetItemNames_ja()
 		{
 			yield return "提督名";
 			yield return "提督コメント";
@@ -198,6 +224,44 @@ namespace ElectronicObserver.Window
 			yield return "鋼材";
 			yield return "ボーキサイト";
 			yield return "任意のアイテム";
+		}
+
+		private static IEnumerable<string> GetItemNames_zh()
+		{
+			yield return "提督名";
+			yield return "提督签名";
+			yield return "司令部等级";
+			yield return "舰船数";
+			yield return "装备数";
+			yield return "高速修复材";
+			yield return "高速建造材";
+			yield return "开发资材";
+			yield return "改修资材";
+			yield return "家具币";
+			yield return "燃料";
+			yield return "弹药";
+			yield return "钢材";
+			yield return "铝土";
+			yield return "自定义物品";
+		}
+
+		private static IEnumerable<string> GetItemNames_en()
+		{
+			yield return "Admiral Name";
+			yield return "Admiral Signature";
+			yield return "Headquarters Level";
+			yield return "Ships";
+			yield return "Equipments";
+			yield return "Instant Repair Materials";
+			yield return "Instant Construction Materials";
+			yield return "Development Materials";
+			yield return "Improvement Materials";
+			yield return "Furniture Coins";
+			yield return "Fuel";
+			yield return "Ammo";
+			yield return "Steel";
+			yield return "Bauxite";
+			yield return "Customizable Item";
 		}
 
 
@@ -225,21 +289,66 @@ namespace ElectronicObserver.Window
 				StringBuilder tooltip = new StringBuilder();
 
 				var sortieCount = db.Admiral.SortieWin + db.Admiral.SortieLose;
-				tooltip.AppendFormat("出撃回数: {0} / 出撃勝利: {1} ({2:p2}) / 出撃敗北: {3}\r\n",
-					sortieCount, db.Admiral.SortieWin, db.Admiral.SortieWin / Math.Max(sortieCount, 1.0), db.Admiral.SortieLose);
-
-				tooltip.AppendFormat("出撃あたりの平均獲得Exp: {0:n2} / 勝利時 {1:n2}\r\n",
-					 db.Admiral.Exp / Math.Max(sortieCount, 1.0),
-					 db.Admiral.Exp / Math.Max(db.Admiral.SortieWin, 1.0));
-
-				tooltip.AppendFormat("遠征回数: {0} / 遠征成功: {1} ({2:p2}) / 遠征失敗: {3}\r\n",
-					db.Admiral.MissionCount, db.Admiral.MissionSuccess, db.Admiral.MissionSuccess / Math.Max(db.Admiral.MissionCount, 1.0), db.Admiral.MissionCount - db.Admiral.MissionSuccess);
-
 				var practiceCount = db.Admiral.PracticeWin + db.Admiral.PracticeLose;
-				tooltip.AppendFormat("演習回数: {0} / 演習勝利: {1} ({2:p2}) / 演習敗北: {3}\r\n",
-					practiceCount, db.Admiral.PracticeWin, db.Admiral.PracticeWin / Math.Max(practiceCount, 1.0), db.Admiral.PracticeLose);
-
-				tooltip.AppendFormat("甲種勲章保有数: {0}\r\n", db.Admiral.Medals);
+				switch (UILanguage) {
+					case "zh":
+						tooltip.AppendLine(
+							$"出击次数：{sortieCount} / " +
+							$"出击胜利：{db.Admiral.SortieWin} ({db.Admiral.SortieWin / Math.Max(sortieCount, 1.0):p2}) / " +
+							$"出击败北：{db.Admiral.SortieLose}");
+						tooltip.AppendLine(
+							$"每次出击平均获取经验：{db.Admiral.Exp / Math.Max(sortieCount, 1.0):n2} / " +
+							$"仅计胜利时 {db.Admiral.Exp / Math.Max(db.Admiral.SortieWin, 1.0):n2}");
+						tooltip.AppendLine(
+							$"远征次数：{db.Admiral.MissionCount} / " +
+							$"远征成功：{db.Admiral.MissionSuccess} ({db.Admiral.MissionSuccess / Math.Max(db.Admiral.MissionCount, 1.0):p2}) / " +
+							$"远征失败：{db.Admiral.MissionCount - db.Admiral.MissionSuccess}");
+						tooltip.AppendLine(
+							$"演习次数：{practiceCount} / " +
+							$"演习胜利：{db.Admiral.PracticeWin} ({db.Admiral.PracticeWin / Math.Max(practiceCount, 1.0):p2}) / " +
+							$"演习败北：{db.Admiral.PracticeLose}");
+						tooltip.AppendLine(
+							$"甲级勋章持有数：{db.Admiral.Medals}");
+						break;
+					case "en":
+						tooltip.AppendLine(
+							$"Sorties: {sortieCount} / " +
+							$"Sorties Won: {db.Admiral.SortieWin} ({db.Admiral.SortieWin / Math.Max(sortieCount, 1.0):p2}) / " +
+							$"Sorties Lost: {db.Admiral.SortieLose}");
+						tooltip.AppendLine(
+							$"Experience gain per sortie: {db.Admiral.Exp / Math.Max(sortieCount, 1.0):n2} / " +
+							$"sorties won only {db.Admiral.Exp / Math.Max(db.Admiral.SortieWin, 1.0):n2}");
+						tooltip.AppendLine(
+							$"Expeditions: {db.Admiral.MissionCount} / " +
+							$"Expeditions Succeeded: {db.Admiral.MissionSuccess} ({db.Admiral.MissionSuccess / Math.Max(db.Admiral.MissionCount, 1.0):p2}) / " +
+							$"Expeditions Failed: {db.Admiral.MissionCount - db.Admiral.MissionSuccess}");
+						tooltip.AppendLine(
+							$"Exercises: {practiceCount} / " +
+							$"Exercises Won: {db.Admiral.PracticeWin} ({db.Admiral.PracticeWin / Math.Max(practiceCount, 1.0):p2}) / " +
+							$"Exercises Lost: {db.Admiral.PracticeLose}");
+						tooltip.AppendLine(
+							$"First Class Medal Possessed: {db.Admiral.Medals}");
+						break;
+					default:
+						tooltip.AppendLine(
+							$"出撃回数: {sortieCount} / " +
+							$"出撃勝利: {db.Admiral.SortieWin} ({db.Admiral.SortieWin / Math.Max(sortieCount, 1.0):p2}) / " +
+							$"出撃敗北: {db.Admiral.SortieLose}");
+						tooltip.AppendLine(
+							$"出撃あたりの平均獲得Exp: {db.Admiral.Exp / Math.Max(sortieCount, 1.0):n2} / " +
+							$"勝利時 {db.Admiral.Exp / Math.Max(db.Admiral.SortieWin, 1.0):n2}");
+						tooltip.AppendLine(
+							$"遠征回数: {db.Admiral.MissionCount} / " +
+							$"遠征成功: {db.Admiral.MissionSuccess} ({db.Admiral.MissionSuccess / Math.Max(db.Admiral.MissionCount, 1.0):p2}) / " +
+							$"遠征失敗: {db.Admiral.MissionCount - db.Admiral.MissionSuccess}");
+						tooltip.AppendLine(
+							$"演習回数: {practiceCount} / " +
+							$"演習勝利: {db.Admiral.PracticeWin} ({db.Admiral.PracticeWin / Math.Max(practiceCount, 1.0):p2}) / " +
+							$"演習敗北: {db.Admiral.PracticeLose}");
+						tooltip.AppendLine(
+							$"甲種勲章保有数: {db.Admiral.Medals}");
+						break;
+				}
 
 				ToolTipInfo.SetToolTip(AdmiralName, tooltip.ToString());
 			}
@@ -269,7 +378,17 @@ namespace ElectronicObserver.Window
 					if (res != null)
 					{
 						int diff = db.Admiral.Exp - res.HQExp;
-						tooltip.AppendFormat("今回: +{0} exp. / 戦果 {1:n2}\r\n", diff, diff * 7 / 10000.0);
+						switch (UILanguage) {
+							case "zh":
+								tooltip.AppendFormat("本次：+{0} exp. / 战果 {1:n2}\r\n", diff, diff * 7 / 10000.0);
+								break;
+							case "en":
+								tooltip.AppendFormat("Last Sortie: +{0} exp. / {1:n2} Ranking Points\r\n", diff, diff * 7 / 10000.0);
+								break;
+							default:
+								tooltip.AppendFormat("今回: +{0} exp. / 戦果 {1:n2}\r\n", diff, diff * 7 / 10000.0);
+								break;
+						}
 					}
 				}
 				{
@@ -277,7 +396,17 @@ namespace ElectronicObserver.Window
 					if (res != null)
 					{
 						int diff = db.Admiral.Exp - res.HQExp;
-						tooltip.AppendFormat("今日: +{0} exp. / 戦果 {1:n2}\r\n", diff, diff * 7 / 10000.0);
+						switch (UILanguage) {
+							case "zh":
+								tooltip.AppendFormat("今日：+{0} exp. / 战果 {1:n2}\r\n", diff, diff * 7 / 10000.0);
+								break;
+							case "en":
+								tooltip.AppendFormat("Today: +{0} exp. / {1:n2} Ranking Points\r\n", diff, diff * 7 / 10000.0);
+								break;
+							default:
+								tooltip.AppendFormat("今日: +{0} exp. / 戦果 {1:n2}\r\n", diff, diff * 7 / 10000.0);
+								break;
+						}
 					}
 				}
 				{
@@ -285,7 +414,17 @@ namespace ElectronicObserver.Window
 					if (res != null)
 					{
 						int diff = db.Admiral.Exp - res.HQExp;
-						tooltip.AppendFormat("今月: +{0} exp. / 戦果 {1:n2}\r\n", diff, diff * 7 / 10000.0);
+						switch (UILanguage) {
+							case "zh":
+								tooltip.AppendFormat("本月：+{0} exp. / 战果 {1:n2}\r\n", diff, diff * 7 / 10000.0);
+								break;
+							case "en":
+								tooltip.AppendFormat("This Month: +{0} exp. / {1:n2} Ranking Points\r\n", diff, diff * 7 / 10000.0);
+								break;
+							default:
+								tooltip.AppendFormat("今月: +{0} exp. / 戦果 {1:n2}\r\n", diff, diff * 7 / 10000.0);
+								break;
+						}
 					}
 				}
 
@@ -333,31 +472,95 @@ namespace ElectronicObserver.Window
 
 			InstantRepair.Text = db.Material.InstantRepair.ToString();
 			InstantRepair.BackColor = db.Material.InstantRepair >= 3000 ? overcolor : Color.Transparent;
-			ToolTipInfo.SetToolTip(InstantRepair, string.Format("今日: {0:+##;-##;±0}\n今週: {1:+##;-##;±0}\n今月: {2:+##;-##;±0}",
-					resday == null ? 0 : (db.Material.InstantRepair - resday.InstantRepair),
-					resweek == null ? 0 : (db.Material.InstantRepair - resweek.InstantRepair),
-					resmonth == null ? 0 : (db.Material.InstantRepair - resmonth.InstantRepair)));
+			switch (UILanguage) {
+				case "zh":
+					ToolTipInfo.SetToolTip(InstantRepair,
+						$"今日：{(resday == null ? 0 : (db.Material.InstantRepair - resday.InstantRepair)):+##;-##;±0}\r\n" +
+						$"本周：{(resweek == null ? 0 : (db.Material.InstantRepair - resweek.InstantRepair)):+##;-##;±0}\r\n" +
+						$"本月：{(resmonth == null ? 0 : (db.Material.InstantRepair - resmonth.InstantRepair)):+##;-##;±0}");
+					break;
+				case "en":
+					ToolTipInfo.SetToolTip(InstantRepair,
+						$"Today: {(resday == null ? 0 : (db.Material.InstantRepair - resday.InstantRepair)):+##;-##;±0}\r\n" +
+						$"This Week: {(resweek == null ? 0 : (db.Material.InstantRepair - resweek.InstantRepair)):+##;-##;±0}\r\n" +
+						$"This Month: {(resmonth == null ? 0 : (db.Material.InstantRepair - resmonth.InstantRepair)):+##;-##;±0}");
+					break;
+				default:
+					ToolTipInfo.SetToolTip(InstantRepair,
+						$"今日: {(resday == null ? 0 : (db.Material.InstantRepair - resday.InstantRepair)):+##;-##;±0}\r\n" +
+						$"今週: {(resweek == null ? 0 : (db.Material.InstantRepair - resweek.InstantRepair)):+##;-##;±0}\r\n" +
+						$"今月: {(resmonth == null ? 0 : (db.Material.InstantRepair - resmonth.InstantRepair)):+##;-##;±0}");
+					break;
+			}
 
 			InstantConstruction.Text = db.Material.InstantConstruction.ToString();
 			InstantConstruction.BackColor = db.Material.InstantConstruction >= 3000 ? overcolor : Color.Transparent;
-			ToolTipInfo.SetToolTip(InstantConstruction, string.Format("今日: {0:+##;-##;±0}\n今週: {1:+##;-##;±0}\n今月: {2:+##;-##;±0}",
-					resday == null ? 0 : (db.Material.InstantConstruction - resday.InstantConstruction),
-					resweek == null ? 0 : (db.Material.InstantConstruction - resweek.InstantConstruction),
-					resmonth == null ? 0 : (db.Material.InstantConstruction - resmonth.InstantConstruction)));
+			switch (UILanguage) {
+				case "zh":
+					ToolTipInfo.SetToolTip(InstantConstruction,
+						$"今日：{(resday == null ? 0 : (db.Material.InstantConstruction - resday.InstantConstruction)):+##;-##;±0}\r\n" +
+						$"本周：{(resweek == null ? 0 : (db.Material.InstantConstruction - resweek.InstantConstruction)):+##;-##;±0}\r\n" +
+						$"本月：{(resmonth == null ? 0 : (db.Material.InstantConstruction - resmonth.InstantConstruction)):+##;-##;±0}");
+					break;
+				case "en":
+					ToolTipInfo.SetToolTip(InstantConstruction,
+						$"Today: {(resday == null ? 0 : (db.Material.InstantConstruction - resday.InstantConstruction)):+##;-##;±0}\r\n" +
+						$"This Week: {(resweek == null ? 0 : (db.Material.InstantConstruction - resweek.InstantConstruction)):+##;-##;±0}\r\n" +
+						$"This Month: {(resmonth == null ? 0 : (db.Material.InstantConstruction - resmonth.InstantConstruction)):+##;-##;±0}");
+					break;
+				default:
+					ToolTipInfo.SetToolTip(InstantConstruction,
+						$"今日: {(resday == null ? 0 : (db.Material.InstantConstruction - resday.InstantConstruction)):+##;-##;±0}\r\n" +
+						$"今週: {(resweek == null ? 0 : (db.Material.InstantConstruction - resweek.InstantConstruction)):+##;-##;±0}\r\n" +
+						$"今月: {(resmonth == null ? 0 : (db.Material.InstantConstruction - resmonth.InstantConstruction)):+##;-##;±0}");
+					break;
+			}
 
 			DevelopmentMaterial.Text = db.Material.DevelopmentMaterial.ToString();
 			DevelopmentMaterial.BackColor = db.Material.DevelopmentMaterial >= 3000 ? overcolor : Color.Transparent;
-			ToolTipInfo.SetToolTip(DevelopmentMaterial, string.Format("今日: {0:+##;-##;±0}\n今週: {1:+##;-##;±0}\n今月: {2:+##;-##;±0}",
-					resday == null ? 0 : (db.Material.DevelopmentMaterial - resday.DevelopmentMaterial),
-					resweek == null ? 0 : (db.Material.DevelopmentMaterial - resweek.DevelopmentMaterial),
-					resmonth == null ? 0 : (db.Material.DevelopmentMaterial - resmonth.DevelopmentMaterial)));
+			switch (UILanguage) {
+				case "zh":
+					ToolTipInfo.SetToolTip(DevelopmentMaterial,
+						$"今日：{(resday == null ? 0 : (db.Material.DevelopmentMaterial - resday.DevelopmentMaterial)):+##;-##;±0}\r\n" +
+						$"本周：{(resweek == null ? 0 : (db.Material.DevelopmentMaterial - resweek.DevelopmentMaterial)):+##;-##;±0}\r\n" +
+						$"本月：{(resmonth == null ? 0 : (db.Material.DevelopmentMaterial - resmonth.DevelopmentMaterial)):+##;-##;±0}");
+					break;
+				case "en":
+					ToolTipInfo.SetToolTip(DevelopmentMaterial,
+						$"Today: {(resday == null ? 0 : (db.Material.DevelopmentMaterial - resday.DevelopmentMaterial)):+##;-##;±0}\r\n" +
+						$"This Week: {(resweek == null ? 0 : (db.Material.DevelopmentMaterial - resweek.DevelopmentMaterial)):+##;-##;±0}\r\n" +
+						$"This Month: {(resmonth == null ? 0 : (db.Material.DevelopmentMaterial - resmonth.DevelopmentMaterial)):+##;-##;±0}");
+					break;
+				default:
+					ToolTipInfo.SetToolTip(DevelopmentMaterial,
+						$"今日: {(resday == null ? 0 : (db.Material.DevelopmentMaterial - resday.DevelopmentMaterial)):+##;-##;±0}\r\n" +
+						$"今週: {(resweek == null ? 0 : (db.Material.DevelopmentMaterial - resweek.DevelopmentMaterial)):+##;-##;±0}\r\n" +
+						$"今月: {(resmonth == null ? 0 : (db.Material.DevelopmentMaterial - resmonth.DevelopmentMaterial)):+##;-##;±0}");
+					break;
+			}
 
 			ModdingMaterial.Text = db.Material.ModdingMaterial.ToString();
 			ModdingMaterial.BackColor = db.Material.ModdingMaterial >= 3000 ? overcolor : Color.Transparent;
-			ToolTipInfo.SetToolTip(ModdingMaterial, string.Format("今日: {0:+##;-##;±0}\n今週: {1:+##;-##;±0}\n今月: {2:+##;-##;±0}",
-					resday == null ? 0 : (db.Material.ModdingMaterial - resday.ModdingMaterial),
-					resweek == null ? 0 : (db.Material.ModdingMaterial - resweek.ModdingMaterial),
-					resmonth == null ? 0 : (db.Material.ModdingMaterial - resmonth.ModdingMaterial)));
+			switch (UILanguage) {
+				case "zh":
+					ToolTipInfo.SetToolTip(ModdingMaterial,
+						$"今日：{(resday == null ? 0 : (db.Material.ModdingMaterial - resday.ModdingMaterial)):+##;-##;±0}\r\n" +
+						$"本周：{(resweek == null ? 0 : (db.Material.ModdingMaterial - resweek.ModdingMaterial)):+##;-##;±0}\r\n" +
+						$"本月：{(resmonth == null ? 0 : (db.Material.ModdingMaterial - resmonth.ModdingMaterial)):+##;-##;±0}");
+					break;
+				case "en":
+					ToolTipInfo.SetToolTip(ModdingMaterial,
+						$"Today: {(resday == null ? 0 : (db.Material.ModdingMaterial - resday.ModdingMaterial)):+##;-##;±0}\r\n" +
+						$"This Week: {(resweek == null ? 0 : (db.Material.ModdingMaterial - resweek.ModdingMaterial)):+##;-##;±0}\r\n" +
+						$"This Month: {(resmonth == null ? 0 : (db.Material.ModdingMaterial - resmonth.ModdingMaterial)):+##;-##;±0}");
+					break;
+				default:
+					ToolTipInfo.SetToolTip(ModdingMaterial,
+						$"今日: {(resday == null ? 0 : (db.Material.ModdingMaterial - resday.ModdingMaterial)):+##;-##;±0}\r\n" +
+						$"今週: {(resweek == null ? 0 : (db.Material.ModdingMaterial - resweek.ModdingMaterial)):+##;-##;±0}\r\n" +
+						$"今月: {(resmonth == null ? 0 : (db.Material.ModdingMaterial - resmonth.ModdingMaterial)):+##;-##;±0}");
+					break;
+			}
 
 			FurnitureCoin.Text = db.Admiral.FurnitureCoin.ToString();
 			FurnitureCoin.BackColor = db.Admiral.FurnitureCoin >= 200000 ? overcolor : Color.Transparent;
@@ -366,11 +569,26 @@ namespace ElectronicObserver.Window
 				int medium = db.UseItems[11]?.Count ?? 0;
 				int large = db.UseItems[12]?.Count ?? 0;
 
-				ToolTipInfo.SetToolTip(FurnitureCoin,
-						string.Format("(小) x {0} ( +{1} )\r\n(中) x {2} ( +{3} )\r\n(大) x {4} ( +{5} )\r\n",
-							small, small * 200,
-							medium, medium * 400,
-							large, large * 700));
+				switch (UILanguage) {
+					case "zh":
+						ToolTipInfo.SetToolTip(FurnitureCoin,
+							$"（小）x{small} ( +{small * 200} )\r\n" +
+							$"（中）x{medium} ( +{medium * 400} )\r\n" +
+							$"（大）x{large} ( +{large * 700} )");
+						break;
+					case "en":
+						ToolTipInfo.SetToolTip(FurnitureCoin,
+							$"(Small) x {small} ( +{small * 200} )\r\n" +
+							$"(Medium) x {medium} ( +{medium * 400} )\r\n" +
+							$"(Large) x {large} ( +{large * 700} )");
+						break;
+					default:
+						ToolTipInfo.SetToolTip(FurnitureCoin,
+							$"(小) x {small} ( +{small * 200} )\r\n" +
+							$"(中) x {medium} ( +{medium * 400} )\r\n" +
+							$"(大) x {large} ( +{large * 700} )");
+						break;
+				}
 			}
 			UpdateDisplayUseItem();
 			FlowPanelUseItem.ResumeLayout();
@@ -382,32 +600,95 @@ namespace ElectronicObserver.Window
 
 				Fuel.Text = db.Material.Fuel.ToString();
 				Fuel.BackColor = db.Material.Fuel < db.Admiral.MaxResourceRegenerationAmount ? Color.Transparent : overcolor;
-				ToolTipInfo.SetToolTip(Fuel, string.Format("今日: {0:+##;-##;±0}\n今週: {1:+##;-##;±0}\n今月: {2:+##;-##;±0}",
-					resday == null ? 0 : (db.Material.Fuel - resday.Fuel),
-					resweek == null ? 0 : (db.Material.Fuel - resweek.Fuel),
-					resmonth == null ? 0 : (db.Material.Fuel - resmonth.Fuel)));
+				switch (UILanguage) {
+					case "zh":
+						ToolTipInfo.SetToolTip(Fuel,
+							$"今日：{(resday == null ? 0 : (db.Material.Fuel - resday.Fuel)):+##;-##;±0}\r\n" +
+							$"本周：{(resweek == null ? 0 : (db.Material.Fuel - resweek.Fuel)):+##;-##;±0}\r\n" +
+							$"本月：{(resmonth == null ? 0 : (db.Material.Fuel - resmonth.Fuel)):+##;-##;±0}");
+						break;
+					case "en":
+						ToolTipInfo.SetToolTip(Fuel,
+							$"Today: {(resday == null ? 0 : (db.Material.Fuel - resday.Fuel)):+##;-##;±0}\r\n" +
+							$"This Week: {(resweek == null ? 0 : (db.Material.Fuel - resweek.Fuel)):+##;-##;±0}\r\n" +
+							$"This Month: {(resmonth == null ? 0 : (db.Material.Fuel - resmonth.Fuel)):+##;-##;±0}");
+						break;
+					default:
+						ToolTipInfo.SetToolTip(Fuel,
+							$"今日: {(resday == null ? 0 : (db.Material.Fuel - resday.Fuel)):+##;-##;±0}\r\n" +
+							$"今週: {(resweek == null ? 0 : (db.Material.Fuel - resweek.Fuel)):+##;-##;±0}\r\n" +
+							$"今月: {(resmonth == null ? 0 : (db.Material.Fuel - resmonth.Fuel)):+##;-##;±0}");
+						break;
+				}
 
 				Ammo.Text = db.Material.Ammo.ToString();
 				Ammo.BackColor = db.Material.Ammo < db.Admiral.MaxResourceRegenerationAmount ? Color.Transparent : overcolor;
-				ToolTipInfo.SetToolTip(Ammo, string.Format("今日: {0:+##;-##;±0}\n今週: {1:+##;-##;±0}\n今月: {2:+##;-##;±0}",
-					resday == null ? 0 : (db.Material.Ammo - resday.Ammo),
-					resweek == null ? 0 : (db.Material.Ammo - resweek.Ammo),
-					resmonth == null ? 0 : (db.Material.Ammo - resmonth.Ammo)));
+				switch (UILanguage) {
+					case "zh":
+						ToolTipInfo.SetToolTip(Ammo,
+							$"今日：{(resday == null ? 0 : (db.Material.Ammo - resday.Ammo)):+##;-##;±0}\r\n" +
+							$"本周：{(resweek == null ? 0 : (db.Material.Ammo - resweek.Ammo)):+##;-##;±0}\r\n" +
+							$"本月：{(resmonth == null ? 0 : (db.Material.Ammo - resmonth.Ammo)):+##;-##;±0}");
+						break;
+					case "en":
+						ToolTipInfo.SetToolTip(Ammo,
+							$"Today: {(resday == null ? 0 : (db.Material.Ammo - resday.Ammo)):+##;-##;±0}\r\n" +
+							$"This Week: {(resweek == null ? 0 : (db.Material.Ammo - resweek.Ammo)):+##;-##;±0}\r\n" +
+							$"This Month: {(resmonth == null ? 0 : (db.Material.Ammo - resmonth.Ammo)):+##;-##;±0}");
+						break;
+					default:
+						ToolTipInfo.SetToolTip(Ammo,
+							$"今日: {(resday == null ? 0 : (db.Material.Ammo - resday.Ammo)):+##;-##;±0}\r\n" +
+							$"今週: {(resweek == null ? 0 : (db.Material.Ammo - resweek.Ammo)):+##;-##;±0}\r\n" +
+							$"今月: {(resmonth == null ? 0 : (db.Material.Ammo - resmonth.Ammo)):+##;-##;±0}");
+						break;
+				}
 
 				Steel.Text = db.Material.Steel.ToString();
 				Steel.BackColor = db.Material.Steel < db.Admiral.MaxResourceRegenerationAmount ? Color.Transparent : overcolor;
-				ToolTipInfo.SetToolTip(Steel, string.Format("今日: {0:+##;-##;±0}\n今週: {1:+##;-##;±0}\n今月: {2:+##;-##;±0}",
-					resday == null ? 0 : (db.Material.Steel - resday.Steel),
-					resweek == null ? 0 : (db.Material.Steel - resweek.Steel),
-					resmonth == null ? 0 : (db.Material.Steel - resmonth.Steel)));
+				switch (UILanguage) {
+					case "zh":
+						ToolTipInfo.SetToolTip(Steel,
+							$"今日：{(resday == null ? 0 : (db.Material.Steel - resday.Steel)):+##;-##;±0}\r\n" +
+							$"本周：{(resweek == null ? 0 : (db.Material.Steel - resweek.Steel)):+##;-##;±0}\r\n" +
+							$"本月：{(resmonth == null ? 0 : (db.Material.Steel - resmonth.Steel)):+##;-##;±0}");
+						break;
+					case "en":
+						ToolTipInfo.SetToolTip(Steel,
+							$"Today: {(resday == null ? 0 : (db.Material.Steel - resday.Steel)):+##;-##;±0}\r\n" +
+							$"This Week: {(resweek == null ? 0 : (db.Material.Steel - resweek.Steel)):+##;-##;±0}\r\n" +
+							$"This Month: {(resmonth == null ? 0 : (db.Material.Steel - resmonth.Steel)):+##;-##;±0}");
+						break;
+					default:
+						ToolTipInfo.SetToolTip(Steel,
+							$"今日: {(resday == null ? 0 : (db.Material.Steel - resday.Steel)):+##;-##;±0}\r\n" +
+							$"今週: {(resweek == null ? 0 : (db.Material.Steel - resweek.Steel)):+##;-##;±0}\r\n" +
+							$"今月: {(resmonth == null ? 0 : (db.Material.Steel - resmonth.Steel)):+##;-##;±0}");
+						break;
+				}
 
 				Bauxite.Text = db.Material.Bauxite.ToString();
 				Bauxite.BackColor = db.Material.Bauxite < db.Admiral.MaxResourceRegenerationAmount ? Color.Transparent : overcolor;
-				ToolTipInfo.SetToolTip(Bauxite, string.Format("今日: {0:+##;-##;±0}\n今週: {1:+##;-##;±0}\n今月: {2:+##;-##;±0}",
-					resday == null ? 0 : (db.Material.Bauxite - resday.Bauxite),
-					resweek == null ? 0 : (db.Material.Bauxite - resweek.Bauxite),
-					resmonth == null ? 0 : (db.Material.Bauxite - resmonth.Bauxite)));
-
+				switch (UILanguage) {
+					case "zh":
+						ToolTipInfo.SetToolTip(Bauxite,
+							$"今日：{(resday == null ? 0 : (db.Material.Bauxite - resday.Bauxite)):+##;-##;±0}\r\n" +
+							$"本周：{(resweek == null ? 0 : (db.Material.Bauxite - resweek.Bauxite)):+##;-##;±0}\r\n" +
+							$"本月：{(resmonth == null ? 0 : (db.Material.Bauxite - resmonth.Bauxite)):+##;-##;±0}");
+						break;
+					case "en":
+						ToolTipInfo.SetToolTip(Bauxite,
+							$"Today: {(resday == null ? 0 : (db.Material.Bauxite - resday.Bauxite)):+##;-##;±0}\r\n" +
+							$"This Week: {(resweek == null ? 0 : (db.Material.Bauxite - resweek.Bauxite)):+##;-##;±0}\r\n" +
+							$"This Month: {(resmonth == null ? 0 : (db.Material.Bauxite - resmonth.Bauxite)):+##;-##;±0}");
+						break;
+					default:
+						ToolTipInfo.SetToolTip(Bauxite,
+							$"今日: {(resday == null ? 0 : (db.Material.Bauxite - resday.Bauxite)):+##;-##;±0}\r\n" +
+							$"今週: {(resweek == null ? 0 : (db.Material.Bauxite - resweek.Bauxite)):+##;-##;±0}\r\n" +
+							$"今月: {(resmonth == null ? 0 : (db.Material.Bauxite - resmonth.Bauxite)):+##;-##;±0}");
+						break;
+				}
 			}
 			FlowPanelResource.ResumeLayout();
 
@@ -455,11 +736,37 @@ namespace ElectronicObserver.Window
 				try
 				{
 					var mat = KCDatabase.Instance.Material;
-					Clipboard.SetText($"{mat.Fuel}/{mat.Ammo}/{mat.Steel}/{mat.Bauxite}/修復{mat.InstantRepair}/開発{mat.DevelopmentMaterial}/建造{mat.InstantConstruction}/改修{mat.ModdingMaterial}");
+					switch (UILanguage) {
+						case "zh":
+							Clipboard.SetText(
+								$"{mat.Fuel}/{mat.Ammo}/{mat.Steel}/{mat.Bauxite}/" +
+								$"修复{mat.InstantRepair}/开发{mat.DevelopmentMaterial}/建造{mat.InstantConstruction}/改修{mat.ModdingMaterial}");
+							break;
+						case "en":
+							Clipboard.SetText(
+								$"{mat.Fuel}/{mat.Ammo}/{mat.Steel}/{mat.Bauxite}/" +
+								$"InstantRepair{mat.InstantRepair}/DevelopmentMaterial{mat.DevelopmentMaterial}/InstantConstruction{mat.InstantConstruction}/ImprovementMaterials{mat.ModdingMaterial}");
+							break;
+						default:
+							Clipboard.SetText(
+								$"{mat.Fuel}/{mat.Ammo}/{mat.Steel}/{mat.Bauxite}/" +
+								$"修復{mat.InstantRepair}/開発{mat.DevelopmentMaterial}/建造{mat.InstantConstruction}/改修{mat.ModdingMaterial}");
+							break;
+					}
 				}
 				catch (Exception ex)
 				{
-					Utility.Logger.Add(3, "資源のクリップボードへのコピーに失敗しました。" + ex.Message);
+					switch (UILanguage) {
+						case "zh":
+							Utility.Logger.Add(3, "复制资源到剪贴板失败。" + ex.Message);
+							break;
+						case "en":
+							Utility.Logger.Add(3, "Failed to copy Materials to clipboard." + ex.Message);
+							break;
+						default:
+							Utility.Logger.Add(3, "資源のクリップボードへのコピーに失敗しました。" + ex.Message);
+							break;
+					}
 				}
 			}
 		}
@@ -471,7 +778,18 @@ namespace ElectronicObserver.Window
 			var itemID = Utility.Configuration.Config.FormHeadquarters.DisplayUseItemID;
 			var item = db.UseItems[itemID];
 			var itemMaster = db.MasterUseItems[itemID];
-			string tail = "\r\n(設定から変更可能)";
+			string tail = "";
+			switch (UILanguage) {
+				case "zh":
+					tail = "\r\n（可在设置中修改）";
+					break;
+				case "en":
+					tail = "\r\n(Customizable in Configuration)";
+					break;
+				default:
+					tail = "\r\n(設定から変更可能)";
+					break;
+			}
 
 
 
@@ -479,7 +797,17 @@ namespace ElectronicObserver.Window
 			{
 				case null:
 					DisplayUseItem.Text = "???";
-					ToolTipInfo.SetToolTip(DisplayUseItem, "不明なアイテム (ID: " + Utility.Configuration.Config.FormHeadquarters.DisplayUseItemID + ")" + tail);
+					switch (UILanguage) {
+						case "zh":
+							ToolTipInfo.SetToolTip(DisplayUseItem, $"不明物品（ID: {Utility.Configuration.Config.FormHeadquarters.DisplayUseItemID}）{tail}");
+							break;
+						case "en":
+							ToolTipInfo.SetToolTip(DisplayUseItem, $"Unknown Item (ID: {Utility.Configuration.Config.FormHeadquarters.DisplayUseItemID}){tail}");
+							break;
+						default:
+							ToolTipInfo.SetToolTip(DisplayUseItem, $"不明なアイテム (ID: {Utility.Configuration.Config.FormHeadquarters.DisplayUseItemID}){tail}");
+							break;
+					}
 					break;
 
 				// '18 spring event special mode
@@ -488,8 +816,29 @@ namespace ElectronicObserver.Window
 				case "海苔":
 				case "お茶":
 					DisplayUseItem.Text = (item?.Count ?? 0).ToString();
-					ToolTipInfo.SetToolTip(DisplayUseItem,
-						$"お米: {db.UseItems[85]?.Count ?? 0}\r\n梅干: {db.UseItems[86]?.Count ?? 0}\r\n海苔: {db.UseItems[87]?.Count ?? 0}\r\nお茶: {db.UseItems[88]?.Count ?? 0}\r\n{tail}");
+					switch (UILanguage) {
+						case "zh":
+							ToolTipInfo.SetToolTip(DisplayUseItem,
+								$"大米: {db.UseItems[85]?.Count ?? 0}\r\n" +
+								$"梅干: {db.UseItems[86]?.Count ?? 0}\r\n" +
+								$"海苔: {db.UseItems[87]?.Count ?? 0}\r\n" +
+								$"茶叶: {db.UseItems[88]?.Count ?? 0}{tail}");
+							break;
+						case "en":
+							ToolTipInfo.SetToolTip(DisplayUseItem,
+								$"Rice: {db.UseItems[85]?.Count ?? 0}\r\n" +
+								$"Umeboshi: {db.UseItems[86]?.Count ?? 0}\r\n" +
+								$"Nori: {db.UseItems[87]?.Count ?? 0}\r\n" +
+								$"Tea: {db.UseItems[88]?.Count ?? 0}{tail}");
+							break;
+						default:
+							ToolTipInfo.SetToolTip(DisplayUseItem,
+								$"お米: {db.UseItems[85]?.Count ?? 0}\r\n" +
+								$"梅干: {db.UseItems[86]?.Count ?? 0}\r\n" +
+								$"海苔: {db.UseItems[87]?.Count ?? 0}\r\n" +
+								$"お茶: {db.UseItems[88]?.Count ?? 0}{tail}");
+							break;
+					}
 					break;
 
 				default:
