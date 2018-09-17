@@ -28,10 +28,14 @@ namespace ElectronicObserver.Window
 			public Label CompletionTime;
 			private ToolTip tooltip;
 
+			private string UILanguage;
+
 			public TableArsenalControl(FormArsenal parent)
 			{
 
 				#region Initialize
+
+				UILanguage = parent.UILanguage;
 
 				ShipName = new ImageLabel
 				{
@@ -122,7 +126,17 @@ namespace ElectronicObserver.Window
 					tooltip.SetToolTip(ShipName, name);
 					CompletionTime.Text = DateTimeHelper.ToTimeRemainString(arsenal.CompletionTime);
 					CompletionTime.Tag = arsenal.CompletionTime;
-					tooltip.SetToolTip(CompletionTime, "完了日時 : " + DateTimeHelper.TimeToCSVString(arsenal.CompletionTime));
+					switch (UILanguage) {
+						case "zh":
+							tooltip.SetToolTip(CompletionTime, "完成时间" + DateTimeHelper.TimeToCSVString(arsenal.CompletionTime));
+							break;
+						case "en":
+							tooltip.SetToolTip(CompletionTime, "ETC: " + DateTimeHelper.TimeToCSVString(arsenal.CompletionTime));
+							break;
+						default:
+							tooltip.SetToolTip(CompletionTime, "完了日時 : " + DateTimeHelper.TimeToCSVString(arsenal.CompletionTime));
+							break;
+					}
 
 				}
 				else if (arsenal.State == 3)
@@ -131,7 +145,17 @@ namespace ElectronicObserver.Window
 					string name = showShipName ? db.MasterShips[arsenal.ShipID].Name : "???";
 					ShipName.Text = name;
 					tooltip.SetToolTip(ShipName, name);
-					CompletionTime.Text = "完成！";
+					switch (UILanguage) {
+						case "zh":
+							CompletionTime.Text = "完成！";
+							break;
+						case "en":
+							CompletionTime.Text = "Completed!";
+							break;
+						default:
+							CompletionTime.Text = "完成！";
+							break;
+					}
 					CompletionTime.Tag = null;
 
 				}
@@ -185,9 +209,26 @@ namespace ElectronicObserver.Window
 		private TableArsenalControl[] ControlArsenal;
 		private int _buildingID;
 
+		private string UILanguage;
+
 		public FormArsenal(FormMain parent)
 		{
 			InitializeComponent();
+
+			UILanguage = parent.UILanguage;
+
+			switch (UILanguage) {
+				case "zh":
+					MenuMain_ShowShipName.Text = "显示舰名(&V)";
+					Text = "工厂";
+					break;
+				case "en":
+					MenuMain_ShowShipName.Text = "&Show Ship Name";
+					Text = "Arsenal";
+					break;
+				default:
+					break;
+			}
 
 			Utility.SystemEvents.UpdateTimerTick += UpdateTimerTick;
 
@@ -245,20 +286,39 @@ namespace ElectronicObserver.Window
 				}
 				else
 				{
-
-					name = "艦娘";
+					switch (UILanguage) {
+						case "zh":
+							name = "新舰娘";
+							break;
+						case "en":
+							name = "new ship";
+							break;
+						default:
+							name = "艦娘";
+							break;
+					}
 				}
 
-				Utility.Logger.Add(2, string.Format("工廠ドック #{0}で {1}の建造を開始しました。({2}/{3}/{4}/{5}-{6} 秘書艦: {7})",
-					_buildingID,
-					name,
-					arsenal.Fuel,
-					arsenal.Ammo,
-					arsenal.Steel,
-					arsenal.Bauxite,
-					arsenal.DevelopmentMaterial,
-					KCDatabase.Instance.Fleet[1].MembersInstance[0].NameWithLevel
-					));
+				switch (UILanguage) {
+					case "zh":
+						Utility.Logger.Add(2,
+							$"工厂船坞 #{_buildingID} 开始建造{name}。" +
+							$"({arsenal.Fuel}/{arsenal.Ammo}/{arsenal.Steel}/{arsenal.Bauxite}-{arsenal.DevelopmentMaterial}" +
+							$" 秘书舰：{KCDatabase.Instance.Fleet[1].MembersInstance[0].NameWithLevel})");
+						break;
+					case "en":
+						Utility.Logger.Add(2,
+							$"Arsenal dock #{_buildingID} begins building of {name}." +
+							$"({arsenal.Fuel}/{arsenal.Ammo}/{arsenal.Steel}/{arsenal.Bauxite}-{arsenal.DevelopmentMaterial}" +
+							$" Secretary: {KCDatabase.Instance.Fleet[1].MembersInstance[0].NameWithLevel})");
+						break;
+					default:
+						Utility.Logger.Add(2,
+							$"工廠ドック #{_buildingID}で {name}の建造を開始しました。" +
+							$"({arsenal.Fuel}/{arsenal.Ammo}/{arsenal.Steel}/{arsenal.Bauxite}-{arsenal.DevelopmentMaterial}" +
+							$" 秘書艦: {KCDatabase.Instance.Fleet[1].MembersInstance[0].NameWithLevel})");
+						break;
+				}
 
 				_buildingID = -1;
 			}

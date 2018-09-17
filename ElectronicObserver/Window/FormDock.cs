@@ -28,10 +28,14 @@ namespace ElectronicObserver.Window
 			public Label RepairTime;
 			public ToolTip ToolTipInfo;
 
+			private string UILanguage;
+
 			public TableDockControl(FormDock parent)
 			{
 
 				#region Initialize
+
+				UILanguage = parent.UILanguage;
 
 				ShipName = new ImageLabel
 				{
@@ -122,10 +126,18 @@ namespace ElectronicObserver.Window
 					ToolTipInfo.SetToolTip(ShipName, db.Ships[dock.ShipID].NameWithLevel);
 					RepairTime.Text = DateTimeHelper.ToTimeRemainString(dock.CompletionTime);
 					RepairTime.Tag = dock.CompletionTime;
-					ToolTipInfo.SetToolTip(RepairTime, "完了日時 : " + DateTimeHelper.TimeToCSVString(dock.CompletionTime));
-
+					switch (UILanguage) {
+						case "zh":
+							ToolTipInfo.SetToolTip(RepairTime, "完成时间：" + DateTimeHelper.TimeToCSVString(dock.CompletionTime));
+							break;
+						case "en":
+							ToolTipInfo.SetToolTip(RepairTime, "ETR: " + DateTimeHelper.TimeToCSVString(dock.CompletionTime));
+							break;
+						default:
+							ToolTipInfo.SetToolTip(RepairTime, "完了日時 : " + DateTimeHelper.TimeToCSVString(dock.CompletionTime));
+							break;
+					}
 				}
-
 			}
 
 			//タイマー更新時
@@ -173,9 +185,24 @@ namespace ElectronicObserver.Window
 
 
 
+		private string UILanguage;
+
 		public FormDock(FormMain parent)
 		{
 			InitializeComponent();
+
+			UILanguage = parent.UILanguage;
+
+			switch (UILanguage) {
+				case "zh":
+					Text = "入渠";
+					break;
+				case "en":
+					Text = "Dock";
+					break;
+				default:
+					break;
+			}
 
 			Utility.SystemEvents.UpdateTimerTick += UpdateTimerTick;
 
