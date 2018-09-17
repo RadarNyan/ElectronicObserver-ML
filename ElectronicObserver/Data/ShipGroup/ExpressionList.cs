@@ -112,7 +112,20 @@ namespace ElectronicObserver.Data.ShipGroup
 		public override string ToString()
 		{
 			var exp = Expressions.Where(p => p.Enabled);
-			return string.Format("({0}){1}", exp.Count() == 0 ? "なし" : string.Join(InternalAnd ? " かつ " : " または ", exp), Inverse ? " を満たさない" : "");
+			switch (Utility.Configuration.Config.UI.Language) {
+				case "zh":
+					return string.Format("{1}（{0}）",
+						exp.Count() == 0 ? "无" : string.Join(InternalAnd ? "，且" : "，或", exp),
+						Inverse ? "不满足" : "");
+				case "en":
+					return string.Format("{1}({0})",
+						exp.Count() == 0 ? "Empty" : string.Join(InternalAnd ? ", and " : ", or ", exp),
+						Inverse ? "Doesn't satisfy " : "");
+				default:
+					return string.Format("({0}){1}",
+						exp.Count() == 0 ? "なし" : string.Join(InternalAnd ? " かつ " : " または ", exp),
+						Inverse ? " を満たさない" : "");
+			}
 		}
 
 

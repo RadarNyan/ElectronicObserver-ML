@@ -15,6 +15,8 @@ namespace ElectronicObserver.Data.ShipGroup
 	public sealed class ExpressionManager : DataStorage, ICloneable
 	{
 
+		private static string UILanguage = Utility.Configuration.Config.UI.Language;
+
 		[DataMember]
 		public List<ExpressionList> Expressions { get; set; }
 
@@ -88,8 +90,16 @@ namespace ElectronicObserver.Data.ShipGroup
 		public IEnumerable<ShipData> GetResult(IEnumerable<ShipData> list)
 		{
 
-			if (predicate == null)
-				throw new InvalidOperationException("式がコンパイルされていません。");
+			if (predicate == null) {
+				switch (UILanguage) {
+					case "zh":
+						throw new InvalidOperationException("表达式未被编译。");
+					case "en":
+						throw new InvalidOperationException("Expressions aren't compiled.");
+					default:
+						throw new InvalidOperationException("式がコンパイルされていません。");
+				}
+			}
 
 			return list.AsQueryable().Where(predicate).AsEnumerable();
 		}
@@ -102,7 +112,16 @@ namespace ElectronicObserver.Data.ShipGroup
 		{
 
 			if (Expressions == null)
-				return "(なし)";
+			{
+				switch (UILanguage) {
+					case "zh":
+						return "（无）";
+					case "en":
+						return "(Empty)";
+					default:
+						return "(なし)";
+				}
+			}
 
 			StringBuilder sb = new StringBuilder();
 			foreach (var ex in Expressions)
@@ -112,11 +131,38 @@ namespace ElectronicObserver.Data.ShipGroup
 				else if (sb.Length == 0)
 					sb.Append(ex.ToString());
 				else
-					sb.AppendFormat(" {0} {1}", ex.ExternalAnd ? "かつ" : "または", ex.ToString());
+				{
+					switch (UILanguage) {
+						case "zh":
+							sb.Append($"{(ex.ExternalAnd ? "且" : "或")}{ex}");
+							break;
+						case "en":
+							string ex_en = ex.ToString();
+							if (ex_en.StartsWith("Doesn't"))
+								ex_en = "doesn't" + ex_en.Substring(7);
+							sb.Append($" {(ex.ExternalAnd ? "and" : "or")} {ex_en}");
+							break;
+						default:
+							sb.Append($" {(ex.ExternalAnd ? "かつ" : "または")} {ex}");
+							break;
+					}
+				}
 			}
 
 			if (sb.Length == 0)
-				sb.Append("(なし)");
+			{
+				switch (UILanguage) {
+					case "zh":
+						sb.Append("（无）");
+						break;
+					case "en":
+						sb.Append("(Empty)");
+						break;
+					default:
+						sb.Append("(なし)");
+						break;
+				}
+			}
 			return sb.ToString();
 		}
 

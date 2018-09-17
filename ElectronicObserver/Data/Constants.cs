@@ -208,6 +208,8 @@ namespace ElectronicObserver.Data
 		/// </summary>
 		public static string GetShipRarity(int value)
 		{
+			switch (UILanguage) {
+			default:
 			switch (value)
 			{
 				case 0:
@@ -230,6 +232,49 @@ namespace ElectronicObserver.Data
 					return "桜虹";
 				default:
 					return "不明";
+			}
+			case "zh":
+				switch (value) {
+					case 1:
+						return "蓝";
+					case 2:
+						return "天蓝";
+					case 3:
+						return "浅蓝";
+					case 4:
+						return "银";
+					case 5:
+						return "金";
+					case 6:
+						return "虹";
+					case 7:
+						return "辉虹";
+					case 8:
+						return "樱虹";
+					default:
+						return "不明";
+				}
+			case "en":
+				switch (value) {
+					case 1:
+						return "C";
+					case 2:
+						return "C";
+					case 3:
+						return "SC";
+					case 4:
+						return "R";
+					case 5:
+						return "SR";
+					case 6:
+						return "H";
+					case 7:
+						return "SH";
+					case 8:
+						return "SH+";
+					default:
+						return "Unknown";
+				}
 			}
 		}
 

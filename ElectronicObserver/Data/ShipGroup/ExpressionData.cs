@@ -18,6 +18,8 @@ namespace ElectronicObserver.Data.ShipGroup
 	public class ExpressionData : ICloneable
 	{
 
+		private static string UILanguage = Utility.Configuration.Config.UI.Language;
+
 		public enum ExpressionOperator
 		{
 			Equal,
@@ -55,7 +57,197 @@ namespace ElectronicObserver.Data.ShipGroup
 		private static readonly Regex regex_index = new Regex(@"\.(?<name>\w+)(\[(?<index>\d+?)\])?", RegexOptions.Compiled);
 
 		[IgnoreDataMember]
-		public static readonly Dictionary<string, string> LeftOperandNameTable = new Dictionary<string, string>() {
+		private static readonly Dictionary<string, string> LeftOperandNameTable_zh = new Dictionary<string, string>() {
+			{ ".MasterID", "舰船唯一ID" },
+			{ ".ShipID", "舰船ID" },
+			{ ".MasterShip.NameWithClass", "舰名" },
+			{ ".MasterShip.ShipType", "舰种" },
+			{ ".Level", "等级" },
+			{ ".ExpTotal", "经验值" },
+			{ ".ExpNext", "距离升级" },
+			{ ".ExpNextRemodel", "距离改装" },
+			{ ".HPCurrent", "当前HP" },
+			{ ".HPMax", "最大HP" },
+			{ ".HPRate", "HP比例" },
+			{ ".Condition", "士气" },
+			{ ".AllSlotMaster", "装备" },
+			{ ".SlotMaster[0]", "装备 #1" },	//checkme: 要る?
+			{ ".SlotMaster[1]", "装备 #2" },
+			{ ".SlotMaster[2]", "装备 #3" },
+			{ ".SlotMaster[3]", "装备 #4" },
+			{ ".SlotMaster[4]", "装备 #5" },
+			{ ".ExpansionSlotMaster", "补强装备" },
+			{ ".Aircraft[0]", "搭载 #1" },
+			{ ".Aircraft[1]", "搭载 #2" },
+			{ ".Aircraft[2]", "搭载 #3" },
+			{ ".Aircraft[3]", "搭载 #4" },
+			{ ".Aircraft[4]", "搭载 #5" },
+			{ ".AircraftTotal", "搭载数合计" },
+			{ ".MasterShip.Aircraft[0]", "最大搭载 #1" },
+			{ ".MasterShip.Aircraft[1]", "最大搭载 #2" },
+			{ ".MasterShip.Aircraft[2]", "最大搭载 #3" },
+			{ ".MasterShip.Aircraft[3]", "最大搭载 #4" },
+			{ ".MasterShip.Aircraft[4]", "最大搭载 #5" },
+			{ ".MasterShip.AircraftTotal", "最大搭载数合计" },		//要る？
+			{ ".AircraftRate[0]", "搭载比例 #1" },
+			{ ".AircraftRate[1]", "搭载比例 #2" },
+			{ ".AircraftRate[2]", "搭载比例 #3" },
+			{ ".AircraftRate[3]", "搭载比例 #4" },
+			{ ".AircraftRate[4]", "搭载比例 #5" },
+			{ ".AircraftTotalRate", "搭载比例合计" },
+			{ ".Fuel", "燃料" },
+			{ ".Ammo", "弹药" },
+			{ ".FuelMax", "最大燃料载量" },
+			{ ".AmmoMax", "最大弹药载量" },
+			{ ".FuelRate", "燃料比例" },
+			{ ".AmmoRate", "弹药比例" },
+			{ ".SlotSize", "格数" },
+			{ ".RepairingDockID", "入渠船坞" },
+			{ ".RepairTime", "入渠时间" },
+			{ ".RepairSteel", "入渠所需钢材" },
+			{ ".RepairFuel", "入渠所需燃料" },
+			//強化値シリーズは省略
+			{ ".FirepowerBase", "基本火力" },
+			{ ".TorpedoBase", "基本雷装" },
+			{ ".AABase", "基本对空" },
+			{ ".ArmorBase", "基本装甲" },
+			{ ".EvasionBase", "基本回避" },
+			{ ".ASWBase", "基本对潜" },
+			{ ".LOSBase", "基本索敌" },
+			{ ".LuckBase", "基本运" },
+			{ ".FirepowerTotal", "火力合计" },
+			{ ".TorpedoTotal", "雷装合计" },
+			{ ".AATotal", "对空合计" },
+			{ ".ArmorTotal", "装甲合计" },
+			{ ".EvasionTotal", "回避合计" },
+			{ ".ASWTotal", "对潜合计" },
+			{ ".LOSTotal", "索敌合计" },
+			{ ".LuckTotal", "运合计" },
+			{ ".BomberTotal", "爆装合计" },
+			{ ".FirepowerRemain", "剩余火力改修" },
+			{ ".TorpedoRemain", "剩余雷装改修" },
+			{ ".AARemain", "剩余对空改修" },
+			{ ".ArmorRemain", "剩余装甲改修" },
+			{ ".LuckRemain", "剩余运改修" },
+			{ ".Range", "射程" },		//現在の射程
+			{ ".Speed", "速度" },
+			{ ".MasterShip.Speed", "基础速度" },
+			{ ".MasterShip.Rarity", "稀有率" },
+			{ ".IsLocked", "锁定" },
+			{ ".IsLockedByEquipment", "装备锁" },
+			{ ".SallyArea", "活动标签" },
+			{ ".FleetWithIndex", "所属舰队" },
+			{ ".IsMarried", "已结婚" },
+			{ ".AirBattlePower", "航空战威力" },
+			{ ".ShellingPower", "炮击威力" },
+			{ ".AircraftPower", "空袭威力" },
+			{ ".AntiSubmarinePower", "对潜威力" },
+			{ ".TorpedoPower", "雷击威力" },
+			{ ".NightBattlePower", "夜战威力" },
+			{ ".MasterShip.AlbumNo", "图鉴编号" },
+			{ ".MasterShip.NameReading", "舰名读法" },
+			{ ".MasterShip.RemodelBeforeShipID", "改装前舰船ID" },
+			{ ".MasterShip.RemodelAfterShipID", "改装后舰船ID" },
+			//マスターのパラメータ系もおそらく意味がないので省略
+		};
+
+		[IgnoreDataMember]
+		private static readonly Dictionary<string, string> LeftOperandNameTable_en = new Dictionary<string, string>() {
+			{ ".MasterID", "Unique ID" },
+			{ ".ShipID", "Ship ID" },
+			{ ".MasterShip.NameWithClass", "Ship Name" },
+			{ ".MasterShip.ShipType", "Ship Type" },
+			{ ".Level", "Level" },
+			{ ".ExpTotal", "Exp" },
+			{ ".ExpNext", "Exp needed to level up" },
+			{ ".ExpNextRemodel", "Exp needed to remodel" },
+			{ ".HPCurrent", "Current HP" },
+			{ ".HPMax", "Max HP" },
+			{ ".HPRate", "HP Percentage" },
+			{ ".Condition", "Condition" },
+			{ ".AllSlotMaster", "Equipments" },
+			{ ".SlotMaster[0]", "Equipment #1" },	//checkme: 要る?
+			{ ".SlotMaster[1]", "Equipment #2" },
+			{ ".SlotMaster[2]", "Equipment #3" },
+			{ ".SlotMaster[3]", "Equipment #4" },
+			{ ".SlotMaster[4]", "Equipment #5" },
+			{ ".ExpansionSlotMaster", "Ex.Equipment" },
+			{ ".Aircraft[0]", "Aircraft #1" },
+			{ ".Aircraft[1]", "Aircraft #2" },
+			{ ".Aircraft[2]", "Aircraft #3" },
+			{ ".Aircraft[3]", "Aircraft #4" },
+			{ ".Aircraft[4]", "Aircraft #5" },
+			{ ".AircraftTotal", "Aircraft Total" },		//要る？
+			{ ".MasterShip.Aircraft[0]", "Max Aircraft #1" },
+			{ ".MasterShip.Aircraft[1]", "Max Aircraft #2" },
+			{ ".MasterShip.Aircraft[2]", "Max Aircraft #3" },
+			{ ".MasterShip.Aircraft[3]", "Max Aircraft #4" },
+			{ ".MasterShip.Aircraft[4]", "Max Aircraft #5" },
+			{ ".MasterShip.AircraftTotal", "Max Aircraft Total" },
+			{ ".AircraftRate[0]", "Aircraft #1 Percentage" },
+			{ ".AircraftRate[1]", "Aircraft #2 Percentage" },
+			{ ".AircraftRate[2]", "Aircraft #3 Percentage" },
+			{ ".AircraftRate[3]", "Aircraft #4 Percentage" },
+			{ ".AircraftRate[4]", "Aircraft #5 Percentage" },
+			{ ".AircraftTotalRate", "Aircraft Total Percentage" },
+			{ ".Fuel", "Fuel" },
+			{ ".Ammo", "Ammo" },
+			{ ".FuelMax", "Max Fuel" },
+			{ ".AmmoMax", "Max Ammo" },
+			{ ".FuelRate", "Fuel Percentage" },
+			{ ".AmmoRate", "Ammo Percentage" },
+			{ ".SlotSize", "Slots Count" },
+			{ ".RepairingDockID", "Dock ID" },
+			{ ".RepairTime", "Repair Time" },
+			{ ".RepairSteel", "Repair Steel" },
+			{ ".RepairFuel", "Repair Fuel" },
+			//強化値シリーズは省略
+			{ ".FirepowerBase", "Firepower Base" },
+			{ ".TorpedoBase", "Torpedo Base" },
+			{ ".AABase", "AA Base" },
+			{ ".ArmorBase", "Armor Base" },
+			{ ".EvasionBase", "Evasion Base" },
+			{ ".ASWBase", "ASW Base" },
+			{ ".LOSBase", "LOS Base" },
+			{ ".LuckBase", "Luck Base" },
+			{ ".FirepowerTotal", "Firepower Total" },
+			{ ".TorpedoTotal", "Torpedo Total" },
+			{ ".AATotal", "AA Total" },
+			{ ".ArmorTotal", "Armor Total" },
+			{ ".EvasionTotal", "Evasion Total" },
+			{ ".ASWTotal", "ASW Total" },
+			{ ".LOSTotal", "LOS Total" },
+			{ ".LuckTotal", "Luck Total" },
+			{ ".BomberTotal", "Bomber Total" },
+			{ ".FirepowerRemain", "Firepower Remain" },
+			{ ".TorpedoRemain", "Torpedo Remain" },
+			{ ".AARemain", "AA Remain" },
+			{ ".ArmorRemain", "Armor Remain" },
+			{ ".LuckRemain", "Luck Remain" },
+			{ ".Range", "Range" },		//現在の射程
+			{ ".Speed", "Speed" },
+			{ ".MasterShip.Speed", "Speed Base" },
+			{ ".MasterShip.Rarity", "Rarity" },
+			{ ".IsLocked", "Locked" },
+			{ ".IsLockedByEquipment", "Locked by Equipment" },
+			{ ".SallyArea", "Event Tag" },
+			{ ".FleetWithIndex", "Fleet Index" },
+			{ ".IsMarried", "Married" },
+			{ ".AirBattlePower", "Aerial Power" },
+			{ ".ShellingPower", "Shelling Power" },
+			{ ".AircraftPower", "Aircraft Power" },
+			{ ".AntiSubmarinePower", "ASW Power" },
+			{ ".TorpedoPower", "Torpedo Power" },
+			{ ".NightBattlePower", "Night Battle Power" },
+			{ ".MasterShip.AlbumNo", "Album No." },
+			{ ".MasterShip.NameReading", "Name Reading" },
+			{ ".MasterShip.RemodelBeforeShipID", "Ship ID Before Remodel" },
+			{ ".MasterShip.RemodelAfterShipID", "Ship ID After Remodel" },
+			//マスターのパラメータ系もおそらく意味がないので省略
+		};
+
+		[IgnoreDataMember]
+		private static readonly Dictionary<string, string> LeftOperandNameTable_ja = new Dictionary<string, string>() {
 			{ ".MasterID", "艦船固有ID" },
 			{ ".ShipID", "艦船ID" },
 			{ ".MasterShip.NameWithClass", "艦名" },
@@ -149,11 +341,52 @@ namespace ElectronicObserver.Data.ShipGroup
 			//マスターのパラメータ系もおそらく意味がないので省略		
 		};
 
+		public static readonly Dictionary<string, string> LeftOperandNameTable =
+			UILanguage == "zh" ? LeftOperandNameTable_zh :
+			UILanguage == "en" ? LeftOperandNameTable_en :
+			LeftOperandNameTable_ja;
+
 		private static Dictionary<string, Type> ExpressionTypeTable = new Dictionary<string, Type>();
 
 
 		[IgnoreDataMember]
-		public static readonly Dictionary<ExpressionOperator, string> OperatorNameTable = new Dictionary<ExpressionOperator, string>() {
+		private static readonly Dictionary<ExpressionOperator, string> OperatorNameTable_zh = new Dictionary<ExpressionOperator, string>() {
+			{ ExpressionOperator.Equal, "等于" },
+			{ ExpressionOperator.NotEqual, "不等于" },
+			{ ExpressionOperator.LessThan, "小于" },
+			{ ExpressionOperator.LessEqual, "未满" },
+			{ ExpressionOperator.GreaterThan, "大于" },
+			{ ExpressionOperator.GreaterEqual, "超过" },
+			{ ExpressionOperator.Contains, "包含" },
+			{ ExpressionOperator.NotContains, "不包含" },
+			{ ExpressionOperator.BeginWith, "开头为" },
+			{ ExpressionOperator.NotBeginWith, "开头不为" },
+			{ ExpressionOperator.EndWith, "结尾为" },
+			{ ExpressionOperator.NotEndWith, "结尾不为" },
+			{ ExpressionOperator.ArrayContains, "包括" },
+			{ ExpressionOperator.ArrayNotContains, "不包括" },
+		};
+
+		[IgnoreDataMember]
+		private static readonly Dictionary<ExpressionOperator, string> OperatorNameTable_en = new Dictionary<ExpressionOperator, string>() {
+			{ ExpressionOperator.Equal, "Equal" },
+			{ ExpressionOperator.NotEqual, "Not Equal" },
+			{ ExpressionOperator.LessThan, "Less than" },
+			{ ExpressionOperator.LessEqual, "Equal or Less than" },
+			{ ExpressionOperator.GreaterThan, "Greater Than" },
+			{ ExpressionOperator.GreaterEqual, "Equal or Greater than" },
+			{ ExpressionOperator.Contains, "Contain" },
+			{ ExpressionOperator.NotContains, "Not Contain" },
+			{ ExpressionOperator.BeginWith, "Begin with" },
+			{ ExpressionOperator.NotBeginWith, "Not Begin with" },
+			{ ExpressionOperator.EndWith, "End with" },
+			{ ExpressionOperator.NotEndWith, "Not End with" },
+			{ ExpressionOperator.ArrayContains, "Include" },
+			{ ExpressionOperator.ArrayNotContains, "Not Include" },
+		};
+
+		[IgnoreDataMember]
+		private static readonly Dictionary<ExpressionOperator, string> OperatorNameTable_ja = new Dictionary<ExpressionOperator, string>() {
 			{ ExpressionOperator.Equal, "と等しい" },
 			{ ExpressionOperator.NotEqual, "と等しくない" },
 			{ ExpressionOperator.LessThan, "より小さい" },
@@ -171,7 +404,10 @@ namespace ElectronicObserver.Data.ShipGroup
 
 		};
 
-
+		public static readonly Dictionary<ExpressionOperator, string> OperatorNameTable =
+			UILanguage == "zh" ? OperatorNameTable_zh :
+			UILanguage == "en" ? OperatorNameTable_en :
+			OperatorNameTable_ja;
 
 		public ExpressionData()
 		{
@@ -343,7 +579,90 @@ namespace ElectronicObserver.Data.ShipGroup
 
 
 
-		public override string ToString() => $"{LeftOperandToString()} は {RightOperandToString()} {OperatorToString()}";
+		public override string ToString()
+		{
+			switch (UILanguage) {
+				case "zh":
+					string ro = RightOperandToString();
+					if (Regex.Match(ro[0].ToString(), @"[a-zA-Z0-9\u0400-\u052f]") != Match.Empty)
+						ro = " " + ro;
+
+					string result_zh = $"{LeftOperandToString()}{OperatorToString()}{ro}";
+					switch (result_zh) {
+						case "锁定等于是":
+						case "锁定不等于否":
+							return "已锁定";
+						case "锁定等于否":
+						case "锁定不等于是":
+							return "未锁定";
+						default:
+							return result_zh;
+					}
+				case "en":
+					string op;
+					switch (Operator) {
+						case ExpressionOperator.Equal:
+							op = "is";
+							break;
+						case ExpressionOperator.NotEqual:
+							op = "isn't";
+							break;
+						case ExpressionOperator.LessThan:
+							op = "is less than";
+							break;
+						case ExpressionOperator.LessEqual:
+							op = "is equal to or less than";
+							break;
+						case ExpressionOperator.GreaterThan:
+							op = "is greater than";
+							break;
+						case ExpressionOperator.GreaterEqual:
+							op = "is equal to or greater than";
+							break;
+						case ExpressionOperator.Contains:
+							op = "contains";
+							break;
+						case ExpressionOperator.NotContains:
+							op = "doesn't contain";
+							break;
+						case ExpressionOperator.BeginWith:
+							op = "begins with";
+							break;
+						case ExpressionOperator.NotBeginWith:
+							op = "doesn't begin with";
+							break;
+						case ExpressionOperator.EndWith:
+							op = "ends with";
+							break;
+						case ExpressionOperator.NotEndWith:
+							op = "doesn't ends with";
+							break;
+						case ExpressionOperator.ArrayContains:
+							op = "includes";
+							break;
+						case ExpressionOperator.ArrayNotContains:
+							op = "doesn't include";
+							break;
+						default:
+							op = OperatorToString();
+							break;
+					}
+
+					string result_en = $"{LeftOperandToString()} {op} {RightOperandToString()}";
+					switch (result_en) {
+						case "Locked is true":
+						case "Locked isn't false":
+							return "Locked";
+						case "Locked is false":
+						case "Locked isn't true":
+							return "Unlocked";
+						default:
+							return result_en;
+					}
+				default:
+					return $"{LeftOperandToString()} は {RightOperandToString()} {OperatorToString()}";
+			}
+		}
 
 
 
@@ -378,7 +697,16 @@ namespace ElectronicObserver.Data.ShipGroup
 				if (ship != null)
 					return $"{ship.MasterID} ({ship.NameWithLevel})";
 				else
-					return $"{(int)RightOperand} (未在籍)";
+				{
+					switch (UILanguage) {
+						case "zh":
+							return $"{(int)RightOperand}（未在籍）";
+						case "en":
+							return $"{(int)RightOperand} (Unavailable)";
+						default:
+							return $"{(int)RightOperand} (未在籍)";
+					}
+				}
 
 			}
 			else if (LeftOperand == ".ShipID")
@@ -387,7 +715,16 @@ namespace ElectronicObserver.Data.ShipGroup
 				if (ship != null)
 					return $"{ship.ShipID} ({ship.NameWithClass})";
 				else
-					return $"{(int)RightOperand} (存在せず)";
+				{
+					switch (UILanguage) {
+						case "zh":
+							return $"{(int)RightOperand}（不存在）";
+						case "en":
+							return $"{(int)RightOperand} (Nonexistence)";
+						default:
+							return $"{(int)RightOperand} (存在せず)";
+					}
+				}
 
 			}
 			else if (LeftOperand == ".MasterShip.ShipType")
@@ -396,14 +733,30 @@ namespace ElectronicObserver.Data.ShipGroup
 				if (shiptype != null)
 					return shiptype.Name;
 				else
-					return $"{(int)RightOperand} (未定義)";
+				{
+					switch (UILanguage) {
+						case "zh":
+							return $"{(int)RightOperand}（未定义）";
+						case "en":
+							return $"{(int)RightOperand} (Undefined)";
+						default:
+							return $"{(int)RightOperand} (未定義)";
+					}
+				}
 
 			}
 			else if (LeftOperand.Contains("SlotMaster"))
 			{
 				if ((int)RightOperand == -1)
 				{
-					return "(なし)";
+					switch (UILanguage) {
+						case "zh":
+							return "（空）";
+						case "en":
+							return "(Empty)";
+						default:
+							return "(なし)";
+					}
 				}
 				else
 				{
@@ -411,7 +764,16 @@ namespace ElectronicObserver.Data.ShipGroup
 					if (eq != null)
 						return eq.Name;
 					else
-						return $"{(int)RightOperand} (未定義)";
+					{
+						switch (UILanguage) {
+							case "zh":
+								return $"{(int)RightOperand}（未定义）";
+							case "en":
+								return $"{(int)RightOperand} (Undefined)";
+							default:
+								return $"{(int)RightOperand} (未定義)";
+						}
+					}
 				}
 			}
 			else if (LeftOperand.Contains("Rate") && RightOperand is double)
@@ -445,39 +807,90 @@ namespace ElectronicObserver.Data.ShipGroup
 				if (ship != null)
 					return $"{(int)RightOperand} ({ship.NameWithClass})";
 				else
-					return $"{(int)RightOperand} (存在せず)";
+				{
+					switch (UILanguage) {
+						case "zh":
+							return $"{(int)RightOperand}（不存在）";
+						case "en":
+							return $"{(int)RightOperand} (Nonexistence)";
+						default:
+							return $"{(int)RightOperand} (存在せず)";
+					}
+				}
 
 			}
 			else if (LeftOperand == ".MasterShip.RemodelAfterShipID")
 			{
 
 				if (((int)RightOperand) == 0)
-					return "最終改装";
+				{
+					switch (UILanguage) {
+						case "zh":
+							return "最终改装";
+						case "en":
+							return "Fully Remodeled";
+						default:
+							return "最終改装";
+					}
+				}
 
 				var ship = KCDatabase.Instance.MasterShips[(int)RightOperand];
 				if (ship != null)
 					return $"{ship.ShipID} ({ship.NameWithClass})";
 				else
-					return $"{(int)RightOperand} (存在せず)";
+				{
+					switch (UILanguage) {
+						case "zh":
+							return $"{(int)RightOperand}（不存在）";
+						case "en":
+							return $"{(int)RightOperand} (Nonexistence)";
+						default:
+							return $"{(int)RightOperand} (存在せず)";
+					}
+				}
 
 			}
 			else if (LeftOperand == ".MasterShip.RemodelBeforeShipID")
 			{
 
 				if (((int)RightOperand) == 0)
-					return "未改装";
+				{
+					switch (UILanguage) {
+						case "zh":
+							return "未改装";
+						case "en":
+							return "Unremodeled";
+						default:
+							return "未改装";
+					}
+				}
 
 				var ship = KCDatabase.Instance.MasterShips[(int)RightOperand];
 				if (ship != null)
 					return $"{ship.ShipID} ({ship.NameWithClass})";
 				else
-					return $"{(int)RightOperand} (存在せず)";
+				{
+					switch (UILanguage) {
+						case "zh":
+							return $"{(int)RightOperand}（不存在）";
+						case "en":
+							return $"{(int)RightOperand} (Nonexistence)";
+						default:
+							return $"{(int)RightOperand} (存在せず)";
+					}
+				}
 
 			}
 			else if (RightOperand is bool)
 			{
-				return ((bool)RightOperand) ? "○" : "×";
-
+				switch (UILanguage) {
+					case "zh":
+						return ((bool)RightOperand) ? "是" : "否";
+					case "en":
+						return ((bool)RightOperand) ? "true" : "false";
+					default:
+						return ((bool)RightOperand) ? "○" : "×";
+				}
 			}
 			else
 			{
