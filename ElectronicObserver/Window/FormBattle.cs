@@ -36,9 +36,32 @@ namespace ElectronicObserver.Window
 
 
 
+		private string UILanguage;
+
 		public FormBattle(FormMain parent)
 		{
 			InitializeComponent();
+
+			UILanguage = parent.UILanguage;
+
+			switch (UILanguage) {
+				case "zh":
+					RightClickMenu_ShowBattleDetail.Text = "戦闘詳細を表示(&D)...";
+					RightClickMenu_ShowBattleResult.Text = "戦闘結果を一時的に表示(&V)";
+					FleetEnemyEscort.Text = "敌军随伴";
+					FleetFriendEscort.Text = "自军随伴";
+					Text = "战斗";
+					break;
+				case "en":
+					RightClickMenu_ShowBattleDetail.Text = "Show Battle &Detail...";
+					RightClickMenu_ShowBattleResult.Text = "&View Battle Result";
+					FleetEnemyEscort.Text = "Enemy Escort";
+					FleetFriendEscort.Text = "Escort Fleet";
+					Text = "Battle";
+					break;
+				default:
+					break;
+			}
 
 			ControlHelper.SetDoubleBuffered(TableTop);
 			ControlHelper.SetDoubleBuffered(TableBottom);
@@ -377,6 +400,23 @@ namespace ElectronicObserver.Window
 			FormationFriend.Text = Constants.GetFormationShort(bm.FirstBattle.Searching.FormationFriend);
 			FormationEnemy.Text = Constants.GetFormationShort(bm.FirstBattle.Searching.FormationEnemy);
 			Formation.Text = Constants.GetEngagementForm(bm.FirstBattle.Searching.EngagementForm);
+			switch (UILanguage) {
+				case "en":
+					switch (bm.FirstBattle.Searching.EngagementForm) {
+						case 3:
+							ToolTipInfo.SetToolTip(Formation, "Crossing the T (Advantage)");
+							break;
+						case 4:
+							ToolTipInfo.SetToolTip(Formation, "Crossing the T (Disadvantage)");
+							break;
+						default:
+							ToolTipInfo.SetToolTip(Formation, null);
+							break;
+					}
+					break;
+				default:
+					break;
+			}
 
 			if (bm.Compass != null && bm.Compass.EventID == 5)
 				FleetEnemy.ForeColor = Color.Red;
@@ -426,8 +466,17 @@ namespace ElectronicObserver.Window
 		{
 			if (pd != null && pd.IsAvailable)
 			{
-
-				Searching.Text = "基地航空隊";
+				switch (UILanguage) {
+					case "zh":
+						Searching.Text = "基地航空队";
+						break;
+					case "en":
+						Searching.Text = "Land Base";
+						break;
+					default:
+						Searching.Text = "基地航空隊";
+						break;
+				}
 				Searching.ImageAlign = ContentAlignment.MiddleLeft;
 				Searching.ImageIndex = (int)ResourceManager.EquipmentContent.LandAttacker;
 
@@ -436,24 +485,50 @@ namespace ElectronicObserver.Window
 
 				foreach (var phase in pd.AirAttackUnits)
 				{
-
-					sb.AppendFormat("{0} 回目 - #{1} :\r\n",
-						index, phase.AirUnitID);
-
-					if (phase.IsStage1Available)
-					{
-						sb.AppendFormat("　St1: 自軍 -{0}/{1} | 敵軍 -{2}/{3} | {4}\r\n",
-							phase.AircraftLostStage1Friend, phase.AircraftTotalStage1Friend,
-							phase.AircraftLostStage1Enemy, phase.AircraftTotalStage1Enemy,
-							Constants.GetAirSuperiority(phase.AirSuperiority));
+					switch (UILanguage) {
+						case "zh":
+							sb.AppendLine($"第 {index} 次 - #{phase.AirUnitID}：");
+							if (phase.IsStage1Available) {
+								sb.AppendLine("　S1：" +
+									$"自军 -{phase.AircraftLostStage1Friend}/{phase.AircraftTotalStage1Friend} | " +
+									$"敌军 -{phase.AircraftLostStage1Enemy}/{phase.AircraftTotalStage1Enemy} | " +
+									Constants.GetAirSuperiority(phase.AirSuperiority));
+							}
+							if (phase.IsStage2Available) {
+								sb.AppendLine("　S2：" +
+									$"自军 -{phase.AircraftLostStage2Friend}/{phase.AircraftTotalStage2Friend} | " +
+									$"敌军 -{phase.AircraftLostStage2Enemy}/{phase.AircraftTotalStage2Enemy}");
+							}
+							break;
+						case "en":
+							sb.AppendLine($"Round {index} - #{phase.AirUnitID} :");
+							if (phase.IsStage1Available) {
+								sb.AppendLine("  St1: " +
+									$"Self -{phase.AircraftLostStage1Friend}/{phase.AircraftTotalStage1Friend} | " +
+									$"Enemy -{phase.AircraftLostStage1Enemy}/{phase.AircraftTotalStage1Enemy} | " +
+									Constants.GetAirSuperiority(phase.AirSuperiority));
+							}
+							if (phase.IsStage2Available) {
+								sb.AppendLine("  St2: " +
+									$"Self -{phase.AircraftLostStage2Friend}/{phase.AircraftTotalStage2Friend} | " +
+									$"Enemy -{phase.AircraftLostStage2Enemy}/{phase.AircraftTotalStage2Enemy}");
+							}
+							break;
+						default:
+							sb.AppendLine($"{index} 回目 - #{phase.AirUnitID} :");
+							if (phase.IsStage1Available) {
+								sb.AppendLine("　St1: " +
+									$"自軍 -{phase.AircraftLostStage1Friend}/{phase.AircraftTotalStage1Friend} | " +
+									$"敵軍 -{phase.AircraftLostStage1Enemy}/{phase.AircraftTotalStage1Enemy} | " +
+									Constants.GetAirSuperiority(phase.AirSuperiority));
+							}
+							if (phase.IsStage2Available) {
+								sb.AppendLine("　St2: " +
+									$"自軍 -{phase.AircraftLostStage2Friend}/{phase.AircraftTotalStage2Friend} | " +
+									$"敵軍 -{phase.AircraftLostStage2Enemy}/{phase.AircraftTotalStage2Enemy}");
+							}
+							break;
 					}
-					if (phase.IsStage2Available)
-					{
-						sb.AppendFormat("　St2: 自軍 -{0}/{1} | 敵軍 -{2}/{3}\r\n",
-							phase.AircraftLostStage2Friend, phase.AircraftTotalStage2Friend,
-							phase.AircraftLostStage2Enemy, phase.AircraftTotalStage2Enemy);
-					}
-
 					index++;
 				}
 
@@ -473,7 +548,17 @@ namespace ElectronicObserver.Window
 		/// </summary>
 		private void ClearBaseAirAttack()
 		{
-			Searching.Text = "索敵";
+			switch (UILanguage) {
+				case "zh":
+					Searching.Text = "索敌";
+					break;
+				case "en":
+					Searching.Text = "Detection";
+					break;
+				default:
+					Searching.Text = "索敵";
+					break;
+			}
 			Searching.ImageAlign = ContentAlignment.MiddleCenter;
 			Searching.ImageIndex = -1;
 			ToolTipInfo.SetToolTip(Searching, null);
@@ -554,11 +639,30 @@ namespace ElectronicObserver.Window
 		/// <param name="phase2">第二次航空戦のデータ。発生していなければ null</param>
 		private void SetAerialWarfare(PhaseAirBattleBase phaseJet, PhaseAirBattleBase phase1, PhaseAirBattleBase phase2)
 		{
-			var phases = new[] {
-				new AerialWarfareFormatter( phaseJet, "噴式戦: " ),
-				new AerialWarfareFormatter( phase1, "第1次: "),
-				new AerialWarfareFormatter( phase2, "第2次: "),
-			};
+			AerialWarfareFormatter[] phases;
+			switch (UILanguage) {
+				case "zh":
+					phases = new[] {
+						new AerialWarfareFormatter( phaseJet, "喷式强袭：" ),
+						new AerialWarfareFormatter( phase1, "第 1 次："),
+						new AerialWarfareFormatter( phase2, "第 2 次："),
+					};
+					break;
+				case "en":
+					phases = new[] {
+						new AerialWarfareFormatter( phaseJet, "Jet Assault: " ),
+						new AerialWarfareFormatter( phase1, "1st: "),
+						new AerialWarfareFormatter( phase2, "2nd: "),
+					};
+					break;
+				default:
+					phases = new[] {
+						new AerialWarfareFormatter( phaseJet, "噴式戦: " ),
+						new AerialWarfareFormatter( phase1, "第1次: "),
+						new AerialWarfareFormatter( phase2, "第2次: "),
+					};
+					break;
+			}
 
 			if (!phases[0].Enabled && !phases[2].Enabled)
 				phases[1].PhaseName = "";
@@ -590,7 +694,17 @@ namespace ElectronicObserver.Window
 
 			void ClearAACutinLabel()
 			{
-				AACutin.Text = "対空砲火";
+				switch (UILanguage) {
+					case "zh":
+						AACutin.Text = "防空炮火";
+						break;
+					case "en":
+						AACutin.Text = "AA Fire";
+						break;
+					default:
+						AACutin.Text = "対空砲火";
+						break;
+				}
 				AACutin.ImageAlign = ContentAlignment.MiddleCenter;
 				AACutin.ImageIndex = -1;
 				ToolTipInfo.SetToolTip(AACutin, null);
@@ -619,8 +733,20 @@ namespace ElectronicObserver.Window
 						label.ImageAlign = ContentAlignment.MiddleLeft;
 						label.ImageIndex = (int)ResourceManager.EquipmentContent.Seaplane;
 
-						ToolTipInfo.SetToolTip(label, ToolTipInfo.GetToolTip(label) +
-							"触接中\r\n" + string.Join("\r\n", phases1.Select(p => $"{p.PhaseName}{(KCDatabase.Instance.MasterEquipments[p.GetTouchAircraft(isFriend)]?.Name ?? "(なし)")}")));
+						switch (UILanguage) {
+							case "zh":
+								ToolTipInfo.SetToolTip(label, ToolTipInfo.GetToolTip(label) + "触接中\r\n" +
+									string.Join("\r\n", phases1.Select(p => $"{p.PhaseName}{(KCDatabase.Instance.MasterEquipments[p.GetTouchAircraft(isFriend)]?.Name ?? "（无）")}")));
+								break;
+							case "en":
+								ToolTipInfo.SetToolTip(label, ToolTipInfo.GetToolTip(label) + "Contact\r\n" +
+									string.Join("\r\n", phases1.Select(p => $"{p.PhaseName}{(KCDatabase.Instance.MasterEquipments[p.GetTouchAircraft(isFriend)]?.Name ?? "(N/A)")}")));
+								break;
+							default:
+								ToolTipInfo.SetToolTip(label, ToolTipInfo.GetToolTip(label) + "触接中\r\n" +
+									string.Join("\r\n", phases1.Select(p => $"{p.PhaseName}{(KCDatabase.Instance.MasterEquipments[p.GetTouchAircraft(isFriend)]?.Name ?? "(なし)")}")));
+								break;
+						}
 					}
 					else
 					{
@@ -656,8 +782,29 @@ namespace ElectronicObserver.Window
 					AACutin.ImageAlign = ContentAlignment.MiddleLeft;
 					AACutin.ImageIndex = (int)ResourceManager.EquipmentContent.HighAngleGun;
 
-					ToolTipInfo.SetToolTip(AACutin, "対空カットイン\r\n" +
-						string.Join("\r\n", phases2.Select(p => p.PhaseName + (p.Air.IsAACutinAvailable ? $"{p.Air.AACutInShip.NameWithLevel}\r\nカットイン種別: {p.Air.AACutInKind} ({Constants.GetAACutinKind(p.Air.AACutInKind)})" : "(発動せず)"))));
+					switch (UILanguage) {
+						case "zh":
+							ToolTipInfo.SetToolTip(AACutin, "对空CI\r\n" + string.Join("\r\n", phases2.Select(
+								p => p.PhaseName + (p.Air.IsAACutinAvailable ?
+								$"{p.Air.AACutInShip.NameWithLevel}\r\nCI类型：{p.Air.AACutInKind}（{Constants.GetAACutinKind(p.Air.AACutInKind)}）" :
+								"（未发动）"))
+							));
+							break;
+						case "en":
+							ToolTipInfo.SetToolTip(AACutin, "Anti-aircraft Cut-in\r\n" + string.Join("\r\n", phases2.Select(
+								p => p.PhaseName + (p.Air.IsAACutinAvailable ?
+								$"{p.Air.AACutInShip.NameWithLevel}\r\nCut-in Type: {p.Air.AACutInKind} ({Constants.GetAACutinKind(p.Air.AACutInKind)})" :
+								"(No Cut-in)"))
+							));
+							break;
+						default:
+							ToolTipInfo.SetToolTip(AACutin, "対空カットイン\r\n" + string.Join("\r\n", phases2.Select(
+								p => p.PhaseName + (p.Air.IsAACutinAvailable ?
+								$"{p.Air.AACutInShip.NameWithLevel}\r\nカットイン種別: {p.Air.AACutInKind} ({Constants.GetAACutinKind(p.Air.AACutInKind)})" :
+								"(発動せず)"))
+							));
+							break;
+					}
 				}
 				else
 				{
@@ -745,7 +892,17 @@ namespace ElectronicObserver.Window
 
 					if (isBaseAirRaid)
 					{
-						name = string.Format("第{0}基地", i + 1);
+						switch (UILanguage) {
+							case "zh":
+								name = $"第 {i + 1} 基地";
+								break;
+							case "en":
+								name = $"Base No.{i + 1}";
+								break;
+							default:
+								name = $"第{i + 1}基地";
+								break;
+						}
 						isEscaped = false;
 						isLandBase = true;
 						bar.Text = "LB";        //note: Land Base (Landing Boat もあるらしいが考えつかなかったので)
@@ -760,17 +917,29 @@ namespace ElectronicObserver.Window
 						bar.Text = Constants.GetShipClassClassification(ship.MasterShip.ShipType);
 					}
 
-					ToolTipInfo.SetToolTip(bar, string.Format
-						("{0}\r\nHP: ({1} → {2})/{3} ({4}) [{5}]\r\n与ダメージ: {6}\r\n\r\n{7}",
-						name,
-						Math.Max(bar.PrevValue, 0),
-						Math.Max(bar.Value, 0),
-						bar.MaximumValue,
-						bar.Value - bar.PrevValue,
-						Constants.GetDamageState((double)bar.Value / bar.MaximumValue, isPractice, isLandBase, isEscaped),
-						attackDamages[refindex],
-						bd.GetBattleDetail(refindex)
-						));
+					switch (UILanguage) {
+						case "zh":
+							ToolTipInfo.SetToolTip(bar,
+								$"{name}\r\n" +
+								$"HP: ({Math.Max(bar.PrevValue, 0)} → {Math.Max(bar.Value, 0)})/{bar.MaximumValue} ({bar.Value - bar.PrevValue})" +
+								$" [{Constants.GetDamageState((double)bar.Value / bar.MaximumValue, isPractice, isLandBase, isEscaped)}]\r\n" +
+								$"造成伤害：{attackDamages[refindex]}\r\n\r\n{bd.GetBattleDetail(refindex)}");
+							break;
+						case "en":
+							ToolTipInfo.SetToolTip(bar,
+								$"{name}\r\n" +
+								$"HP: ({Math.Max(bar.PrevValue, 0)} → {Math.Max(bar.Value, 0)})/{bar.MaximumValue} ({bar.Value - bar.PrevValue})" +
+								$" [{Constants.GetDamageState((double)bar.Value / bar.MaximumValue, isPractice, isLandBase, isEscaped)}]\r\n" +
+								$"Damage Given: {attackDamages[refindex]}\r\n\r\n{bd.GetBattleDetail(refindex)}");
+							break;
+						default:
+							ToolTipInfo.SetToolTip(bar,
+								$"{name}\r\n" +
+								$"HP: ({Math.Max(bar.PrevValue, 0)} → {Math.Max(bar.Value, 0)})/{bar.MaximumValue} ({bar.Value - bar.PrevValue})" +
+								$" [{Constants.GetDamageState((double)bar.Value / bar.MaximumValue, isPractice, isLandBase, isEscaped)}]\r\n" +
+								$"与ダメージ: {attackDamages[refindex]}\r\n\r\n{bd.GetBattleDetail(refindex)}");
+							break;
+					}
 
 					if (isEscaped) bar.BackColor = Color.Silver;
 					else bar.BackColor = SystemColors.Control;
@@ -834,18 +1003,29 @@ namespace ElectronicObserver.Window
 						var bar = HPBars[refindex];
 						bar.Text = Constants.GetShipClassClassification(ship.MasterShip.ShipType);
 
-						ToolTipInfo.SetToolTip(bar, string.Format(
-							"{0} Lv. {1}\r\nHP: ({2} → {3})/{4} ({5}) [{6}]\r\n与ダメージ: {7}\r\n\r\n{8}",
-							ship.MasterShip.NameWithClass,
-							ship.Level,
-							Math.Max(bar.PrevValue, 0),
-							Math.Max(bar.Value, 0),
-							bar.MaximumValue,
-							bar.Value - bar.PrevValue,
-							Constants.GetDamageState((double)bar.Value / bar.MaximumValue, isPractice, ship.MasterShip.IsLandBase, isEscaped),
-							attackDamages[refindex],
-							bd.GetBattleDetail(refindex)
-							));
+						switch (UILanguage) {
+							case "zh":
+								ToolTipInfo.SetToolTip(bar,
+									$"{ship.MasterShip.NameWithClass} Lv. {ship.Level}\r\n" +
+									$"HP: ({Math.Max(bar.PrevValue, 0)} → {Math.Max(bar.Value, 0)})/{bar.MaximumValue} ({bar.Value - bar.PrevValue})" +
+									$" [{Constants.GetDamageState((double)bar.Value / bar.MaximumValue, isPractice, ship.MasterShip.IsLandBase, isEscaped)}]\r\n" +
+									$"造成伤害：{attackDamages[refindex]}\r\n\r\n{bd.GetBattleDetail(refindex)}");
+								break;
+							case "en":
+								ToolTipInfo.SetToolTip(bar,
+									$"{ship.MasterShip.NameWithClass} Lv. {ship.Level}\r\n" +
+									$"HP: ({Math.Max(bar.PrevValue, 0)} → {Math.Max(bar.Value, 0)})/{bar.MaximumValue} ({bar.Value - bar.PrevValue})" +
+									$" [{Constants.GetDamageState((double)bar.Value / bar.MaximumValue, isPractice, ship.MasterShip.IsLandBase, isEscaped)}]\r\n" +
+									$"Damage Given: {attackDamages[refindex]}\r\n\r\n{bd.GetBattleDetail(refindex)}");
+								break;
+							default:
+								ToolTipInfo.SetToolTip(bar,
+									$"{ship.MasterShip.NameWithClass} Lv. {ship.Level}\r\n" +
+									$"HP: ({Math.Max(bar.PrevValue, 0)} → {Math.Max(bar.Value, 0)})/{bar.MaximumValue} ({bar.Value - bar.PrevValue})" +
+									$" [{Constants.GetDamageState((double)bar.Value / bar.MaximumValue, isPractice, ship.MasterShip.IsLandBase, isEscaped)}]\r\n" +
+									$"与ダメージ: {attackDamages[refindex]}\r\n\r\n{bd.GetBattleDetail(refindex)}");
+								break;
+						}
 
 						if (isEscaped) bar.BackColor = Color.Silver;
 						else bar.BackColor = SystemColors.Control;
@@ -873,6 +1053,17 @@ namespace ElectronicObserver.Window
 			if (isEnemyCombined)
 			{
 				FleetEnemyEscort.Visible = true;
+				switch (UILanguage) {
+					case "zh":
+						FleetEnemy.Text = "敌军主力";
+						break;
+					case "en":
+						FleetEnemy.Text = "Enemy Main";
+						break;
+					default:
+						FleetEnemy.Text = "敵軍主力";
+						break;
+				}
 
 				for (int i = 0; i < 6; i++)
 				{
@@ -910,6 +1101,17 @@ namespace ElectronicObserver.Window
 			else
 			{
 				FleetEnemyEscort.Visible = false;
+				switch (UILanguage) {
+					case "zh":
+						FleetEnemy.Text = "敌军舰队";
+						break;
+					case "en":
+						FleetEnemy.Text = "Enemy Fleet";
+						break;
+					default:
+						FleetEnemy.Text = "敵軍艦隊";
+						break;
+				}
 
 				foreach (var i in BattleIndex.EnemyEscort)
 					DisableHPBar(i);
@@ -974,19 +1176,63 @@ namespace ElectronicObserver.Window
 					}
 
 					FleetFriend.ImageAlign = ContentAlignment.MiddleLeft;
-					ToolTipInfo.SetToolTip(FleetFriend, "支援攻撃\r\n" + support.GetBattleDetail());
+					switch (UILanguage) {
+						case "zh":
+							ToolTipInfo.SetToolTip(FleetFriend, "支援攻击\r\n" + support.GetBattleDetail());
+							break;
+						case "en":
+							ToolTipInfo.SetToolTip(FleetFriend, "Support\r\n" + support.GetBattleDetail());
+							break;
+						default:
+							ToolTipInfo.SetToolTip(FleetFriend, "支援攻撃\r\n" + support.GetBattleDetail());
+							break;
+					}
 
 					if ((isFriendCombined || hasFriend7thShip) && isEnemyCombined)
-						FleetFriend.Text = "自軍";
+					{
+						switch (UILanguage) {
+							case "zh":
+								FleetFriend.Text = "我军";
+								break;
+							case "en":
+								FleetFriend.Text = isFriendCombined ? "Main" : "Fleet";
+								break;
+							default:
+								FleetFriend.Text = "自軍";
+								break;
+						}
+					}
 					else
-						FleetFriend.Text = "自軍艦隊";
+					{
+						switch (UILanguage) {
+							case "zh":
+								FleetFriend.Text = isFriendCombined ? "我军主力" : "我军舰队";
+								break;
+							case "en":
+								FleetFriend.Text = isFriendCombined ? "Main Fleet" : "Our Fleet";
+								break;
+							default:
+								FleetFriend.Text = isFriendCombined ? "自軍主力" : "自軍艦隊";
+								break;
+						}
+					}
 
 				}
 				else
 				{
 					FleetFriend.ImageIndex = -1;
 					FleetFriend.ImageAlign = ContentAlignment.MiddleCenter;
-					FleetFriend.Text = "自軍艦隊";
+					switch (UILanguage) {
+						case "zh":
+							FleetFriend.Text = isFriendCombined ? "我军主力" : "我军舰队";
+							break;
+						case "en":
+							FleetFriend.Text = isFriendCombined ? "Main Fleet" : "Our Fleet";
+							break;
+						default:
+							FleetFriend.Text = isFriendCombined ? "自軍主力" : "自軍艦隊";
+							break;
+					}
 					ToolTipInfo.SetToolTip(FleetFriend, null);
 
 				}
@@ -1090,7 +1336,17 @@ namespace ElectronicObserver.Window
 					AirStage1Friend.ForeColor = SystemColors.ControlText;
 					AirStage1Friend.ImageAlign = ContentAlignment.MiddleLeft;
 					AirStage1Friend.ImageIndex = (int)ResourceManager.EquipmentContent.Searchlight;
-					ToolTipInfo.SetToolTip(AirStage1Friend, "探照灯照射: " + ship.NameWithLevel);
+					switch (UILanguage) {
+						case "zh":
+							ToolTipInfo.SetToolTip(AirStage1Friend, "点亮探照灯：" + ship.NameWithLevel);
+							break;
+						case "en":
+							ToolTipInfo.SetToolTip(AirStage1Friend, "Searchlight On: " + ship.NameWithLevel);
+							break;
+						default:
+							ToolTipInfo.SetToolTip(AirStage1Friend, "探照灯照射: " + ship.NameWithLevel);
+							break;
+					}
 				}
 				else
 				{
@@ -1107,7 +1363,17 @@ namespace ElectronicObserver.Window
 					AirStage1Enemy.ForeColor = SystemColors.ControlText;
 					AirStage1Enemy.ImageAlign = ContentAlignment.MiddleLeft;
 					AirStage1Enemy.ImageIndex = (int)ResourceManager.EquipmentContent.Searchlight;
-					ToolTipInfo.SetToolTip(AirStage1Enemy, "探照灯照射: " + pd.SearchlightEnemyInstance.NameWithClass);
+					switch (UILanguage) {
+						case "zh":
+							ToolTipInfo.SetToolTip(AirStage1Enemy, "点亮探照灯：" + pd.SearchlightEnemyInstance.NameWithClass);
+							break;
+						case "en":
+							ToolTipInfo.SetToolTip(AirStage1Enemy, "Searchlight On: " + pd.SearchlightEnemyInstance.NameWithClass);
+							break;
+						default:
+							ToolTipInfo.SetToolTip(AirStage1Enemy, "探照灯照射: " + pd.SearchlightEnemyInstance.NameWithClass);
+							break;
+					}
 				}
 				else
 				{
@@ -1119,10 +1385,22 @@ namespace ElectronicObserver.Window
 			//夜間触接判定
 			if (pd.TouchAircraftFriend != -1)
 			{
-				SearchingFriend.Text = "夜間触接";
+				switch (UILanguage) {
+					case "zh":
+						SearchingFriend.Text = "夜间触接";
+						ToolTipInfo.SetToolTip(SearchingFriend, "夜间触接中：" + KCDatabase.Instance.MasterEquipments[pd.TouchAircraftFriend].Name);
+						break;
+					case "en":
+						SearchingFriend.Text = "Night Contact";
+						ToolTipInfo.SetToolTip(SearchingFriend, "Night Contact: " + KCDatabase.Instance.MasterEquipments[pd.TouchAircraftFriend].Name);
+						break;
+					default:
+						SearchingFriend.Text = "夜間触接";
+						ToolTipInfo.SetToolTip(SearchingFriend, "夜間触接中: " + KCDatabase.Instance.MasterEquipments[pd.TouchAircraftFriend].Name);
+						break;
+				}
 				SearchingFriend.ImageIndex = (int)ResourceManager.EquipmentContent.Seaplane;
 				SearchingFriend.ImageAlign = ContentAlignment.MiddleLeft;
-				ToolTipInfo.SetToolTip(SearchingFriend, "夜間触接中: " + KCDatabase.Instance.MasterEquipments[pd.TouchAircraftFriend].Name);
 			}
 			else
 			{
@@ -1131,10 +1409,22 @@ namespace ElectronicObserver.Window
 
 			if (pd.TouchAircraftEnemy != -1)
 			{
-				SearchingEnemy.Text = "夜間触接";
+				switch (UILanguage) {
+					case "zh":
+						SearchingEnemy.Text = "夜间触接";
+						ToolTipInfo.SetToolTip(SearchingEnemy, "夜间触接中：" + KCDatabase.Instance.MasterEquipments[pd.TouchAircraftEnemy].Name);
+						break;
+					case "en":
+						SearchingEnemy.Text = "Night Contact";
+						ToolTipInfo.SetToolTip(SearchingEnemy, "Night Contact: " + KCDatabase.Instance.MasterEquipments[pd.TouchAircraftEnemy].Name);
+						break;
+					default:
+						SearchingEnemy.Text = "夜間触接";
+						ToolTipInfo.SetToolTip(SearchingEnemy, "夜間触接中: " + KCDatabase.Instance.MasterEquipments[pd.TouchAircraftEnemy].Name);
+						break;
+				}
 				SearchingEnemy.ImageIndex = (int)ResourceManager.EquipmentContent.Seaplane;
 				SearchingFriend.ImageAlign = ContentAlignment.MiddleLeft;
-				ToolTipInfo.SetToolTip(SearchingEnemy, "夜間触接中: " + KCDatabase.Instance.MasterEquipments[pd.TouchAircraftEnemy].Name);
 			}
 			else
 			{
@@ -1151,8 +1441,17 @@ namespace ElectronicObserver.Window
 					AirStage2Friend.ForeColor = SystemColors.ControlText;
 					AirStage2Friend.ImageAlign = ContentAlignment.MiddleLeft;
 					AirStage2Friend.ImageIndex = (int)ResourceManager.EquipmentContent.Flare;
-					ToolTipInfo.SetToolTip(AirStage2Friend, "照明弾投射: " + pd.FlareFriendInstance.NameWithLevel);
-
+					switch (UILanguage) {
+						case "zh":
+							ToolTipInfo.SetToolTip(AirStage2Friend, "发射照明弹：" + pd.FlareFriendInstance.NameWithLevel);
+							break;
+						case "en":
+							ToolTipInfo.SetToolTip(AirStage2Friend, "Star Sheel Shoot: " + pd.FlareFriendInstance.NameWithLevel);
+							break;
+						default:
+							ToolTipInfo.SetToolTip(AirStage2Friend, "照明弾投射: " + pd.FlareFriendInstance.NameWithLevel);
+							break;
+					}
 				}
 				else
 				{
@@ -1169,7 +1468,17 @@ namespace ElectronicObserver.Window
 					AirStage2Enemy.ForeColor = SystemColors.ControlText;
 					AirStage2Enemy.ImageAlign = ContentAlignment.MiddleLeft;
 					AirStage2Enemy.ImageIndex = (int)ResourceManager.EquipmentContent.Flare;
-					ToolTipInfo.SetToolTip(AirStage2Enemy, "照明弾投射: " + pd.FlareEnemyInstance.NameWithClass);
+					switch (UILanguage) {
+						case "zh":
+							ToolTipInfo.SetToolTip(AirStage2Enemy, "发射照明弹：" + pd.FlareEnemyInstance.NameWithClass);
+							break;
+						case "en":
+							ToolTipInfo.SetToolTip(AirStage2Enemy, "Star Sheel Shoot: " + pd.FlareEnemyInstance.NameWithClass);
+							break;
+						default:
+							ToolTipInfo.SetToolTip(AirStage2Enemy, "照明弾投射: " + pd.FlareEnemyInstance.NameWithClass);
+							break;
+					}
 				}
 				else
 				{
