@@ -23,9 +23,24 @@ namespace ElectronicObserver.Window
 		private List<int> _inSortie;
 		private int[] _prevResource;
 
+		private string UILanguage;
+
 		public FormInformation(FormMain parent)
 		{
 			InitializeComponent();
+
+			UILanguage = parent.UILanguage;
+
+			switch (UILanguage) {
+				case "zh":
+					Text = "信息";
+					break;
+				case "en":
+					Text = "Information";
+					break;
+				default:
+					break;
+			}
 
 			_ignorePort = 0;
 			_inSortie = null;
@@ -92,8 +107,20 @@ namespace ElectronicObserver.Window
 					// '16 summer event
 					if (data.api_event_object() && data.api_event_object.api_m_flag2() && (int)data.api_event_object.api_m_flag2 > 0)
 					{
-						TextInformation.Text += "\r\n＊ギミック解除＊\r\n";
-						Utility.Logger.Add(2, "敵勢力の弱体化を確認しました！");
+						switch (UILanguage) {
+							case "zh":
+								TextInformation.Text += "\r\n＊解谜成功＊\r\n";
+								Utility.Logger.Add(2, "敌势力已被削弱！");
+								break;
+							case "en":
+								TextInformation.Text += "\r\n＊Mechanism Unlocked＊\r\n";
+								Utility.Logger.Add(2, "Enemy forces weakened!");
+								break;
+							default:
+								TextInformation.Text += "\r\n＊ギミック解除＊\r\n";
+								Utility.Logger.Add(2, "敵勢力の弱体化を確認しました！");
+								break;
+						}
 					}
 					break;
 
@@ -168,9 +195,23 @@ namespace ElectronicObserver.Window
 		{
 
 			StringBuilder sb = new StringBuilder();
-			sb.AppendLine("[演習情報]");
-			sb.AppendLine("敵提督名 : " + data.api_nickname);
-			sb.AppendLine("敵艦隊名 : " + data.api_deckname);
+			switch (UILanguage) {
+				case "zh":
+					sb.AppendLine("[演习信息]");
+					sb.AppendLine("对手提督名：" + data.api_nickname);
+					sb.AppendLine("对手舰队名：" + data.api_deckname);
+					break;
+				case "en":
+					sb.AppendLine("[Exercise Info]");
+					sb.AppendLine("Opponent Admerial: " + data.api_nickname);
+					sb.AppendLine("Opponent Fleet: " + data.api_deckname);
+					break;
+				default:
+					sb.AppendLine("[演習情報]");
+					sb.AppendLine("敵提督名 : " + data.api_nickname);
+					sb.AppendLine("敵艦隊名 : " + data.api_deckname);
+					break;
+			}
 
 			{
 				int ship1lv = (int)data.api_deck.api_ships[0].api_id != -1 ? (int)data.api_deck.api_ships[0].api_level : 1;
@@ -186,7 +227,17 @@ namespace ElectronicObserver.Window
 
 				expbase = (int)expbase;
 
-				sb.AppendFormat("獲得経験値: {0} / S勝利: {1}\r\n", expbase, (int)(expbase * 1.2));
+				switch (UILanguage) {
+					case "zh":
+						sb.AppendLine($"获得经验值：{expbase} / S胜利：{(int)(expbase * 1.2)}");
+						break;
+					case "en":
+						sb.AppendLine($"Experience gain: {expbase} / S Rank: {(int)(expbase * 1.2)}");
+						break;
+					default:
+						sb.AppendLine($"獲得経験値: {expbase} / S勝利: {(int)(expbase * 1.2)}");
+						break;
+				}
 
 
 				// 練巡ボーナス計算 - きたない
@@ -251,8 +302,17 @@ namespace ElectronicObserver.Window
 						}
 					}
 
-					sb.AppendFormat("(練巡強化: {0} / S勝利: {1})\r\n", (int)(expbase * bonus), (int)((int)(expbase * 1.2) * bonus));
-
+					switch (UILanguage) {
+						case "zh":
+							sb.AppendLine($"（练巡强化：{(int)(expbase * bonus)} / S胜利：{(int)((int)(expbase * 1.2) * bonus)}）");
+							break;
+						case "en":
+							sb.AppendLine($"(Training Cruiser Bonus: {(int)(expbase * bonus)} / S Rank: {(int)((int)(expbase * 1.2) * bonus)})");
+							break;
+						default:
+							sb.AppendLine($"(練巡強化: {(int)(expbase * bonus)} / S勝利: {(int)((int)(expbase * 1.2) * bonus)})");
+							break;
+					}
 
 				}
 			}
@@ -276,7 +336,17 @@ namespace ElectronicObserver.Window
 					int startIndex = (((int)data.api_list[0].api_index_no - 1) / bound) * bound + 1;
 					bool[] flags = Enumerable.Repeat<bool>(false, bound).ToArray();
 
-					sb.AppendLine("[中破絵未回収]");
+					switch (UILanguage) {
+						case "zh":
+							sb.AppendLine("[未收集中破图]");
+							break;
+						case "en":
+							sb.AppendLine("[Medium Damaged Picture Uncollected]");
+							break;
+						default:
+							sb.AppendLine("[中破絵未回収]");
+							break;
+					}
 
 					foreach (dynamic elem in data.api_list)
 					{
@@ -297,7 +367,17 @@ namespace ElectronicObserver.Window
 
 					}
 
-					sb.AppendLine("[未保有艦]");
+					switch (UILanguage) {
+						case "zh":
+							sb.AppendLine("[未持有舰]");
+							break;
+						case "en":
+							sb.AppendLine("[Uncollected Ships]");
+							break;
+						default:
+							sb.AppendLine("[未保有艦]");
+							break;
+					}
 					for (int i = 0; i < bound; i++)
 					{
 						if (!flags[i])
@@ -324,7 +404,17 @@ namespace ElectronicObserver.Window
 						flags[(int)elem.api_index_no - startIndex] = true;
 					}
 
-					sb.AppendLine("[未保有装備]");
+					switch (UILanguage) {
+						case "zh":
+							sb.AppendLine("[未持有装备]");
+							break;
+						case "en":
+							sb.AppendLine("[Uncollected Equipments]");
+							break;
+						default:
+							sb.AppendLine("[未保有装備]");
+							break;
+					}
 					for (int i = 0; i < bound; i++)
 					{
 						if (!flags[i])
@@ -350,7 +440,17 @@ namespace ElectronicObserver.Window
 			{
 
 				StringBuilder sb = new StringBuilder();
-				sb.AppendLine("[開発失敗]");
+				switch (UILanguage) {
+					case "zh":
+						sb.AppendLine("[开发失败]");
+						break;
+					case "en":
+						sb.AppendLine("[Development Failed]");
+						break;
+					default:
+						sb.AppendLine("[開発失敗]");
+						break;
+				}
 				sb.AppendLine(data.api_fdata);
 
 				EquipmentDataMaster eqm = KCDatabase.Instance.MasterEquipments[int.Parse(((string)data.api_fdata).Split(",".ToCharArray())[1])];
@@ -370,7 +470,17 @@ namespace ElectronicObserver.Window
 		{
 
 			StringBuilder sb = new StringBuilder();
-			sb.AppendLine("[海域ゲージ]");
+			switch (UILanguage) {
+				case "zh":
+					sb.AppendLine("[海域血条]");
+					break;
+				case "en":
+					sb.AppendLine("[Map Gauges]");
+					break;
+				default:
+					sb.AppendLine("[海域ゲージ]");
+					break;
+			}
 
 			var list = data.api_map_info() ? data.api_map_info : data;
 
@@ -384,9 +494,17 @@ namespace ElectronicObserver.Window
 				{
 					if (map.RequiredDefeatedCount != -1 && elem.api_defeat_count())
 					{
-
-						sb.AppendFormat("{0}-{1} : 撃破 {2}/{3} 回\r\n", map.MapAreaID, map.MapInfoID, (int)elem.api_defeat_count, map.RequiredDefeatedCount);
-
+						switch (UILanguage) {
+							case "zh":
+								sb.AppendLine($"{map.MapAreaID}-{map.MapInfoID}：击破 {(int)elem.api_defeat_count}/{map.RequiredDefeatedCount} 次");
+								break;
+							case "en":
+								sb.AppendLine($"{map.MapAreaID}-{map.MapInfoID} : Defeat Count {(int)elem.api_defeat_count}/{map.RequiredDefeatedCount}");
+								break;
+							default:
+								sb.AppendLine($"{map.MapAreaID}-{map.MapInfoID} : 撃破 {(int)elem.api_defeat_count}/{map.RequiredDefeatedCount} 回");
+								break;
+						}
 					}
 					else if (elem.api_eventmap())
 					{
@@ -415,11 +533,29 @@ namespace ElectronicObserver.Window
 		{
 			StringBuilder sb = new StringBuilder();
 
-			sb.AppendLine("[遠征帰投]");
-			sb.AppendLine(data.api_quest_name);
-			sb.AppendFormat("結果: {0}\r\n", Constants.GetExpeditionResult((int)data.api_clear_result));
-			sb.AppendFormat("提督経験値: +{0}\r\n", (int)data.api_get_exp);
-			sb.AppendFormat("艦娘経験値: +{0}\r\n", ((int[])data.api_get_ship_exp).Min());
+			switch (UILanguage) {
+				case "zh":
+					sb.AppendLine("[远征结束]");
+					sb.AppendLine(data.api_quest_name);
+					sb.AppendLine($"结果：{Constants.GetExpeditionResult((int)data.api_clear_result)}");
+					sb.AppendLine($"提督经验值：+{(int)data.api_get_exp}");
+					sb.AppendLine($"舰娘经验值：+{((int[])data.api_get_ship_exp).Min()}");
+					break;
+				case "en":
+					sb.AppendLine("[Expedition Complete]");
+					sb.AppendLine(data.api_quest_name);
+					sb.AppendLine($"Result: {Constants.GetExpeditionResult((int)data.api_clear_result)}");
+					sb.AppendLine($"HQ Experience: +{(int)data.api_get_exp}");
+					sb.AppendLine($"Ship Experience: +{((int[])data.api_get_ship_exp).Min()}");
+					break;
+				default:
+					sb.AppendLine("[遠征帰投]");
+					sb.AppendLine(data.api_quest_name);
+					sb.AppendLine($"結果: {Constants.GetExpeditionResult((int)data.api_clear_result)}");
+					sb.AppendLine($"提督経験値: +{(int)data.api_get_exp}");
+					sb.AppendLine($"艦娘経験値: +{((int[])data.api_get_ship_exp).Min()}");
+					break;
+			}
 
 			return sb.ToString();
 		}
@@ -429,10 +565,26 @@ namespace ElectronicObserver.Window
 		{
 			StringBuilder sb = new StringBuilder();
 
-			sb.AppendLine("[戦闘終了]");
-			sb.AppendFormat("敵艦隊名: {0}\r\n", data.api_enemy_info.api_deck_name);
-			sb.AppendFormat("勝敗判定: {0}\r\n", data.api_win_rank);
-			sb.AppendFormat("提督経験値: +{0}\r\n", (int)data.api_get_exp);
+			switch (UILanguage) {
+				case "zh":
+					sb.AppendLine("[战斗结束]");
+					sb.AppendLine($"敌舰队名：{data.api_enemy_info.api_deck_name}");
+					sb.AppendLine($"胜败判定：{data.api_win_rank}");
+					sb.AppendLine($"提督经验值：+{(int)data.api_get_exp}");
+					break;
+				case "en":
+					sb.AppendLine("[Battle End]");
+					sb.AppendLine($"Enemy Fleet: {data.api_enemy_info.api_deck_name}");
+					sb.AppendLine($"Battle Result: {data.api_win_rank}");
+					sb.AppendLine($"HQ Experience: +{(int)data.api_get_exp}");
+					break;
+				default:
+					sb.AppendLine("[戦闘終了]");
+					sb.AppendLine($"敵艦隊名: {data.api_enemy_info.api_deck_name}");
+					sb.AppendLine($"勝敗判定: {data.api_win_rank}");
+					sb.AppendLine($"提督経験値: +{(int)data.api_get_exp}");
+					break;
+			}
 
 			sb.Append(CheckGimmickUpdated(data));
 
@@ -443,8 +595,17 @@ namespace ElectronicObserver.Window
 		{
 			if (data.api_m1() && data.api_m1 == 1)
 			{
-				Utility.Logger.Add(2, "海域に変化を確認しました！");
-				return "\r\n＊ギミック解除＊\r\n";
+				switch (UILanguage) {
+					case "zh":
+						Utility.Logger.Add(2, "已确认到海域变化！");
+						return "\r\n＊解谜成功＊\r\n";
+					case "en":
+						Utility.Logger.Add(2, "Map change confirmed!");
+						return "\r\n＊Mechanism Unlocked＊\r\n";
+					default:
+						Utility.Logger.Add(2, "海域に変化を確認しました！");
+						return "\r\n＊ギミック解除＊\r\n";
+				}
 			}
 
 			return "";
@@ -456,8 +617,20 @@ namespace ElectronicObserver.Window
 
 			StringBuilder sb = new StringBuilder();
 
-			sb.AppendLine("[補給完了]");
-			sb.AppendFormat("ボーキサイト: {0} ( {1}機 )\r\n", (int)data.api_use_bou, (int)data.api_use_bou / 5);
+			switch (UILanguage) {
+				case "zh":
+					sb.AppendLine("[补给完成]");
+					sb.AppendLine($"消耗铝土：{(int)data.api_use_bou}（{(int)data.api_use_bou / 5} 架飞机）");
+					break;
+				case "en":
+					sb.AppendLine("[Ships Replenished]");
+					sb.AppendLine($"Bauxite consumed: {(int)data.api_use_bou} ({(int)data.api_use_bou / 5} aircrafts)");
+					break;
+				default:
+					sb.AppendLine("[補給完了]");
+					sb.AppendLine($"ボーキサイト: {(int)data.api_use_bou} ( {(int)data.api_use_bou / 5}機 )");
+					break;
+			}
 
 			return sb.ToString();
 		}
@@ -488,13 +661,32 @@ namespace ElectronicObserver.Window
 			int fuel_repair = ships.Sum(s => s.RepairFuel);
 			int steel = ships.Sum(s => s.RepairSteel);
 
-
-			sb.AppendLine("[艦隊帰投]");
-			sb.AppendFormat("燃料: {0:+0;-0} ( 自然 {1:+0;-0} - 補給 {2} - 入渠 {3} )\r\n弾薬: {4:+0;-0} ( 自然 {5:+0;-0} - 補給 {6} )\r\n鋼材: {7:+0;-0} ( 自然 {8:+0;-0} - 入渠 {9} )\r\nボーキ: {10:+0;-0} ( 自然 {11:+0;-0} - 補給 {12} ( {13} 機 ) )",
-				fuel_diff - fuel_supply - fuel_repair, fuel_diff, fuel_supply, fuel_repair,
-				ammo_diff - ammo, ammo_diff, ammo,
-				steel_diff - steel, steel_diff, steel,
-				bauxite_diff - bauxite, bauxite_diff, bauxite, bauxite / 5);
+			switch (UILanguage) {
+				case "zh":
+					sb.AppendLine("[舰队归港]");
+					sb.Append(
+						$"燃料：{fuel_diff - fuel_supply - fuel_repair:+0;-0}（自然 {fuel_diff:+0;-0} / 补给 {fuel_supply} / 入渠 {fuel_repair}）\r\n" +
+						$"弹药：{ammo_diff - ammo:+0;-0}（自然 {ammo_diff:+0;-0} / 补给 {ammo}）\r\n" +
+						$"钢材：{steel_diff - steel:+0;-0}（自然 {steel_diff:+0;-0} / 入渠 {steel}）\r\n" +
+						$"铝土：{bauxite_diff - bauxite:+0;-0}（自然 {bauxite_diff:+0;-0} / 补给 {bauxite}，{bauxite / 5} 架飞机）");
+					break;
+				case "en":
+					sb.AppendLine("[Fleet Return]");
+					sb.Append(
+						$"Fuel: {fuel_diff - fuel_supply - fuel_repair:+0;-0} (natural {fuel_diff:+0;-0} / replenish {fuel_supply} / repair {fuel_repair})\r\n" +
+						$"Ammo: {ammo_diff - ammo:+0;-0} (natural {ammo_diff:+0;-0} / replenish {ammo})\r\n" +
+						$"Steel: {steel_diff - steel:+0;-0} (natural {steel_diff:+0;-0} / repair {steel})\r\n" +
+						$"Bauxite: {bauxite_diff - bauxite:+0;-0} (natural {bauxite_diff:+0;-0} / replenish {bauxite}, {bauxite / 5} aircrafts)");
+					break;
+				default:
+					sb.AppendLine("[艦隊帰投]");
+					sb.Append(
+						$"燃料: {fuel_diff - fuel_supply - fuel_repair:+0;-0} ( 自然 {fuel_diff:+0;-0} - 補給 {fuel_supply} - 入渠 {fuel_repair} )\r\n" +
+						$"弾薬: {ammo_diff - ammo:+0;-0} ( 自然 {ammo_diff:+0;-0} - 補給 {ammo} )\r\n" +
+						$"鋼材: {steel_diff - steel:+0;-0} ( 自然 {steel_diff:+0;-0} - 入渠 {steel} )\r\n" +
+						$"ボーキ: {bauxite_diff - bauxite:+0;-0} ( 自然 {bauxite_diff:+0;-0} - 補給 {bauxite} ( {bauxite / 5} 機 ) )");
+					break;
+			}
 
 			return sb.ToString();
 		}
@@ -525,11 +717,35 @@ namespace ElectronicObserver.Window
 			{
 				var freeShips = group.SelectMany(f => f).Where(s => s.SallyArea == 0);
 
-				TextInformation.Text = "[誤出撃警告]\r\n札なし艦娘：\r\n" + string.Join("\r\n", freeShips.Select(s => s.NameWithLevel));
-
-				if (Utility.Configuration.Config.Control.ShowSallyAreaAlertDialog)
-					MessageBox.Show("出撃札がついていない艦娘が編成されています。\r\n注意して出撃してください。\r\n\r\n（この警告は 設定→動作 から無効化できます。）", "誤出撃警告",
-						MessageBoxButtons.OK, MessageBoxIcon.Warning);
+				switch (UILanguage) {
+					case "zh":
+						TextInformation.Text = "[误出击警告]\r\n未贴条舰娘：\r\n" + string.Join("\r\n", freeShips.Select(s => s.NameWithLevel));
+						if (Utility.Configuration.Config.Control.ShowSallyAreaAlertDialog)
+							MessageBox.Show(
+								"编成中存在未贴条的舰娘。\r\n" +
+								"请确认无误后再出击。\r\n\r\n" +
+								"（本对话框可于 [设置]→[行为] 禁用，禁用后信息窗口仍会显示警告信息）", "误出击警告",
+								MessageBoxButtons.OK, MessageBoxIcon.Warning);
+						break;
+					case "en":
+						TextInformation.Text = "[Caution]\r\nShips w/o Tags:\r\n" + string.Join("\r\n", freeShips.Select(s => s.NameWithLevel));
+						if (Utility.Configuration.Config.Control.ShowSallyAreaAlertDialog)
+							MessageBox.Show(
+								"There are ships w/o tags in your fleet.\r\n" +
+								"Please confirm your fleet before sortie.\r\n\r\n" +
+								"(You can disable this dialog from [Configuration]-[Actions], Information Panel will continue show this message)", "Caution",
+								MessageBoxButtons.OK, MessageBoxIcon.Warning);
+						break;
+					default:
+						TextInformation.Text = "[誤出撃警告]\r\n札なし艦娘：\r\n" + string.Join("\r\n", freeShips.Select(s => s.NameWithLevel));
+						if (Utility.Configuration.Config.Control.ShowSallyAreaAlertDialog)
+							MessageBox.Show(
+								"出撃札がついていない艦娘が編成されています。\r\n" +
+								"注意して出撃してください。\r\n\r\n" +
+								"（この警告は 設定→動作 から無効化できます。）", "誤出撃警告",
+								MessageBoxButtons.OK, MessageBoxIcon.Warning);
+						break;
+				}
 			}
 		}
 

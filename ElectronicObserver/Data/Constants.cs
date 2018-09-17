@@ -707,7 +707,8 @@ namespace ElectronicObserver.Data
 		/// </summary>
 		public static string GetDifficulty(int value)
 		{
-
+			switch (UILanguage) {
+			default:
 			switch (value)
 			{
 				case -1:
@@ -724,6 +725,41 @@ namespace ElectronicObserver.Data
 					return "甲";
 				default:
 					return "不明";
+			}
+			case "zh":
+				switch (value) {
+					case -1:
+						return "无";
+					case 0:
+						return "未选择";
+					case 1:
+						return "丁";
+					case 2:
+						return "丙";
+					case 3:
+						return "乙";
+					case 4:
+						return "甲";
+					default:
+						return "不明";
+				}
+			case "en":
+				switch (value) {
+					case -1:
+						return "N/A";
+					case 0:
+						return "Unselected";
+					case 1:
+						return "Casual";
+					case 2:
+						return "Easy";
+					case 3:
+						return "Medium";
+					case 4:
+						return "Hard";
+					default:
+						return "Unknown";
+				}
 			}
 		}
 
@@ -1647,16 +1683,40 @@ namespace ElectronicObserver.Data
 		/// </summary>
 		public static string GetExpeditionResult(int value)
 		{
-			switch (value)
-			{
-				case 0:
-					return "失敗";
-				case 1:
-					return "成功";
-				case 2:
-					return "大成功";
+			switch (UILanguage) {
+				case "zh":
+					switch (value) {
+						case 0:
+							return "失败";
+						case 1:
+							return "成功";
+						case 2:
+							return "大成功";
+						default:
+							return "不明";
+					}
+				case "en":
+					switch (value) {
+						case 0:
+							return "Fail";
+						case 1:
+							return "Success";
+						case 2:
+							return "Great Success";
+						default:
+							return "Unknown";
+					}
 				default:
-					return "不明";
+					switch (value) {
+						case 0:
+							return "失敗";
+						case 1:
+							return "成功";
+						case 2:
+							return "大成功";
+						default:
+							return "不明";
+					}
 			}
 		}
 
