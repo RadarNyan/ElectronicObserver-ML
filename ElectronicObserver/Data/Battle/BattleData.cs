@@ -32,13 +32,27 @@ namespace ElectronicObserver.Data.Battle
 		public PhaseSearching Searching { get; protected set; }
 		public PhaseSupport Support { get; protected set; }
 
+		public string UILanguage = Utility.Configuration.Config.UI.Language;
+
 
 		public override void LoadFromResponse(string apiname, dynamic data)
 		{
 			base.LoadFromResponse(apiname, (object)data);
 
-			Initial = new PhaseInitial(this, "戦力");
-			Searching = new PhaseSearching(this, "索敵");
+			switch (UILanguage) {
+				case "zh":
+					Initial = new PhaseInitial(this, "战力");
+					Searching = new PhaseSearching(this, "索敌");
+					break;
+				case "en":
+					Initial = new PhaseInitial(this, "Fleet");
+					Searching = new PhaseSearching(this, "Detection");
+					break;
+				default:
+					Initial = new PhaseInitial(this, "戦力");
+					Searching = new PhaseSearching(this, "索敵");
+					break;
+			}
 
 			_resultHPs = new int[24];
 			Array.Copy(Initial.FriendInitialHPs, 0, _resultHPs, 0, Initial.FriendInitialHPs.Length);
