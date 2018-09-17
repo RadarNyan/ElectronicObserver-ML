@@ -413,59 +413,48 @@ namespace ElectronicObserver.Window
 			sb.Append(ship.ShipTypeName).Append(" ").AppendLine(ship.NameWithClass);
 			if (level > 0)
 				sb.Append("Lv. ").Append(level.ToString());
-			sb.Append(" (ID: ").Append(shipID).AppendLine(")");
 
-			sb.Append("耐久: ").Append(hp).AppendLine();
-
-			sb.Append("火力: ").Append(firepower_c);
-			if (firepower_c != firepower)
-				sb.Append("/").Append(firepower);
-			sb.AppendLine();
-
-			sb.Append("雷装: ").Append(torpedo_c);
-			if (torpedo_c != torpedo)
-				sb.Append("/").Append(torpedo);
-			sb.AppendLine();
-
-			sb.Append("対空: ").Append(aa_c);
-			if (aa_c != aa)
-				sb.Append("/").Append(aa);
-			sb.AppendLine();
-
-			sb.Append("装甲: ").Append(armor_c);
-			if (armor_c != armor)
-				sb.Append("/").Append(armor);
-			sb.AppendLine();
-
-			sb.Append("対潜: ");
-			if (asw_c < 0) sb.Append("???");
-			else sb.Append(asw_c);
-			if (asw_c != asw)
-				sb.Append("/").Append(asw);
-			sb.AppendLine();
-
-			sb.Append("回避: ");
-			if (evasion_c < 0) sb.Append("???");
-			else sb.Append(evasion_c);
-			if (evasion_c != evasion)
-				sb.Append("/").Append(evasion);
-			sb.AppendLine();
-
-			sb.Append("索敵: ");
-			if (los_c < 0) sb.Append("???");
-			else sb.Append(los_c);
-			if (los_c != los)
-				sb.Append("/").Append(los);
-			sb.AppendLine();
-
-			sb.Append("運: ").Append(luck_c);
-			if (luck_c != luck)
-				sb.Append("/").Append(luck);
-			sb.AppendLine();
-
-			sb.AppendFormat("射程: {0} / 速力: {1}\r\n(右クリックで図鑑)\r\n",
-				Constants.GetRange(range),
-				Constants.GetSpeed(ship.Speed));
+			switch (UILanguage) {
+				case "zh":
+					sb.AppendLine($"（ID：{shipID}）");
+					sb.AppendLine($"耐久：{hp}");
+					sb.AppendLine($"火力：{firepower_c}{(firepower_c != firepower ? $"/{firepower}" : "")}");
+					sb.AppendLine($"雷装：{torpedo_c}{(torpedo_c != torpedo ? $"/{torpedo}" : "")}");
+					sb.AppendLine($"对空：{aa_c}{(aa_c != aa ? $"/{aa}" : "")}");
+					sb.AppendLine($"装甲：{armor_c}{(armor_c != armor ? $"/{armor}" : "")}");
+					sb.AppendLine($"对潜：{(asw_c < 0 ? "???" : $"{asw_c}")}{(asw_c != asw ? $"/{asw}" : "")}");
+					sb.AppendLine($"回避：{(evasion_c < 0 ? "???" : $"{evasion_c}")}{(evasion_c != evasion ? $"/{evasion}" : "")}");
+					sb.AppendLine($"索敌：{(los_c < 0 ? "???" : $"{los_c}")}{(los_c != los ? $"/{los}" : "")}");
+					sb.AppendLine($"运：{luck_c}{(luck_c != luck ? $"/{luck}" : "")}");
+					sb.AppendLine($"射程：{Constants.GetRange(range)} / 速度：{Constants.GetSpeed(ship.Speed)}\r\n（点击右键转到图鉴）");
+					break;
+				case "en":
+					sb.AppendLine($"(ID: {shipID})");
+					sb.AppendLine($"HP: {hp}");
+					sb.AppendLine($"Firepower: {firepower_c}{(firepower_c != firepower ? $"/{firepower}" : "")}");
+					sb.AppendLine($"Torpedo: {torpedo_c}{(torpedo_c != torpedo ? $"/{torpedo}" : "")}");
+					sb.AppendLine($"AA: {aa_c}{(aa_c != aa ? $"/{aa}" : "")}");
+					sb.AppendLine($"Armor: {armor_c}{(armor_c != armor ? $"/{armor}" : "")}");
+					sb.AppendLine($"ASW: {(asw_c < 0 ? "???" : $"{asw_c}")}{(asw_c != asw ? $"/{asw}" : "")}");
+					sb.AppendLine($"Evasion: {(evasion_c < 0 ? "???" : $"{evasion_c}")}{(evasion_c != evasion ? $"/{evasion}" : "")}");
+					sb.AppendLine($"LOS: {(los_c < 0 ? "???" : $"{los_c}")}{(los_c != los ? $"/{los}" : "")}");
+					sb.AppendLine($"Luck: {luck_c}{(luck_c != luck ? $"/{luck}" : "")}");
+					sb.AppendLine($"Range: {Constants.GetRange(range)} / Speed: {Constants.GetSpeed(ship.Speed)}\r\n(Right-click for Album)");
+					break;
+				default:
+					sb.AppendLine($" (ID: {shipID})");
+					sb.AppendLine($"耐久: {hp}");
+					sb.AppendLine($"火力: {firepower_c}{(firepower_c != firepower ? $"/{firepower}" : "")}");
+					sb.AppendLine($"雷装: {torpedo_c}{(torpedo_c != torpedo ? $"/{torpedo}" : "")}");
+					sb.AppendLine($"対空: {aa_c}{(aa_c != aa ? $"/{aa}" : "")}");
+					sb.AppendLine($"装甲: {armor_c}{(armor_c != armor ? $"/{armor}" : "")}");
+					sb.AppendLine($"対潜: {(asw_c < 0 ? "???" : $"{asw_c}")}{(asw_c != asw ? $"/{asw}" : "")}");
+					sb.AppendLine($"回避: {(evasion_c < 0 ? "???" : $"{evasion_c}")}{(evasion_c != evasion ? $"/{evasion}" : "")}");
+					sb.AppendLine($"索敵: {(los_c < 0 ? "???" : $"{los_c}")}{(los_c != los ? $"/{los}" :"")}");
+					sb.AppendLine($"運: {luck_c}{(luck_c != luck ? $"/{luck}" : "")}");
+					sb.AppendLine($"射程: {Constants.GetRange(range)} / 速力: {Constants.GetSpeed(ship.Speed)}\r\n(右クリックで図鑑)");
+					break;
+			}
 
 			return sb.ToString();
 
@@ -485,22 +474,56 @@ namespace ElectronicObserver.Window
 					sb.AppendFormat("[{0}] {1}\r\n", ship.Aircraft[i], eq.Name);
 			}
 
-			sb.AppendFormat("\r\n昼戦: {0}\r\n夜戦: {1}\r\n",
-				Constants.GetDayAttackKind(Calculator.GetDayAttackKind(slot, ship.ShipID, -1)),
-				Constants.GetNightAttackKind(Calculator.GetNightAttackKind(slot, ship.ShipID, -1)));
+			switch (UILanguage) {
+				case "zh":
+					sb.AppendLine("\r\n" +
+						$"昼战：{Constants.GetDayAttackKind(Calculator.GetDayAttackKind(slot, ship.ShipID, -1))}\r\n" +
+						$"夜战：{Constants.GetNightAttackKind(Calculator.GetNightAttackKind(slot, ship.ShipID, -1))}");
+					break;
+				case "en":
+					sb.AppendLine("\r\n" +
+						$"Day: {Constants.GetDayAttackKind(Calculator.GetDayAttackKind(slot, ship.ShipID, -1))}\r\n" +
+						$"Night: {Constants.GetNightAttackKind(Calculator.GetNightAttackKind(slot, ship.ShipID, -1))}");
+					break;
+				default:
+					sb.AppendLine("\r\n" +
+						$"昼戦: {Constants.GetDayAttackKind(Calculator.GetDayAttackKind(slot, ship.ShipID, -1))}\r\n" +
+						$"夜戦: {Constants.GetNightAttackKind(Calculator.GetNightAttackKind(slot, ship.ShipID, -1))}");
+					break;
+			}
 
 			{
 				int aacutin = Calculator.GetAACutinKind(shipID, slot);
 				if (aacutin != 0)
 				{
-					sb.AppendFormat("対空: {0}\r\n", Constants.GetAACutinKind(aacutin));
+					switch (UILanguage) {
+						case "zh":
+							sb.AppendLine($"对空：{Constants.GetAACutinKind(aacutin)}");
+							break;
+						case "en":
+							sb.AppendLine($"AACI: {Constants.GetAACutinKind(aacutin)}");
+							break;
+						default:
+							sb.AppendLine($"対空: {Constants.GetAACutinKind(aacutin)}");
+							break;
+					}
 				}
 			}
 			{
 				int airsup = Calculator.GetAirSuperiority(slot, ship.Aircraft.ToArray());
 				if (airsup > 0)
 				{
-					sb.AppendFormat("制空戦力: {0}\r\n", airsup);
+					switch (UILanguage) {
+						case "zh":
+							sb.AppendLine($"制空战力：{airsup}");
+							break;
+						case "en":
+							sb.AppendLine($"Fighter Power: {airsup}");
+							break;
+						default:
+							sb.AppendLine($"制空戦力: {airsup}");
+							break;
+					}
 				}
 			}
 
@@ -511,11 +534,26 @@ namespace ElectronicObserver.Window
 		{
 			if (air > 0)
 			{
-				return string.Format("確保: {0}\r\n優勢: {1}\r\n均衡: {2}\r\n劣勢: {3}\r\n",
-							(int)(air * 3.0),
-							(int)Math.Ceiling(air * 1.5),
-							(int)(air / 1.5 + 1),
-							(int)(air / 3.0 + 1));
+				switch (UILanguage) {
+					case "zh":
+						return
+							$"确保：{(int)(air * 3.0)}\r\n" +
+							$"优势：{(int)Math.Ceiling(air * 1.5)}\r\n" +
+							$"均衡：{(int)(air / 1.5 + 1)}\r\n" +
+							$"劣势：{(int)(air / 3.0 + 1)}\r\n";
+					case "en":
+						return
+							$"Air Supremacy: {(int)(air * 3.0)}\r\n" +
+							$"Air Superiority: {(int)Math.Ceiling(air * 1.5)}\r\n" +
+							$"Air Parity: {(int)(air / 1.5 + 1)}\r\n" +
+							$"Air Denial: {(int)(air / 3.0 + 1)}\r\n";
+					default:
+						return
+							$"確保: {(int)(air * 3.0)}\r\n" +
+							$"優勢: {(int)Math.Ceiling(air * 1.5)}\r\n" +
+							$"均衡: {(int)(air / 1.5 + 1)}\r\n" +
+							$"劣勢: {(int)(air / 3.0 + 1)}\r\n";
+				}
 			}
 			return null;
 		}
@@ -550,9 +588,24 @@ namespace ElectronicObserver.Window
 
 
 
+		private static string UILanguage;
+
 		public FormCompass(FormMain parent)
 		{
 			InitializeComponent();
+
+			UILanguage = parent.UILanguage;
+
+			switch (UILanguage) {
+				case "zh":
+					Text = "罗盘";
+					break;
+				case "en":
+					Text = "Compass";
+					break;
+				default:
+					break;
+			}
 
 
 
@@ -670,8 +723,17 @@ namespace ElectronicObserver.Window
 			}
 			else if (apiname == "api_req_member/get_practice_enemyinfo")
 			{
-
-				TextMapArea.Text = "演習";
+				switch (UILanguage) {
+					case "zh":
+						TextMapArea.Text = "演习";
+						break;
+					case "en":
+						TextMapArea.Text = "Exercise";
+						break;
+					default:
+						TextMapArea.Text = "演習";
+						break;
+				}
 				TextDestination.Text = string.Format("{0} {1}", data.api_nickname, Constants.GetAdmiralRank((int)data.api_rank));
 				TextDestination.ImageAlign = ContentAlignment.MiddleCenter;
 				TextDestination.ImageIndex = -1;
@@ -702,8 +764,17 @@ namespace ElectronicObserver.Window
 				_enemyFleetCandidateIndex = -1;
 
 
-				TextMapArea.Text = string.Format("出撃海域 : {0}-{1}{2}", compass.MapAreaID, compass.MapInfoID,
-					compass.MapInfo.EventDifficulty > 0 ? " [" + Constants.GetDifficulty(compass.MapInfo.EventDifficulty) + "]" : "");
+				switch (UILanguage) {
+					case "zh":
+						TextMapArea.Text = $"出击海域：{compass.MapAreaID}-{compass.MapInfoID}{(compass.MapInfo.EventDifficulty > 0 ? " [" + Constants.GetDifficulty(compass.MapInfo.EventDifficulty) + "]" : "")}";
+						break;
+					case "en":
+						TextMapArea.Text = $"Sortie Area: {compass.MapAreaID}-{compass.MapInfoID}{(compass.MapInfo.EventDifficulty > 0 ? " [" + Constants.GetDifficulty(compass.MapInfo.EventDifficulty) + "]" : "")}";
+						break;
+					default:
+						TextMapArea.Text = $"出撃海域 : {compass.MapAreaID}-{compass.MapInfoID}{(compass.MapInfo.EventDifficulty > 0 ? " [" + Constants.GetDifficulty(compass.MapInfo.EventDifficulty) + "]" : "")}";
+						break;
+				}
 				{
 					var mapinfo = compass.MapInfo;
 
@@ -714,8 +785,17 @@ namespace ElectronicObserver.Window
 					}
 					else if (mapinfo.RequiredDefeatedCount != -1)
 					{
-						ToolTipInfo.SetToolTip(TextMapArea, string.Format("撃破: {0} / {1} 回", mapinfo.CurrentDefeatedCount, mapinfo.RequiredDefeatedCount));
-
+						switch (UILanguage) {
+							case "zh":
+								ToolTipInfo.SetToolTip(TextMapArea, $"击破：{mapinfo.CurrentDefeatedCount} / {mapinfo.RequiredDefeatedCount} 次");
+								break;
+							case "en":
+								ToolTipInfo.SetToolTip(TextMapArea, $"Defeat Count: {mapinfo.CurrentDefeatedCount} / {mapinfo.RequiredDefeatedCount}");
+								break;
+							default:
+								ToolTipInfo.SetToolTip(TextMapArea, $"撃破: {mapinfo.CurrentDefeatedCount} / {mapinfo.RequiredDefeatedCount} 回");
+								break;
+						}
 					}
 					else if (mapinfo.MapHPMax > 0)
 					{
@@ -734,26 +814,71 @@ namespace ElectronicObserver.Window
 				}
 
 
-				TextDestination.Text = string.Format("次のセル : {0}{1}", compass.Destination, (compass.IsEndPoint ? " (終点)" : ""));
+				switch (UILanguage) {
+					case "zh":
+						TextDestination.Text = $"下一航路：{compass.Destination}{(compass.IsEndPoint ? "（终点）" : "")}";
+						break;
+					case "en":
+						TextDestination.Text = $"Next Route: {compass.Destination}{(compass.IsEndPoint ? " (End Point)" : "")}";
+						break;
+					default:
+						TextDestination.Text = $"次のセル : {compass.Destination}{(compass.IsEndPoint ? " (終点)" : "")}";
+						break;
+				}
 				if (compass.LaunchedRecon != 0)
 				{
 					TextDestination.ImageAlign = ContentAlignment.MiddleRight;
 					TextDestination.ImageIndex = (int)ResourceManager.EquipmentContent.Seaplane;
 
 					string tiptext;
-					switch (compass.CommentID)
-					{
-						case 1:
-							tiptext = "敵艦隊発見！";
+					switch (UILanguage) {
+						case "zh":
+							switch (compass.CommentID) {
+								case 1:
+									tiptext = "发现敌舰队！";
+									break;
+								case 2:
+									tiptext = "发现攻击目标！";
+									break;
+								case 3:
+									tiptext = "航路巡逻！";
+									break;
+								default:
+									tiptext = "索敌机离舰！";
+									break;
+							}
 							break;
-						case 2:
-							tiptext = "攻撃目標発見！";
-							break;
-						case 3:
-							tiptext = "針路哨戒！";
+						case "en":
+							switch (compass.CommentID) {
+								case 1:
+									tiptext = "Enemy Fleet Spotted!";
+									break;
+								case 2:
+									tiptext = "Target Spotted!";
+									break;
+								case 3:
+									tiptext = "Route Patrol!";
+									break;
+								default:
+									tiptext = "Patrol Aircraft Take Off!";
+									break;
+							}
 							break;
 						default:
-							tiptext = "索敵機発艦！";
+							switch (compass.CommentID) {
+								case 1:
+									tiptext = "敵艦隊発見！";
+									break;
+								case 2:
+									tiptext = "攻撃目標発見！";
+									break;
+								case 3:
+									tiptext = "針路哨戒！";
+									break;
+								default:
+									tiptext = "索敵機発艦！";
+									break;
+							}
 							break;
 					}
 					ToolTipInfo.SetToolTip(TextDestination, tiptext);
@@ -781,7 +906,17 @@ namespace ElectronicObserver.Window
 					{
 
 						case 0:     //初期位置
-							TextEventDetail.Text = "どうしてこうなった";
+							switch (UILanguage) {
+								case "zh":
+									TextEventDetail.Text = "为什么会变成这样呢？";
+									break;
+								case "en":
+									TextEventDetail.Text = "Why did things end up like this?";
+									break;
+								default:
+									TextEventDetail.Text = "どうしてこうなった";
+									break;
+							}
 							break;
 
 						case 2:     //資源
@@ -819,7 +954,7 @@ namespace ElectronicObserver.Window
 						case 4:     //通常戦闘
 							if (compass.EventKind >= 2)
 							{
-								eventkind += "/" + Constants.GetMapEventKind(compass.EventKind);
+								eventkind += " / " + Constants.GetMapEventKind(compass.EventKind);
 
 								TextEventKind.ForeColor = getColorFromEventKind(compass.EventKind);
 							}
@@ -831,93 +966,259 @@ namespace ElectronicObserver.Window
 
 							if (compass.EventKind >= 2)
 							{
-								eventkind += "/" + Constants.GetMapEventKind(compass.EventKind);
+								eventkind += " / " + Constants.GetMapEventKind(compass.EventKind);
 							}
 							UpdateEnemyFleet();
 							break;
 
 						case 1:     //イベントなし
 						case 6:     //気のせいだった
-							switch (compass.EventKind)
-							{
-
-								case 0:     //気のせいだった
+							switch (UILanguage) {
+								case "zh":
+									switch (compass.EventKind) {
+										case 0:
+										default:
+											break;
+										case 1:
+											eventkind = "不见敌影";
+											break;
+										case 2:
+											eventkind = "能動分岐";
+											break;
+										case 3:
+											eventkind = "平静的大海";
+											break;
+										case 4:
+											eventkind = "平静的海峡";
+											break;
+										case 5:
+											eventkind = "注意警戒";
+											break;
+										case 6:
+											eventkind = "静谧的海洋";
+											break;
+										case 7:
+											eventkind = "正在对潜警戒";
+											break;
+										case 8:
+											eventkind = "发现敌巡逻机";
+											break;
+										case 9:
+											eventkind = "栗田舰队进击中";
+											break;
+										case 10:
+											eventkind = "西村舰队进击中";
+											break;
+										case 11:
+											eventkind = "突入苏里高海峡";
+											break;
+										case 12:
+											eventkind = "突入锡布延海";
+											break;
+										case 13:
+											eventkind = "运输作战失败";
+											break;
+										case 14:
+											eventkind = "突入锡布延海";
+											break;
+										case 15:
+											eventkind = "向萨马岛海岸进击中";
+											break;
+										case 16:
+											eventkind = "西村舰队突入";
+											break;
+										case 17:
+											eventkind = "小泽舰队出击";
+											break;
+										case 18:
+											eventkind = "班乃岛";
+											break;
+										case 19:
+											eventkind = "入港棉兰老岛";
+											break;
+										case 20:
+											eventkind = "志摩舰队出击";
+											break;
+										case 21:
+											eventkind = "发现敌侦察机";
+											break;
+										case 22:
+											eventkind = "对空对潜警戒";
+											break;
+										case 23:
+											eventkind = "高速舰艇出击";
+											break;
+										case 24:
+											eventkind = "机动部队出击";
+											break;
+										case 25:
+											eventkind = "舰队决战";
+											break;
+									}
+									break;
+								case "en":
+									switch (compass.EventKind) {
+										case 0:
+										default:
+											break;
+										case 1:
+											eventkind = "Enemy Lost";
+											break;
+										case 2:
+											eventkind = "Route Select";
+											break;
+										case 3:
+											eventkind = "A Calm Sea";
+											break;
+										case 4:
+											eventkind = "A Calm Strait";
+											break;
+										case 5:
+											eventkind = "Caution Needed";
+											break;
+										case 6:
+											eventkind = "A Quiet Sea";
+											break;
+										case 7:
+											eventkind = "Proceed with ASW Caution";
+											break;
+										case 8:
+											eventkind = "Enemy Patrol Aircraft Spotted";
+											break;
+										case 9:
+											eventkind = "Kurita Fleet Advancing";
+											break;
+										case 10:
+											eventkind = "Nishimura Fleet Advancing";
+											break;
+										case 11:
+											eventkind = "Entering Straits of Surigao";
+											break;
+										case 12:
+											eventkind = "Entering Sibuyan Sea";
+											break;
+										case 13:
+											eventkind = "Transportation Operation Failed";
+											break;
+										case 14:
+											eventkind = "Entering Sibuyan Sea";
+											break;
+										case 15:
+											eventkind = "Entering Coast of Samar";
+											break;
+										case 16:
+											eventkind = "Nishimura Fleet Advancing";
+											break;
+										case 17:
+											eventkind = "Ozawa Fleet Advancing";
+											break;
+										case 18:
+											eventkind = "Panay Island";
+											break;
+										case 19:
+											eventkind = "Porting into Mindanao";
+											break;
+										case 20:
+											eventkind = "Shima Fleet Sortie";
+											break;
+										case 21:
+											eventkind = "Enemy Patrol Aircraft Spotted";
+											break;
+										case 22:
+											eventkind = "Proceed With AA&ASW Caution";
+											break;
+										case 23:
+											eventkind = "High-speed Ships Sortie";
+											break;
+										case 24:
+											eventkind = "Carrier Task Force Sortie";
+											break;
+										case 25:
+											eventkind = "Decisive Battle Doctrine";
+											break;
+									}
+									break;
 								default:
-									break;
-								case 1:
-									eventkind = "敵影を見ず";
-									break;
-								case 2:
-									eventkind = "能動分岐";
-									break;
-								case 3:
-									eventkind = "穏やかな海";
-									break;
-								case 4:
-									eventkind = "穏やかな海峡";
-									break;
-								case 5:
-									eventkind = "警戒が必要";
-									break;
-								case 6:
-									eventkind = "静かな海";
-									break;
-								case 7:
-									eventkind = "対潜警戒進撃中";
-									break;
-								case 8:
-									eventkind = "敵哨戒機発見";
-									break;
-								case 9:
-									eventkind = "栗田艦隊進撃中";
-									break;
-								case 10:
-									eventkind = "西村艦隊進撃中";
-									break;
-								case 11:
-									eventkind = "スリガオ海峡突入"; // 西村
-									break;
-								case 12:
-									eventkind = "シブヤン海突入";
-									break;
-								case 13:
-									eventkind = "輸送作戦失敗";
-									break;
-								case 14:
-									eventkind = "シブヤン海進撃中"; // 栗田
-									break;
-								case 15:
-									eventkind = "サマール沖進撃中";
-									break;
-								case 16:
-									eventkind = "西村艦隊突入"; // 西村
-									break;
-								case 17:
-									eventkind = "小沢艦隊出撃";
-									break;
-								case 18:
-									eventkind = "パナイ島";
-									break;
-								case 19:
-									eventkind = "ミンダナオ島入港";
-									break;
-								case 20:
-									eventkind = "志摩艦隊出撃";
-									break;
-								case 21:
-									eventkind = "敵哨戒機発見";
-									break;
-								case 22:
-									eventkind = "対空対潜警戒";
-									break;
-								case 23:
-									eventkind = "高速艦艇出撃";
-									break;
-								case 24:
-									eventkind = "機動部隊出撃";
-									break;
-								case 25:
-									eventkind = "艦隊決戦";
+									switch (compass.EventKind) {
+										case 0:     //気のせいだった
+										default:
+											break;
+										case 1:
+											eventkind = "敵影を見ず";
+											break;
+										case 2:
+											eventkind = "能動分岐";
+											break;
+										case 3:
+											eventkind = "穏やかな海";
+											break;
+										case 4:
+											eventkind = "穏やかな海峡";
+											break;
+										case 5:
+											eventkind = "警戒が必要";
+											break;
+										case 6:
+											eventkind = "静かな海";
+											break;
+										case 7:
+											eventkind = "対潜警戒進撃中";
+											break;
+										case 8:
+											eventkind = "敵哨戒機発見";
+											break;
+										case 9:
+											eventkind = "栗田艦隊進撃中";
+											break;
+										case 10:
+											eventkind = "西村艦隊進撃中";
+											break;
+										case 11:
+											eventkind = "スリガオ海峡突入"; // 西村
+											break;
+										case 12:
+											eventkind = "シブヤン海突入";
+											break;
+										case 13:
+											eventkind = "輸送作戦失敗";
+											break;
+										case 14:
+											eventkind = "シブヤン海進撃中"; // 栗田
+											break;
+										case 15:
+											eventkind = "サマール沖進撃中";
+											break;
+										case 16:
+											eventkind = "西村艦隊突入"; // 西村
+											break;
+										case 17:
+											eventkind = "小沢艦隊出撃";
+											break;
+										case 18:
+											eventkind = "パナイ島";
+											break;
+										case 19:
+											eventkind = "ミンダナオ島入港";
+											break;
+										case 20:
+											eventkind = "志摩艦隊出撃";
+											break;
+										case 21:
+											eventkind = "敵哨戒機発見";
+											break;
+										case 22:
+											eventkind = "対空対潜警戒";
+											break;
+										case 23:
+											eventkind = "高速艦艇出撃";
+											break;
+										case 24:
+											eventkind = "機動部隊出撃";
+											break;
+										case 25:
+											eventkind = "艦隊決戦";
+											break;
+									}
 									break;
 							}
 							if (compass.RouteChoices != null)
@@ -933,19 +1234,60 @@ namespace ElectronicObserver.Window
 							switch (compass.EventKind)
 							{
 								case 0:     //航空偵察
-									eventkind = "航空偵察";
-
-									switch (compass.AirReconnaissanceResult)
-									{
-										case 0:
+									switch (UILanguage) {
+										case "zh":
+											eventkind = "航空侦察";
+											break;
+										case "en":
+											eventkind = "Aerial Reconnaissance";
+											break;
 										default:
-											TextEventDetail.Text = "失敗";
+											eventkind = "航空偵察";
 											break;
-										case 1:
-											TextEventDetail.Text = "成功";
+									}
+
+									switch (UILanguage) {
+										case "zh":
+											switch (compass.AirReconnaissanceResult) {
+												case 0:
+												default:
+													TextEventDetail.Text = "失败";
+													break;
+												case 1:
+													TextEventDetail.Text = "成功";
+													break;
+												case 2:
+													TextEventDetail.Text = "大成功";
+													break;
+											}
 											break;
-										case 2:
-											TextEventDetail.Text = "大成功";
+										case "en":
+											switch (compass.AirReconnaissanceResult) {
+												case 0:
+												default:
+													TextEventDetail.Text = "Fail";
+													break;
+												case 1:
+													TextEventDetail.Text = "Success";
+													break;
+												case 2:
+													TextEventDetail.Text = "Great Success";
+													break;
+											}
+											break;
+										default:
+											switch (compass.AirReconnaissanceResult) {
+												case 0:
+												default:
+													TextEventDetail.Text = "失敗";
+													break;
+												case 1:
+													TextEventDetail.Text = "成功";
+													break;
+												case 2:
+													TextEventDetail.Text = "大成功";
+													break;
+											}
 											break;
 									}
 
@@ -997,7 +1339,17 @@ namespace ElectronicObserver.Window
 				{
 					TextEventKind.ImageAlign = ContentAlignment.MiddleRight;
 					TextEventKind.ImageIndex = (int)ResourceManager.EquipmentContent.CarrierBasedBomber;
-					ToolTipInfo.SetToolTip(TextEventKind, "空襲 - " + Constants.GetAirRaidDamage(compass.AirRaidDamageKind));
+					switch (UILanguage) {
+						case "zh":
+							ToolTipInfo.SetToolTip(TextEventKind, "空袭 - " + Constants.GetAirRaidDamage(compass.AirRaidDamageKind));
+							break;
+						case "en":
+							ToolTipInfo.SetToolTip(TextEventKind, "Air Raid - " + Constants.GetAirRaidDamage(compass.AirRaidDamageKind));
+							break;
+						default:
+							ToolTipInfo.SetToolTip(TextEventKind, "空襲 - " + Constants.GetAirRaidDamage(compass.AirRaidDamageKind));
+							break;
+					}
 				}
 				else
 				{
@@ -1037,7 +1389,19 @@ namespace ElectronicObserver.Window
 					if (itemMaster != null)
 						itemName = itemMaster.Name;
 					else
-						itemName = "謎のアイテム";
+					{
+						switch (UILanguage) {
+							case "zh":
+								itemName = "未知物品";
+								break;
+							case "en":
+								itemName = "Unknown Item";
+								break;
+							default:
+								itemName = "謎のアイテム";
+								break;
+						}
+					}
 				}
 
 				strs.AddLast(itemName + " x " + item.Amount);
@@ -1045,8 +1409,14 @@ namespace ElectronicObserver.Window
 
 			if (!strs.Any())
 			{
-				return "(なし)";
-
+				switch (UILanguage) {
+					case "zh":
+						return "（无）";
+					case "en":
+						return "(None)";
+					default:
+						return "(なし)";
+				}
 			}
 			else
 			{
@@ -1082,8 +1452,20 @@ namespace ElectronicObserver.Window
 
 			if (_enemyFleetCandidate.Count == 0)
 			{
-				TextEventDetail.Text = "(敵艦隊候補なし)";
-				TextEnemyFleetName.Text = "(敵艦隊名不明)";
+				switch (UILanguage) {
+					case "zh":
+						TextEventDetail.Text = "（尚无敌舰队候选）";
+						TextEnemyFleetName.Text = "（敌舰队名不明）";
+						break;
+					case "en":
+						TextEventDetail.Text = "(No Enemy Fleet Candidates)";
+						TextEnemyFleetName.Text = "(Enemy Fleet Name Unknown)";
+						break;
+					default:
+						TextEventDetail.Text = "(敵艦隊候補なし)";
+						TextEnemyFleetName.Text = "(敵艦隊名不明)";
+						break;
+				}
 
 
 				TableEnemyCandidate.Visible = false;
@@ -1138,7 +1520,17 @@ namespace ElectronicObserver.Window
 					TextEnemyFleetName.Text = efrecord.FleetName;
 					TextEventDetail.Text = "Exp: " + efrecord.ExpShip;
 				}
-				ToolTipInfo.SetToolTip(TextEventDetail, "敵艦隊ID: " + efcurrent.FleetID.ToString("x16"));
+				switch (UILanguage) {
+					case "zh":
+						ToolTipInfo.SetToolTip(TextEventDetail, "敌舰队ID：" + efcurrent.FleetID.ToString("x16"));
+						break;
+					case "en":
+						ToolTipInfo.SetToolTip(TextEventDetail, "Enemy Fleet ID: " + efcurrent.FleetID.ToString("x16"));
+						break;
+					default:
+						ToolTipInfo.SetToolTip(TextEventDetail, "敵艦隊ID: " + efcurrent.FleetID.ToString("x16"));
+						break;
+				}
 			}
 
 			TextFormation.Text = Constants.GetFormationShort((int)bd.Searching.FormationEnemy);
@@ -1147,7 +1539,7 @@ namespace ElectronicObserver.Window
 			{
 				int air = Calculator.GetAirSuperiority(enemies, slots);
 				TextAirSuperiority.Text = isPractice ?
-					air.ToString() + " ～ " + Calculator.GetAirSuperiorityAtMaxLevel(enemies, slots).ToString() :
+					air.ToString() + " ~ " + Calculator.GetAirSuperiorityAtMaxLevel(enemies, slots).ToString() :
 					air.ToString();
 				ToolTipInfo.SetToolTip(TextAirSuperiority, GetAirSuperiorityString(isPractice ? 0 : air));
 				TextAirSuperiority.Visible = true;
@@ -1211,11 +1603,31 @@ namespace ElectronicObserver.Window
 				if (_enemyFleetCandidate.Count > _candidatesDisplayCount)
 				{
 					TextEventDetail.Text += " ▼";
-					ToolTipInfo.SetToolTip(TextEventDetail, string.Format("候補: {0} / {1}\r\n(左右クリックでページめくり)\r\n", _enemyFleetCandidateIndex + 1, _enemyFleetCandidate.Count));
+					switch (UILanguage) {
+						case "zh":
+							ToolTipInfo.SetToolTip(TextEventDetail, $"候选：{_enemyFleetCandidateIndex + 1} / {_enemyFleetCandidate.Count}\r\n（使用鼠标左、右键翻页）");
+							break;
+						case "en":
+							ToolTipInfo.SetToolTip(TextEventDetail, $"Candidates: {_enemyFleetCandidateIndex + 1} / {_enemyFleetCandidate.Count}\r\n(Turn page with mouse Left/Right click)");
+							break;
+						default:
+							ToolTipInfo.SetToolTip(TextEventDetail, $"候補: {_enemyFleetCandidateIndex + 1} / {_enemyFleetCandidate.Count}\r\n(左右クリックでページめくり)");
+							break;
+					}
 				}
 				else
 				{
-					ToolTipInfo.SetToolTip(TextEventDetail, string.Format("候補: {0}\r\n", _enemyFleetCandidate.Count));
+					switch (UILanguage) {
+						case "zh":
+							ToolTipInfo.SetToolTip(TextEventDetail, $"候选：{_enemyFleetCandidate.Count}");
+							break;
+						case "en":
+							ToolTipInfo.SetToolTip(TextEventDetail, $"Candidates: {_enemyFleetCandidate.Count}");
+							break;
+						default:
+							ToolTipInfo.SetToolTip(TextEventDetail, $"候補: {_enemyFleetCandidate.Count}");
+							break;
+					}
 				}
 
 				TableEnemyCandidate.SuspendLayout();
