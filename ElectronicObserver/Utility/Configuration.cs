@@ -953,7 +953,7 @@ namespace ElectronicObserver.Utility
 					ZoomRate = 1;
 					ZoomFit = false;
 					LogInPageURL = @"http://www.dmm.com/netgame_s/kancolle/";
-					IsEnabled = true;
+					IsEnabled = false;
 					ScreenShotPath = "ScreenShot";
 					ScreenShotFormat = 2;
 					ScreenShotSaveMode = 1;
