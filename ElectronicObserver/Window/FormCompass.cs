@@ -3,6 +3,7 @@ using ElectronicObserver.Data.Battle;
 using ElectronicObserver.Observer;
 using ElectronicObserver.Resource;
 using ElectronicObserver.Resource.Record;
+using ElectronicObserver.Utility;
 using ElectronicObserver.Utility.Data;
 using ElectronicObserver.Window.Control;
 using ElectronicObserver.Window.Dialog;
@@ -104,7 +105,7 @@ namespace ElectronicObserver.Window
 				{
 					//なし
 					ShipName.Text = "-";
-					ShipName.ForeColor = Color.FromArgb(0x00, 0x00, 0x00);
+					ShipName.ForeColor = UIColorScheme.Colors.MainFG;
 					Equipments.Visible = false;
 					ToolTipInfo.SetToolTip(ShipName, null);
 					ToolTipInfo.SetToolTip(Equipments, null);
@@ -290,7 +291,7 @@ namespace ElectronicObserver.Window
 					{
 						// nothing
 						ShipNames[i].Text = "-";
-						ShipNames[i].ForeColor = Color.Black;
+						ShipNames[i].ForeColor = UIColorScheme.Colors.MainFG;
 						ShipNames[i].Tag = -1;
 						ShipNames[i].Cursor = Cursors.Default;
 						ToolTipInfo.SetToolTip(ShipNames[i], null);
@@ -595,6 +596,8 @@ namespace ElectronicObserver.Window
 			InitializeComponent();
 
 			UILanguage = parent.UILanguage;
+			ForeColor = parent.ForeColor;
+			BackColor = parent.BackColor;
 
 			switch (UILanguage) {
 				case "zh":
@@ -701,17 +704,17 @@ namespace ElectronicObserver.Window
 					case 0:
 					case 1:
 					default:    //昼夜戦・その他
-						return SystemColors.ControlText;
+						return UIColorScheme.Colors.MainFG;
 					case 2:
 					case 3:     //夜戦・夜昼戦
-						return Color.Navy;
+						return UIColorScheme.Colors.Compass_TextEventKind3;
 					case 4:     //航空戦
 					case 6:     //長距離空襲戦
-						return Color.DarkGreen;
+						return UIColorScheme.Colors.Compass_TextEventKind6;
 					case 5:     // 敵連合
-						return Color.DarkRed;
+						return UIColorScheme.Colors.Compass_TextEventKind5;
 					case 7:     // 夜昼戦(対連合艦隊)
-						return Color.Navy;
+						return UIColorScheme.Colors.Compass_TextEventKind3;
 				}
 			};
 
@@ -962,7 +965,7 @@ namespace ElectronicObserver.Window
 							break;
 
 						case 5:     //ボス戦闘
-							TextEventKind.ForeColor = Color.Red;
+							TextEventKind.ForeColor = UIColorScheme.Colors.Red;
 
 							if (compass.EventKind >= 2)
 							{
@@ -1708,7 +1711,7 @@ namespace ElectronicObserver.Window
 
 		private void TableEnemyMember_CellPaint(object sender, TableLayoutCellPaintEventArgs e)
 		{
-			e.Graphics.DrawLine(Pens.Silver, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
+			e.Graphics.DrawLine(UIColorScheme.Colors.SubBGPen, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
 		}
 
 		private void TableEnemyCandidateMember_CellPaint(object sender, TableLayoutCellPaintEventArgs e)
@@ -1718,11 +1721,11 @@ namespace ElectronicObserver.Window
 				return;
 
 
-			e.Graphics.DrawLine(Pens.Silver, e.CellBounds.Right - 1, e.CellBounds.Top, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
+			e.Graphics.DrawLine(UIColorScheme.Colors.SubBGPen, e.CellBounds.Right - 1, e.CellBounds.Top, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
 
 			if (e.Row == 5 || e.Row == 7)
 			{
-				e.Graphics.DrawLine(Pens.Silver, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
+				e.Graphics.DrawLine(UIColorScheme.Colors.SubBGPen, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
 			}
 		}
 

@@ -125,6 +125,8 @@ namespace ElectronicObserver.Window
 			InitializeComponent();
 
 			UILanguage = parent.UILanguage;
+			ForeColor = parent.ForeColor;
+			BackColor = parent.BackColor;
 
 			ControlHelper.SetDoubleBuffered(TableFleet);
 
@@ -399,7 +401,7 @@ namespace ElectronicObserver.Window
 
 		private void TableFleet_CellPaint(object sender, TableLayoutCellPaintEventArgs e)
 		{
-			e.Graphics.DrawLine(Pens.Silver, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
+			e.Graphics.DrawLine(Utility.UIColorScheme.Colors.SubBGPen, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
 
 		}
 

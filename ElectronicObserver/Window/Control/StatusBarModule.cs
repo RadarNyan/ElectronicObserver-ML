@@ -340,7 +340,8 @@ namespace ElectronicObserver.Window.Control
 
 		public StatusBarModule()
 		{
-
+			_barColorBackground = Utility.UIColorScheme.Colors.SubBG;
+			_barBackgroundOffset = Utility.Configuration.Config.UI.BarDrawShadow ? 1 : 0;
 		}
 
 

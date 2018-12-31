@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.28010.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectronicObserver", "ElectronicObserver\ElectronicObserver.csproj", "{A9ABEC50-1BFC-4C69-87AE-C68DB6004F68}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A965D7BB-5CDA-4531-AB67-58D4FA10AA6D} = {A965D7BB-5CDA-4531-AB67-58D4FA10AA6D}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrowserLib", "BrowserLib\BrowserLib.csproj", "{8BB3E37D-09FB-40B9-958A-8CDCD18EF1F5}"
 EndProject
@@ -13,6 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EOBrowser-ML", "EOBrowser-M
 	ProjectSection(ProjectDependencies) = postProject
 		{8BB3E37D-09FB-40B9-958A-8CDCD18EF1F5} = {8BB3E37D-09FB-40B9-958A-8CDCD18EF1F5}
 	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThemeVS2012", "DockPanelSuite\WinFormsUI\ThemeVS2012.csproj", "{A965D7BB-5CDA-4531-AB67-58D4FA10AA6D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,6 +58,10 @@ Global
 		{28363B05-DEF7-480A-B29C-09645A2EA43D}.Release|Any CPU.Build.0 = Release|x86
 		{28363B05-DEF7-480A-B29C-09645A2EA43D}.Release|x86.ActiveCfg = Release|x86
 		{28363B05-DEF7-480A-B29C-09645A2EA43D}.Release|x86.Build.0 = Release|x86
+		{A965D7BB-5CDA-4531-AB67-58D4FA10AA6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A965D7BB-5CDA-4531-AB67-58D4FA10AA6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A965D7BB-5CDA-4531-AB67-58D4FA10AA6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A965D7BB-5CDA-4531-AB67-58D4FA10AA6D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

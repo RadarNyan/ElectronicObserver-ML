@@ -14,6 +14,7 @@ using WeifenLuo.WinFormsUI.Docking;
 using ElectronicObserver.Utility.Data;
 using ElectronicObserver.Window.Support;
 using ElectronicObserver.Resource.Record;
+using ElectronicObserver.Utility;
 
 namespace ElectronicObserver.Window
 {
@@ -30,6 +31,8 @@ namespace ElectronicObserver.Window
 			InitializeComponent();
 
 			UILanguage = parent.UILanguage;
+			ForeColor = parent.ForeColor;
+			BackColor = parent.BackColor;
 
 			switch (UILanguage) {
 				case "zh":
@@ -141,12 +144,14 @@ namespace ElectronicObserver.Window
 			{
 				if (ShipCount.Tag as bool? ?? false)
 				{
-					ShipCount.BackColor = Color.LightCoral;
+					ShipCount.ForeColor = UIColorScheme.Colors.Headquarters_ShipCountOverFG;
+					ShipCount.BackColor = UIColorScheme.Colors.Headquarters_ShipCountOverBG;
 				}
 
 				if (EquipmentCount.Tag as bool? ?? false)
 				{
-					EquipmentCount.BackColor = Color.LightCoral;
+					EquipmentCount.ForeColor = UIColorScheme.Colors.Headquarters_ShipCountOverFG;
+					EquipmentCount.BackColor = UIColorScheme.Colors.Headquarters_ShipCountOverBG;
 				}
 			}
 
@@ -275,8 +280,6 @@ namespace ElectronicObserver.Window
 				return;
 
 
-			// 資源上限超過時の色
-			Color overcolor = Color.Moccasin;
 
 
 
@@ -438,10 +441,12 @@ namespace ElectronicObserver.Window
 				ShipCount.Text = string.Format("{0}/{1}", RealShipCount, db.Admiral.MaxShipCount);
 				if (RealShipCount > db.Admiral.MaxShipCount - 5)
 				{
-					ShipCount.BackColor = Color.LightCoral;
+					ShipCount.ForeColor = UIColorScheme.Colors.Headquarters_ShipCountOverFG;
+					ShipCount.BackColor = UIColorScheme.Colors.Headquarters_ShipCountOverBG;
 				}
 				else
 				{
+					ShipCount.ForeColor = UIColorScheme.Colors.MainFG;
 					ShipCount.BackColor = Color.Transparent;
 				}
 				ShipCount.Tag = RealShipCount >= db.Admiral.MaxShipCount;
@@ -449,10 +454,12 @@ namespace ElectronicObserver.Window
 				EquipmentCount.Text = string.Format("{0}/{1}", RealEquipmentCount, db.Admiral.MaxEquipmentCount);
 				if (RealEquipmentCount > db.Admiral.MaxEquipmentCount + 3 - 20)
 				{
-					EquipmentCount.BackColor = Color.LightCoral;
+					EquipmentCount.ForeColor = UIColorScheme.Colors.Headquarters_ShipCountOverFG;
+					EquipmentCount.BackColor = UIColorScheme.Colors.Headquarters_ShipCountOverBG;
 				}
 				else
 				{
+					EquipmentCount.ForeColor = UIColorScheme.Colors.MainFG;
 					EquipmentCount.BackColor = Color.Transparent;
 				}
 				EquipmentCount.Tag = RealEquipmentCount >= db.Admiral.MaxEquipmentCount;
@@ -471,7 +478,7 @@ namespace ElectronicObserver.Window
 			FlowPanelUseItem.SuspendLayout();
 
 			InstantRepair.Text = db.Material.InstantRepair.ToString();
-			InstantRepair.BackColor = db.Material.InstantRepair >= 3000 ? overcolor : Color.Transparent;
+			SetLabelColor(InstantRepair, db.Material.InstantRepair);
 			switch (UILanguage) {
 				case "zh":
 					ToolTipInfo.SetToolTip(InstantRepair,
@@ -494,7 +501,7 @@ namespace ElectronicObserver.Window
 			}
 
 			InstantConstruction.Text = db.Material.InstantConstruction.ToString();
-			InstantConstruction.BackColor = db.Material.InstantConstruction >= 3000 ? overcolor : Color.Transparent;
+			SetLabelColor(InstantConstruction, db.Material.InstantConstruction);
 			switch (UILanguage) {
 				case "zh":
 					ToolTipInfo.SetToolTip(InstantConstruction,
@@ -517,7 +524,7 @@ namespace ElectronicObserver.Window
 			}
 
 			DevelopmentMaterial.Text = db.Material.DevelopmentMaterial.ToString();
-			DevelopmentMaterial.BackColor = db.Material.DevelopmentMaterial >= 3000 ? overcolor : Color.Transparent;
+			SetLabelColor(DevelopmentMaterial, db.Material.DevelopmentMaterial);
 			switch (UILanguage) {
 				case "zh":
 					ToolTipInfo.SetToolTip(DevelopmentMaterial,
@@ -540,7 +547,7 @@ namespace ElectronicObserver.Window
 			}
 
 			ModdingMaterial.Text = db.Material.ModdingMaterial.ToString();
-			ModdingMaterial.BackColor = db.Material.ModdingMaterial >= 3000 ? overcolor : Color.Transparent;
+			SetLabelColor(ModdingMaterial, db.Material.ModdingMaterial);
 			switch (UILanguage) {
 				case "zh":
 					ToolTipInfo.SetToolTip(ModdingMaterial,
@@ -563,7 +570,7 @@ namespace ElectronicObserver.Window
 			}
 
 			FurnitureCoin.Text = db.Admiral.FurnitureCoin.ToString();
-			FurnitureCoin.BackColor = db.Admiral.FurnitureCoin >= 200000 ? overcolor : Color.Transparent;
+			SetLabelColor(FurnitureCoin, db.Admiral.FurnitureCoin);
 			{
 				int small = db.UseItems[10]?.Count ?? 0;
 				int medium = db.UseItems[11]?.Count ?? 0;
@@ -599,7 +606,7 @@ namespace ElectronicObserver.Window
 			{
 
 				Fuel.Text = db.Material.Fuel.ToString();
-				Fuel.BackColor = db.Material.Fuel < db.Admiral.MaxResourceRegenerationAmount ? Color.Transparent : overcolor;
+				SetLabelColor(Fuel, db.Material.Fuel, db.Admiral.MaxResourceRegenerationAmount);
 				switch (UILanguage) {
 					case "zh":
 						ToolTipInfo.SetToolTip(Fuel,
@@ -622,7 +629,7 @@ namespace ElectronicObserver.Window
 				}
 
 				Ammo.Text = db.Material.Ammo.ToString();
-				Ammo.BackColor = db.Material.Ammo < db.Admiral.MaxResourceRegenerationAmount ? Color.Transparent : overcolor;
+				SetLabelColor(Ammo, db.Material.Ammo, db.Admiral.MaxResourceRegenerationAmount);
 				switch (UILanguage) {
 					case "zh":
 						ToolTipInfo.SetToolTip(Ammo,
@@ -645,7 +652,7 @@ namespace ElectronicObserver.Window
 				}
 
 				Steel.Text = db.Material.Steel.ToString();
-				Steel.BackColor = db.Material.Steel < db.Admiral.MaxResourceRegenerationAmount ? Color.Transparent : overcolor;
+				SetLabelColor(Steel, db.Material.Steel, db.Admiral.MaxResourceRegenerationAmount);
 				switch (UILanguage) {
 					case "zh":
 						ToolTipInfo.SetToolTip(Steel,
@@ -668,7 +675,7 @@ namespace ElectronicObserver.Window
 				}
 
 				Bauxite.Text = db.Material.Bauxite.ToString();
-				Bauxite.BackColor = db.Material.Bauxite < db.Admiral.MaxResourceRegenerationAmount ? Color.Transparent : overcolor;
+				SetLabelColor(Bauxite, db.Material.Bauxite, db.Admiral.MaxResourceRegenerationAmount);
 				switch (UILanguage) {
 					case "zh":
 						ToolTipInfo.SetToolTip(Bauxite,
@@ -700,6 +707,49 @@ namespace ElectronicObserver.Window
 
 		}
 
+		private void SetLabelColor(Control.ImageLabel label, int value, int limit = 0)
+		{
+			switch (label.Name) {
+				case "InstantRepair":
+				case "InstantConstruction":
+				case "DevelopmentMaterial":
+				case "ModdingMaterial":
+					if (value >= 3000) {
+						label.ForeColor = UIColorScheme.Colors.Headquarters_MaterialMaxFG;
+						label.BackColor = UIColorScheme.Colors.Headquarters_MaterialMaxBG;
+						return;
+					} else {
+						goto default;
+					}
+				case "FurnitureCoin":
+					if (value >= 200000) {
+						label.ForeColor = UIColorScheme.Colors.Headquarters_CoinMaxFG;
+						label.BackColor = UIColorScheme.Colors.Headquarters_CoinMaxBG;
+						return;
+					} else {
+						goto default;
+					}
+				case "Fuel":
+				case "Ammo":
+				case "Steel":
+				case "Bauxite":
+					if (value >= 300000) {
+						label.ForeColor = UIColorScheme.Colors.Headquarters_ResourceMaxFG;
+						label.BackColor = UIColorScheme.Colors.Headquarters_ResourceMaxBG;
+						return;
+					} else if (value >= limit) {
+						label.ForeColor = UIColorScheme.Colors.Headquarters_ResourceOverFG;
+						label.BackColor = UIColorScheme.Colors.Headquarters_ResourceOverBG;
+						return;
+					} else {
+						goto default;
+					}
+				default:
+					label.ForeColor = UIColorScheme.Colors.MainFG;
+					label.BackColor = Color.Transparent;
+					return;
+			}
+		}
 
 		void SystemEvents_UpdateTimerTick()
 		{
@@ -712,12 +762,24 @@ namespace ElectronicObserver.Window
 			{
 				if (ShipCount.Tag as bool? ?? false)
 				{
-					ShipCount.BackColor = DateTime.Now.Second % 2 == 0 ? Color.LightCoral : Color.Transparent;
+					if (DateTime.Now.Second % 2 == 0) {
+						ShipCount.ForeColor = UIColorScheme.Colors.Headquarters_ShipCountOverFG;
+						ShipCount.BackColor = UIColorScheme.Colors.Headquarters_ShipCountOverBG;
+					} else {
+						ShipCount.ForeColor = UIColorScheme.Colors.MainFG;
+						ShipCount.BackColor = Color.Transparent;
+					}
 				}
 
 				if (EquipmentCount.Tag as bool? ?? false)
 				{
-					EquipmentCount.BackColor = DateTime.Now.Second % 2 == 0 ? Color.LightCoral : Color.Transparent;
+					if (DateTime.Now.Second % 2 == 0) {
+						EquipmentCount.ForeColor = UIColorScheme.Colors.Headquarters_ShipCountOverFG;
+						EquipmentCount.BackColor = UIColorScheme.Colors.Headquarters_ShipCountOverBG;
+					} else {
+						EquipmentCount.ForeColor = UIColorScheme.Colors.MainFG;
+						EquipmentCount.BackColor = Color.Transparent;
+					}
 				}
 			}
 		}

@@ -4,6 +4,7 @@ using ElectronicObserver.Data.Battle.Detail;
 using ElectronicObserver.Data.Battle.Phase;
 using ElectronicObserver.Observer;
 using ElectronicObserver.Resource;
+using ElectronicObserver.Utility;
 using ElectronicObserver.Window.Control;
 using ElectronicObserver.Window.Support;
 using System;
@@ -23,8 +24,8 @@ namespace ElectronicObserver.Window
 	public partial class FormBattle : DockContent
 	{
 
-		private readonly Color WinRankColor_Win = SystemColors.ControlText;
-		private readonly Color WinRankColor_Lose = Color.Red;
+		private readonly Color WinRankColor_Win = UIColorScheme.Colors.MainFG;
+		private readonly Color WinRankColor_Lose = UIColorScheme.Colors.Red;
 
 		private readonly Size DefaultBarSize = new Size(80, 20);
 		private readonly Size SmallBarSize = new Size(60, 20);
@@ -43,6 +44,8 @@ namespace ElectronicObserver.Window
 			InitializeComponent();
 
 			UILanguage = parent.UILanguage;
+			ForeColor = parent.ForeColor;
+			BackColor = parent.BackColor;
 
 			switch (UILanguage) {
 				case "zh":
@@ -419,9 +422,9 @@ namespace ElectronicObserver.Window
 			}
 
 			if (bm.Compass != null && bm.Compass.EventID == 5)
-				FleetEnemy.ForeColor = Color.Red;
+				FleetEnemy.ForeColor = UIColorScheme.Colors.Red;
 			else
-				FleetEnemy.ForeColor = SystemColors.ControlText;
+				FleetEnemy.ForeColor = UIColorScheme.Colors.MainFG;
 		}
 
 		/// <summary>
@@ -621,7 +624,7 @@ namespace ElectronicObserver.Window
 		void ClearAircraftLabel(ImageLabel label)
 		{
 			label.Text = "-";
-			label.ForeColor = SystemColors.ControlText;
+			label.ForeColor = UIColorScheme.Colors.MainFG;
 			label.ImageAlign = ContentAlignment.MiddleCenter;
 			label.ImageIndex = -1;
 			ToolTipInfo.SetToolTip(label, null);
@@ -684,9 +687,9 @@ namespace ElectronicObserver.Window
 				}
 
 				if (phasesEnabled.Any(p => p.GetAircraftTotal(stage, isFriend) > 0 && p.GetAircraftLost(stage, isFriend) == p.GetAircraftTotal(stage, isFriend)))
-					label.ForeColor = Color.Red;
+					label.ForeColor = UIColorScheme.Colors.Red;
 				else
-					label.ForeColor = SystemColors.ControlText;
+					label.ForeColor = UIColorScheme.Colors.MainFG;
 
 				label.ImageAlign = ContentAlignment.MiddleCenter;
 				label.ImageIndex = -1;
@@ -864,7 +867,7 @@ namespace ElectronicObserver.Window
 				HPBars[index].Value = resultHP;
 				HPBars[index].PrevValue = initialHP;
 				HPBars[index].MaximumValue = maxHP;
-				HPBars[index].BackColor = SystemColors.Control;
+				HPBars[index].BackColor = UIColorScheme.Colors.MainBG;
 				HPBars[index].Visible = true;
 			}
 
@@ -941,8 +944,9 @@ namespace ElectronicObserver.Window
 							break;
 					}
 
-					if (isEscaped) bar.BackColor = Color.Silver;
-					else bar.BackColor = SystemColors.Control;
+					if (isEscaped) bar.BackColor = UIColorScheme.Colors.Battle_HPBarsEscaped;
+					else bar.BackColor = UIColorScheme.Colors.MainBG;
+					bar.RepaintHPtext();
 				}
 				else
 				{
@@ -1029,6 +1033,7 @@ namespace ElectronicObserver.Window
 
 						if (isEscaped) bar.BackColor = Color.Silver;
 						else bar.BackColor = SystemColors.Control;
+						bar.RepaintHPtext();
 					}
 					else
 					{
@@ -1240,17 +1245,25 @@ namespace ElectronicObserver.Window
 
 
 			if (bd.Initial.IsBossDamaged)
-				HPBars[BattleIndex.EnemyMain1].BackColor = Color.MistyRose;
+				HPBars[BattleIndex.EnemyMain1].BackColor = UIColorScheme.Colors.Battle_HPBarsBossDamaged;
+
+			HPBars[BattleIndex.EnemyMain1].RepaintHPtext();
 
 			if (!isBaseAirRaid)
 			{
 				foreach (int i in bd.MVPShipIndexes)
-					HPBars[BattleIndex.Get(BattleSides.FriendMain, i)].BackColor = Color.Moccasin;
+				{
+					HPBars[BattleIndex.Get(BattleSides.FriendMain, i)].BackColor = UIColorScheme.Colors.Battle_HPBarsMVP;
+					HPBars[BattleIndex.Get(BattleSides.FriendMain, i)].RepaintHPtext();
+				}
 
 				if (isFriendCombined)
 				{
 					foreach (int i in bd.MVPShipCombinedIndexes)
-						HPBars[BattleIndex.Get(BattleSides.FriendEscort, i)].BackColor = Color.Moccasin;
+					{
+						HPBars[BattleIndex.Get(BattleSides.FriendEscort, i)].BackColor = UIColorScheme.Colors.Battle_HPBarsMVP;
+						HPBars[BattleIndex.Get(BattleSides.FriendEscort, i)].RepaintHPtext();
+					}
 				}
 			}
 
@@ -1333,7 +1346,7 @@ namespace ElectronicObserver.Window
 					ShipData ship = fleet.MembersInstance[index];
 
 					AirStage1Friend.Text = "#" + (index + (pd.IsFriendEscort ? 6 : 0) + 1);
-					AirStage1Friend.ForeColor = SystemColors.ControlText;
+					AirStage1Friend.ForeColor = UIColorScheme.Colors.MainFG;
 					AirStage1Friend.ImageAlign = ContentAlignment.MiddleLeft;
 					AirStage1Friend.ImageIndex = (int)ResourceManager.EquipmentContent.Searchlight;
 					switch (UILanguage) {
@@ -1360,7 +1373,7 @@ namespace ElectronicObserver.Window
 				if (index != -1)
 				{
 					AirStage1Enemy.Text = "#" + (index + (pd.IsEnemyEscort ? 6 : 0) + 1);
-					AirStage1Enemy.ForeColor = SystemColors.ControlText;
+					AirStage1Enemy.ForeColor = UIColorScheme.Colors.MainFG;
 					AirStage1Enemy.ImageAlign = ContentAlignment.MiddleLeft;
 					AirStage1Enemy.ImageIndex = (int)ResourceManager.EquipmentContent.Searchlight;
 					switch (UILanguage) {
@@ -1438,7 +1451,7 @@ namespace ElectronicObserver.Window
 				if (index != -1)
 				{
 					AirStage2Friend.Text = "#" + (index + 1);
-					AirStage2Friend.ForeColor = SystemColors.ControlText;
+					AirStage2Friend.ForeColor = UIColorScheme.Colors.MainFG;
 					AirStage2Friend.ImageAlign = ContentAlignment.MiddleLeft;
 					AirStage2Friend.ImageIndex = (int)ResourceManager.EquipmentContent.Flare;
 					switch (UILanguage) {
@@ -1465,7 +1478,7 @@ namespace ElectronicObserver.Window
 				if (index != -1)
 				{
 					AirStage2Enemy.Text = "#" + (index + 1);
-					AirStage2Enemy.ForeColor = SystemColors.ControlText;
+					AirStage2Enemy.ForeColor = UIColorScheme.Colors.MainFG;
 					AirStage2Enemy.ImageAlign = ContentAlignment.MiddleLeft;
 					AirStage2Enemy.ImageIndex = (int)ResourceManager.EquipmentContent.Flare;
 					switch (UILanguage) {
@@ -1520,13 +1533,15 @@ namespace ElectronicObserver.Window
 			for (int i = 0; i < friend.Members.Count; i++)
 			{
 				if (friend.EscapedShipList.Contains(friend.Members[i]))
-					HPBars[i].BackColor = Color.Silver;
+					HPBars[i].BackColor = UIColorScheme.Colors.Battle_HPBarsEscaped;
 
 				else if (br.MVPIndex == i + 1)
-					HPBars[i].BackColor = Color.Moccasin;
+					HPBars[i].BackColor = UIColorScheme.Colors.Battle_HPBarsMVP;
 
 				else
-					HPBars[i].BackColor = SystemColors.Control;
+					HPBars[i].BackColor = UIColorScheme.Colors.MainBG;
+
+				HPBars[i].RepaintHPtext();
 			}
 
 			if (escort != null)
@@ -1534,13 +1549,15 @@ namespace ElectronicObserver.Window
 				for (int i = 0; i < escort.Members.Count; i++)
 				{
 					if (escort.EscapedShipList.Contains(escort.Members[i]))
-						HPBars[i + 6].BackColor = Color.Silver;
+						HPBars[i + 6].BackColor = UIColorScheme.Colors.Battle_HPBarsEscaped;
 
 					else if (br.MVPIndexCombined == i + 1)
-						HPBars[i + 6].BackColor = Color.Moccasin;
+						HPBars[i + 6].BackColor = UIColorScheme.Colors.Battle_HPBarsMVP;
 
 					else
-						HPBars[i + 6].BackColor = SystemColors.Control;
+						HPBars[i + 6].BackColor = UIColorScheme.Colors.MainBG;
+
+					HPBars[i + 6].RepaintHPtext();
 				}
 			}
 
@@ -1628,7 +1645,7 @@ namespace ElectronicObserver.Window
 						b.Size = (HPBars[12].Visible && HPBars[18].Visible) ? SmallBarSize : DefaultBarSize;
 					}
 					b.HPBar.ColorMorphing = config.UI.BarColorMorphing;
-					b.HPBar.SetBarColorScheme(config.UI.BarColorScheme.Select(col => col.ColorData).ToArray());
+					b.HPBar.SetBarColorScheme(config.UI.BarColorScheme);
 					b.ShowHPBar = showHPBar;
 				}
 			}
@@ -1667,13 +1684,13 @@ namespace ElectronicObserver.Window
 		private void TableTop_CellPaint(object sender, TableLayoutCellPaintEventArgs e)
 		{
 			if (e.Row == 1 || e.Row == 3)
-				e.Graphics.DrawLine(Pens.Silver, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
+				e.Graphics.DrawLine(UIColorScheme.Colors.SubBGPen, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
 		}
 
 		private void TableBottom_CellPaint(object sender, TableLayoutCellPaintEventArgs e)
 		{
 			if (e.Row == 8)
-				e.Graphics.DrawLine(Pens.Silver, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
+				e.Graphics.DrawLine(UIColorScheme.Colors.SubBGPen, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
 		}
 
 

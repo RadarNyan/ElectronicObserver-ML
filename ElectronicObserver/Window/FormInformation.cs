@@ -28,6 +28,8 @@ namespace ElectronicObserver.Window
 		public FormInformation(FormMain parent)
 		{
 			InitializeComponent();
+			TextInformation.ForeColor = ForeColor = parent.ForeColor;
+			TextInformation.BackColor = BackColor = parent.BackColor;
 
 			UILanguage = parent.UILanguage;
 

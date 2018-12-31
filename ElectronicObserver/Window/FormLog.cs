@@ -1,4 +1,5 @@
 ﻿using ElectronicObserver.Resource;
+using ElectronicObserver.Window.Control;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,12 +17,20 @@ namespace ElectronicObserver.Window
 	public partial class FormLog : DockContent
 	{
 
+		private MultiLangRichTextBox LogText;
 
 		private string UILanguage;
 
 		public FormLog(FormMain parent)
 		{
 			InitializeComponent();
+			Controls.Remove(LogList);
+			LogList.Dispose();
+			LogText = new MultiLangRichTextBox();
+			LogText.ContextMenuStrip = ContextMenuLog;
+			Controls.Add(LogText);
+			LogText.ForeColor = ForeColor = parent.ForeColor;
+			LogText.BackColor = BackColor = parent.BackColor;
 
 			UILanguage = parent.UILanguage;
 
@@ -37,8 +46,6 @@ namespace ElectronicObserver.Window
 				default:
 					break;
 			}
-
-			ConfigurationChanged();
 		}
 
 		private void FormLog_Load(object sender, EventArgs e)
@@ -47,9 +54,8 @@ namespace ElectronicObserver.Window
 			foreach (var log in Utility.Logger.Log)
 			{
 				if (log.Priority >= Utility.Configuration.Config.Log.LogLevel)
-					LogList.Items.Add(log.ToString());
+					LogText.CreateLogLine(log);
 			}
-			LogList.TopIndex = LogList.Items.Count - 1;
 
 			Utility.Logger.Instance.LogAdded += new Utility.LogAddedEventHandler((Utility.Logger.LogData data) =>
 			{
@@ -66,34 +72,20 @@ namespace ElectronicObserver.Window
 				}
 			});
 
-			Utility.Configuration.Instance.ConfigurationChanged += ConfigurationChanged;
-
 			Icon = ResourceManager.ImageToIcon(ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.FormLog]);
-		}
-
-
-		void ConfigurationChanged()
-		{
-
-			LogList.Font = Font = Utility.Configuration.Config.UI.MainFont;
 		}
 
 
 		void Logger_LogAdded(Utility.Logger.LogData data)
 		{
-
-			int index = LogList.Items.Add(data.ToString());
-			LogList.TopIndex = index;
-
+			LogText.CreateLogLine(data);
 		}
 
 
 
 		private void ContextMenuLog_Clear_Click(object sender, EventArgs e)
 		{
-
-			LogList.Items.Clear();
-
+			LogText.Clear();
 		}
 
 

@@ -2,6 +2,7 @@
 using ElectronicObserver.Data;
 using ElectronicObserver.Observer;
 using ElectronicObserver.Resource;
+using ElectronicObserver.Utility;
 using ElectronicObserver.Utility.Data;
 using ElectronicObserver.Utility.Mathematics;
 using ElectronicObserver.Window.Control;
@@ -698,11 +699,11 @@ namespace ElectronicObserver.Window
 					HP.Tag = (ship.RepairingDockID == -1 && 0.5 < ship.HPRate && ship.HPRate < 1.0) ? DateTimeHelper.FromAPITimeSpan(ship.RepairTime).TotalSeconds : 0.0;
 					if (isEscaped)
 					{
-						HP.BackColor = Color.Silver;
+						HP.BackColor = UIColorScheme.Colors.SubBG;
 					}
 					else
 					{
-						HP.BackColor = SystemColors.Control;
+						HP.BackColor = UIColorScheme.Colors.MainBG;
 					}
 					{
 						StringBuilder sb = new StringBuilder();
@@ -1097,16 +1098,20 @@ namespace ElectronicObserver.Window
 					// icon invisible
 					Condition.ImageIndex = -1;
 
+					Condition.ForeColor = UIColorScheme.Colors.Fleet_ConditionFG;
 					if (cond < 20)
-						Condition.BackColor = Color.LightCoral;
+						Condition.BackColor = UIColorScheme.Colors.Fleet_ConditionBGVeryTired;
 					else if (cond < 30)
-						Condition.BackColor = Color.LightSalmon;
+						Condition.BackColor = UIColorScheme.Colors.Fleet_ConditionBGTired;
 					else if (cond < 40)
-						Condition.BackColor = Color.Moccasin;
+						Condition.BackColor = UIColorScheme.Colors.Fleet_ConditionBGLittleTired;
 					else if (cond < 50)
+					{
+						Condition.ForeColor = UIColorScheme.Colors.MainFG;
 						Condition.BackColor = Color.Transparent;
+					}
 					else
-						Condition.BackColor = Color.LightGreen;
+						Condition.BackColor = UIColorScheme.Colors.Fleet_ConditionBGSparkle;
 
 				}
 				else
@@ -1173,16 +1178,19 @@ namespace ElectronicObserver.Window
 		public FormFleet(FormMain parent, int fleetID)
 		{
 			InitializeComponent();
+			SizeChanged += FormFleet_SizeChanged;
 
 			UILanguage = parent.UILanguage;
+			ForeColor = parent.ForeColor;
+			BackColor = parent.BackColor;
 
 			FleetID = fleetID;
 			Utility.SystemEvents.UpdateTimerTick += UpdateTimerTick;
 
 			ConfigurationChanged();
 
-			MainFontColor = Color.FromArgb(0x00, 0x00, 0x00);
-			SubFontColor = Color.FromArgb(0x88, 0x88, 0x88);
+			MainFontColor = UIColorScheme.Colors.MainFG;
+			SubFontColor = UIColorScheme.Colors.SubFG;
 
 			AnchorageRepairBound = 0;
 
@@ -1194,7 +1202,7 @@ namespace ElectronicObserver.Window
 
 			TableFleet.Visible = false;
 			TableFleet.SuspendLayout();
-			TableFleet.BorderStyle = BorderStyle.FixedSingle;
+			TableFleet.BackColor = UIColorScheme.Colors.SubBG;
 			ControlFleet = new TableFleetControl(this, TableFleet);
 			TableFleet.ResumeLayout();
 
@@ -1214,7 +1222,11 @@ namespace ElectronicObserver.Window
 
 		}
 
-
+		private void FormFleet_SizeChanged(object sender, EventArgs e)
+		{
+			TableFleet.MinimumSize = new Size(Math.Max(Width, TableMember.Width), 0);
+			TableMember.MinimumSize = new Size(Width, 0);
+		}
 
 		private void FormFleet_Load(object sender, EventArgs e)
 		{
@@ -1655,7 +1667,7 @@ namespace ElectronicObserver.Window
 				bool fixShipNameWidth = c.FormFleet.FixShipNameWidth;
 				bool shortHPBar = c.FormFleet.ShortenHPBar;
 				bool colorMorphing = c.UI.BarColorMorphing;
-				Color[] colorScheme = c.UI.BarColorScheme.Select(col => col.ColorData).ToArray();
+				Color[] colorScheme = c.UI.BarColorScheme;
 				bool showNext = c.FormFleet.ShowNextExp;
 				bool showConditionIcon = c.FormFleet.ShowConditionIcon;
 				var levelVisibility = c.FormFleet.EquipmentLevelVisibility;
@@ -1713,7 +1725,7 @@ namespace ElectronicObserver.Window
 
 		private void TableMember_CellPaint(object sender, TableLayoutCellPaintEventArgs e)
 		{
-			e.Graphics.DrawLine(Pens.Silver, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
+			e.Graphics.DrawLine(UIColorScheme.Colors.SubBGPen, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
 		}
 
 

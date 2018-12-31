@@ -116,8 +116,7 @@ namespace ElectronicObserver.Window.Control
 		{
 
 			const int margin = 3;
-
-			BarFuel.Paint(e.Graphics, new Rectangle(0, margin, this.Width, BarFuel.GetPreferredSize().Height));
+			BarFuel.Paint(e.Graphics, new Rectangle(0, Utility.Configuration.Config.UI.BarDrawShadow ? margin : 5, this.Width, BarFuel.GetPreferredSize().Height));
 			BarAmmo.Paint(e.Graphics, new Rectangle(0, this.Height - margin - BarFuel.GetPreferredSize().Height, this.Width, BarFuel.GetPreferredSize().Height));
 
 		}

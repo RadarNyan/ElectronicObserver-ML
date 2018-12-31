@@ -5,6 +5,7 @@ using ElectronicObserver.Observer;
 using ElectronicObserver.Resource;
 using ElectronicObserver.Resource.Record;
 using ElectronicObserver.Utility;
+using ElectronicObserver.Window.Control;
 using ElectronicObserver.Window.Dialog;
 using ElectronicObserver.Window.Integrate;
 using ElectronicObserver.Window.Support;
@@ -71,9 +72,22 @@ namespace ElectronicObserver.Window
 
 		public string UILanguage;
 
+		private ToolStripControlHost StatusBarInformation;
+		private MultiLangRichTextBox StatusBarInformationText;
+
 		public FormMain(string lang)
 		{
 			InitializeComponent();
+
+			StripStatus_Information.Text = "";
+			StatusBarInformationText = new MultiLangRichTextBox();
+			StatusBarInformationText.WordWrap = false;
+			StatusBarInformationText.ScrollBars = RichTextBoxScrollBars.None;
+			StatusBarInformationText.ContentsResized += StatusBarInformationText_ContentsResized;
+			StatusBarInformation = new ToolStripControlHost(StatusBarInformationText);
+			StatusBarInformation.AutoSize = false;
+			StatusBarInformation.Margin = new Padding(2, 2, 0, 0);
+			StripStatus.Items.Insert(0, StatusBarInformation);
 
 			switch (lang) {
 				case "zh":
@@ -89,6 +103,11 @@ namespace ElectronicObserver.Window
 			UILanguage = lang;
 		}
 
+		private void StatusBarInformationText_ContentsResized(object sender, ContentsResizedEventArgs e)
+		{
+			StatusBarInformation.Width = e.NewRectangle.Width + 10; // workaround for width insufficient problem
+		}
+
 		private async void FormMain_Load(object sender, EventArgs e)
 		{
 
@@ -98,6 +117,15 @@ namespace ElectronicObserver.Window
 
 			Utility.Configuration.Instance.Load(this, UILanguage);
 
+			UIColorScheme.Instance.Load(UILanguage);
+			BackColor = StripMenu.BackColor = UIColorScheme.Colors.MainBG;
+			ForeColor = StripMenu.ForeColor = UIColorScheme.Colors.MainFG;
+			StripStatus.BackColor = UIColorScheme.Colors.StatusBarBG;
+			StripStatus.ForeColor = UIColorScheme.Colors.StatusBarFG;
+			StatusBarInformation.BackColor = StatusBarInformationText.BackColor = UIColorScheme.Colors.StatusBarBG;
+			StatusBarInformationText.ForeColor = UIColorScheme.Colors.StatusBarFG;
+			MainDockPanel.Styles = UIColorScheme.Colors.DockPanelSuiteStyles;
+			MainDockPanel.Theme = new VS2012Theme();
 
 			Utility.Logger.Instance.LogAdded += new Utility.LogAddedEventHandler((Utility.Logger.LogData data) =>
 			{
@@ -956,9 +984,7 @@ namespace ElectronicObserver.Window
 
 		void Logger_LogAdded(Utility.Logger.LogData data)
 		{
-
-			StripStatus_Information.Text = data.Message.Replace("\r", " ").Replace("\n", " ");
-
+			StatusBarInformationText.SetText(data.Message);
 		}
 
 

@@ -1,6 +1,7 @@
 ﻿using ElectronicObserver.Data;
 using ElectronicObserver.Observer;
 using ElectronicObserver.Resource;
+using ElectronicObserver.Utility;
 using ElectronicObserver.Utility.Mathematics;
 using ElectronicObserver.Window.Control;
 using ElectronicObserver.Window.Support;
@@ -98,6 +99,7 @@ namespace ElectronicObserver.Window
 				ArsenalData arsenal = db.Arsenals[arsenalID];
 				bool showShipName = Utility.Configuration.Config.FormArsenal.ShowShipName;
 
+				CompletionTime.ForeColor = UIColorScheme.Colors.MainFG;
 				CompletionTime.BackColor = Color.Transparent;
 				tooltip.SetToolTip(ShipName, null);
 				tooltip.SetToolTip(CompletionTime, null);
@@ -175,14 +177,26 @@ namespace ElectronicObserver.Window
 
 					if (Utility.Configuration.Config.FormArsenal.BlinkAtCompletion && (time - DateTime.Now).TotalMilliseconds <= Utility.Configuration.Config.NotifierConstruction.AccelInterval)
 					{
-						CompletionTime.BackColor = DateTime.Now.Second % 2 == 0 ? Color.LightGreen : Color.Transparent;
+						if (DateTime.Now.Second % 2 == 0) {
+							CompletionTime.ForeColor = UIColorScheme.Colors.Arsenal_BuildCompleteFG;
+							CompletionTime.BackColor = UIColorScheme.Colors.Arsenal_BuildCompleteBG;
+						} else {
+							CompletionTime.ForeColor = UIColorScheme.Colors.MainFG;
+							CompletionTime.BackColor = Color.Transparent;
+						}
 					}
 
 				}
 				else if (Utility.Configuration.Config.FormArsenal.BlinkAtCompletion && !string.IsNullOrWhiteSpace(CompletionTime.Text))
 				{
 					//完成しているので
-					CompletionTime.BackColor = DateTime.Now.Second % 2 == 0 ? Color.LightGreen : Color.Transparent;
+					if (DateTime.Now.Second % 2 == 0) {
+						CompletionTime.ForeColor = UIColorScheme.Colors.Arsenal_BuildCompleteFG;
+						CompletionTime.BackColor = UIColorScheme.Colors.Arsenal_BuildCompleteBG;
+					} else {
+						CompletionTime.ForeColor = UIColorScheme.Colors.MainFG;
+						CompletionTime.BackColor = Color.Transparent;
+					}
 				}
 			}
 
@@ -194,6 +208,7 @@ namespace ElectronicObserver.Window
 
 				ShipName.Font = parent.Font;
 				CompletionTime.Font = parent.Font;
+				CompletionTime.ForeColor = UIColorScheme.Colors.MainFG;
 				CompletionTime.BackColor = Color.Transparent;
 				ShipName.MaximumSize = new Size(config.MaxShipNameWidth, ShipName.MaximumSize.Height);
 			}
@@ -216,6 +231,8 @@ namespace ElectronicObserver.Window
 			InitializeComponent();
 
 			UILanguage = parent.UILanguage;
+			ForeColor = parent.ForeColor;
+			BackColor = parent.BackColor;
 
 			switch (UILanguage) {
 				case "zh":
@@ -385,7 +402,7 @@ namespace ElectronicObserver.Window
 
 		private void TableArsenal_CellPaint(object sender, TableLayoutCellPaintEventArgs e)
 		{
-			e.Graphics.DrawLine(Pens.Silver, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
+			e.Graphics.DrawLine(UIColorScheme.Colors.SubBGPen, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
 		}
 
 

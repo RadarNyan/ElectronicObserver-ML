@@ -311,6 +311,7 @@
     <Compile Include="Utility\Storage\SerializableKeyValuePair.cs" />
     <Compile Include="Utility\Storage\SerializableList.cs" />
     <Compile Include="Utility\SystemEvents.cs" />
+    <Compile Include="Utility\UIColorScheme.cs" />
     <Compile Include="Utility\WinAPI.cs" />
     <Compile Include="Window\Control\FleetState.cs">
       <SubType>UserControl</SubType>
@@ -323,6 +324,9 @@
     </Compile>
     <Compile Include="Window\Control\ImageLabel.Designer.cs">
       <DependentUpon>ImageLabel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Window\Control\MultiLangRichTextBox.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Window\Control\ShipStatusEquipment.cs">
       <SubType>UserControl</SubType>
@@ -884,6 +888,10 @@
     <ProjectReference Include="..\BrowserLib\BrowserLib.csproj">
       <Project>{8bb3e37d-09fb-40b9-958a-8cdcd18ef1f5}</Project>
       <Name>BrowserLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DockPanelSuite\WinFormsUI\ThemeVS2012.csproj">
+      <Project>{a965d7bb-5cda-4531-ab67-58d4fa10aa6d}</Project>
+      <Name>ThemeVS2012</Name>
     </ProjectReference>
     <ProjectReference Include="..\DockPanelSuite\WinFormsUI\WinFormsUI.csproj">
       <Project>{c75532c4-765b-418e-b09b-46d36b2abdb1}</Project>

@@ -65,6 +65,8 @@ namespace ElectronicObserver.Window
 			InitializeComponent();
 
 			UILanguage = parent.UILanguage;
+			ForeColor = SystemColors.ControlText;
+			BackColor = SystemColors.Control;
 
 			ControlHelper.SetDoubleBuffered(ShipView);
 

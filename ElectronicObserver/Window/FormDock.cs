@@ -1,6 +1,7 @@
 ﻿using ElectronicObserver.Data;
 using ElectronicObserver.Observer;
 using ElectronicObserver.Resource;
+using ElectronicObserver.Utility;
 using ElectronicObserver.Utility.Mathematics;
 using ElectronicObserver.Window.Control;
 using ElectronicObserver.Window.Support;
@@ -99,6 +100,7 @@ namespace ElectronicObserver.Window
 
 				DockData dock = db.Docks[dockID];
 
+				RepairTime.ForeColor = UIColorScheme.Colors.MainFG;
 				RepairTime.BackColor = Color.Transparent;
 				ToolTipInfo.SetToolTip(ShipName, null);
 				ToolTipInfo.SetToolTip(RepairTime, null);
@@ -153,7 +155,13 @@ namespace ElectronicObserver.Window
 
 					if (Utility.Configuration.Config.FormDock.BlinkAtCompletion && (time - DateTime.Now).TotalMilliseconds <= Utility.Configuration.Config.NotifierRepair.AccelInterval)
 					{
-						RepairTime.BackColor = DateTime.Now.Second % 2 == 0 ? Color.LightGreen : Color.Transparent;
+						if (DateTime.Now.Second % 2 == 0) {
+							RepairTime.ForeColor = UIColorScheme.Colors.Dock_RepairFinishedFG;
+							RepairTime.BackColor = UIColorScheme.Colors.Dock_RepairFinishedBG;
+						} else {
+							RepairTime.ForeColor = UIColorScheme.Colors.MainFG;
+							RepairTime.BackColor = Color.Transparent;
+						}
 					}
 				}
 			}
@@ -166,6 +174,7 @@ namespace ElectronicObserver.Window
 
 				ShipName.Font = parent.Font;
 				RepairTime.Font = parent.Font;
+				RepairTime.ForeColor = UIColorScheme.Colors.MainFG;
 				RepairTime.BackColor = Color.Transparent;
 
 				ShipName.MaximumSize = new Size(config.MaxShipNameWidth, ShipName.MaximumSize.Height);
@@ -192,6 +201,8 @@ namespace ElectronicObserver.Window
 			InitializeComponent();
 
 			UILanguage = parent.UILanguage;
+			ForeColor = parent.ForeColor;
+			BackColor = parent.BackColor;
 
 			switch (UILanguage) {
 				case "zh":
@@ -268,7 +279,7 @@ namespace ElectronicObserver.Window
 
 		private void TableDock_CellPaint(object sender, TableLayoutCellPaintEventArgs e)
 		{
-			e.Graphics.DrawLine(Pens.Silver, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
+			e.Graphics.DrawLine(UIColorScheme.Colors.SubBGPen, e.CellBounds.X, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
 		}
 
 

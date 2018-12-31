@@ -153,6 +153,16 @@ namespace ElectronicObserver.Utility
 				public string Language { get; set; }
 
 				/// <summary>
+				/// カラースキームファイルのパス
+				/// </summary>
+				public string ColorSchemeFilePath { get; set; }
+
+				/// <summary>
+				/// カラースキームのID
+				/// </summary>
+				public int ColorSchemeID { get; set; }
+
+				/// <summary>
 				/// 艦名を翻訳するか
 				/// </summary>
 				public bool TranslateShipNames { get; set; }
@@ -167,94 +177,62 @@ namespace ElectronicObserver.Utility
 				/// </summary>
 				public SerializableFont SubFont { get; set; }
 
-				[IgnoreDataMember]
-				private bool _barColorMorphing;
+				/// <summary>
+				/// メインフォント（日本語）
+				/// </summary>
+				public SerializableFont MainFontJA { get; set; }
+
+				/// <summary>
+				/// サブフォント（日本語）
+				/// </summary>
+				public SerializableFont SubFontJA { get; set; }
 
 				/// <summary>
 				/// HPバーの色を滑らかに変化させるか
 				/// </summary>
-				public bool BarColorMorphing
-				{
-					get { return _barColorMorphing; }
-					set
-					{
-						_barColorMorphing = value;
+				public bool BarColorMorphing { get; set; }
 
-						if (!_barColorMorphing)
-							BarColorScheme = new List<SerializableColor>(DefaultBarColorScheme[0]);
-						else
-							BarColorScheme = new List<SerializableColor>(DefaultBarColorScheme[1]);
-					}
-				}
+				/// <summary>
+				/// HPバーの影がいるか
+				/// </summary>
+				public bool BarDrawShadow { get; set; }
 
 				/// <summary>
 				/// HPバーのカラーリング
 				/// </summary>
-				public List<SerializableColor> BarColorScheme { get; set; }
-
-
 				[IgnoreDataMember]
-				private readonly List<SerializableColor>[] DefaultBarColorScheme = new List<SerializableColor>[] {
-					new List<SerializableColor>() {
-						SerializableColor.UIntToColor( 0xFFFF0000 ),
-						SerializableColor.UIntToColor( 0xFFFF0000 ),
-						SerializableColor.UIntToColor( 0xFFFF8800 ),
-						SerializableColor.UIntToColor( 0xFFFF8800 ),
-						SerializableColor.UIntToColor( 0xFFFFCC00 ),
-						SerializableColor.UIntToColor( 0xFFFFCC00 ),
-						SerializableColor.UIntToColor( 0xFF00CC00 ),
-						SerializableColor.UIntToColor( 0xFF00CC00 ),
-						SerializableColor.UIntToColor( 0xFF0044CC ),
-						SerializableColor.UIntToColor( 0xFF44FF00 ),
-						SerializableColor.UIntToColor( 0xFF882222 ),
-						SerializableColor.UIntToColor( 0xFF888888 ),
-					},
-					/*/// recognize
-					new List<SerializableColor>() {
-						SerializableColor.UIntToColor( 0xFFFF0000 ),
-						SerializableColor.UIntToColor( 0xFFFF0000 ),
-						SerializableColor.UIntToColor( 0xFFFF6600 ),
-						SerializableColor.UIntToColor( 0xFFFF9900 ),
-						SerializableColor.UIntToColor( 0xFFFFCC00 ),
-						SerializableColor.UIntToColor( 0xFFEEEE00 ),
-						SerializableColor.UIntToColor( 0xFFAAEE00 ),
-						SerializableColor.UIntToColor( 0xFF00CC00 ),
-						SerializableColor.UIntToColor( 0xFF0044CC ),
-						SerializableColor.UIntToColor( 0xFF00FF44 ),
-						SerializableColor.UIntToColor( 0xFF882222 ),
-						SerializableColor.UIntToColor( 0xFF888888 ),
-					},
-					/*/// gradation
-					new List<SerializableColor>() {
-						SerializableColor.UIntToColor( 0xFFFF0000 ),
-						SerializableColor.UIntToColor( 0xFFFF0000 ),
-						SerializableColor.UIntToColor( 0xFFFF4400 ),
-						SerializableColor.UIntToColor( 0xFFFF8800 ),
-						SerializableColor.UIntToColor( 0xFFFFAA00 ),
-						SerializableColor.UIntToColor( 0xFFEEEE00 ),
-						SerializableColor.UIntToColor( 0xFFCCEE00 ),
-						SerializableColor.UIntToColor( 0xFF00CC00 ),
-						SerializableColor.UIntToColor( 0xFF0044CC ),
-						SerializableColor.UIntToColor( 0xFF00FF44 ),
-						SerializableColor.UIntToColor( 0xFF882222 ),
-						SerializableColor.UIntToColor( 0xFF888888 ),
-					},
-					//*/
-				};
+				public Color[] BarColorScheme { get; set; }
 
 				/// <summary>
 				/// 固定レイアウト(フォントに依存しないレイアウト)を利用するか
 				/// </summary>
 				public bool IsLayoutFixed;
 
+				/// <summary>
+				/// 古い熟練度アイコンを使う
+				/// </summary>
+				public bool UseOldAircraftLevelIcons { get; set; }
+
+				/// <summary>
+				/// 日誌パネルでリバースするか
+				/// </summary>
+				public bool LogReversed { get; set; }
+
 
 				public ConfigUI()
 				{
+					ColorSchemeFilePath = @"Settings\ColorScheme.json";
+					ColorSchemeID = 0;
 					MainFont = new Font("Meiryo UI", 12, FontStyle.Regular, GraphicsUnit.Pixel);
 					SubFont = new Font("Meiryo UI", 10, FontStyle.Regular, GraphicsUnit.Pixel);
+					MainFontJA = new Font("Meiryo UI", 12, FontStyle.Regular, GraphicsUnit.Pixel);
+					SubFontJA = new Font("Meiryo UI", 10, FontStyle.Regular, GraphicsUnit.Pixel);
 					TranslateShipNames = false;
 					BarColorMorphing = false;
+					BarDrawShadow = false;
 					IsLayoutFixed = true;
+					UseOldAircraftLevelIcons = true;
+					LogReversed = false;
 				}
 			}
 			/// <summary>UI</summary>
@@ -1463,8 +1441,8 @@ namespace ElectronicObserver.Utility
 							"初次启动信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
 						break;
 					case "en":
-						_config.UI.MainFont = new Font("Segoe UI", 12, FontStyle.Regular, GraphicsUnit.Pixel);
-						_config.UI.SubFont = new Font("Segoe UI", 10, FontStyle.Regular, GraphicsUnit.Pixel);
+						//_config.UI.MainFont = new Font("Segoe UI", 12, FontStyle.Regular, GraphicsUnit.Pixel);
+						//_config.UI.SubFont = new Font("Segoe UI", 10, FontStyle.Regular, GraphicsUnit.Pixel);
 						_config.UI.TranslateShipNames = true;
 						MessageBox.Show(
 							$"Thank you for using {SoftwareInformation.SoftwareNameEnglish}.\r\n" +

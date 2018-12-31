@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ElectronicObserver.Utility.Mathematics;
+using ElectronicObserver.Utility;
 
 namespace ElectronicObserver.Window.Control
 {
@@ -377,12 +378,12 @@ namespace ElectronicObserver.Window.Control
 			_maximumDigit = 999;
 
 			_mainFont = new Font("Meiryo UI", 12, FontStyle.Regular, GraphicsUnit.Pixel);
-			_mainFontColor = FromArgb(0xFF000000);
+			_mainFontColor = UIColorScheme.Colors.MainFG;
 
 			_subFont = new Font("Meiryo UI", 10, FontStyle.Regular, GraphicsUnit.Pixel);
-			_subFontColor = FromArgb(0xFF888888);
+			_subFontColor = UIColorScheme.Colors.SubFG;
 
-			_repairFontColor = FromArgb(0xFF000088);
+			_repairFontColor = UIColorScheme.Colors.Fleet_RepairTimerText;
 			_text = "HP:";
 
 			_HPBar.UsePrevValue = true;
@@ -443,6 +444,24 @@ namespace ElectronicObserver.Window.Control
 				_HPBar.Paint(g, new Rectangle(basearea.X, basearea.Bottom - barSize.Height, barSize.Width, barSize.Height));
 		}
 
+
+		public void RepaintHPtext()
+		{
+			if (this.BackColor == UIColorScheme.Colors.Battle_HPBarsMVP) {
+				_mainFontColor = UIColorScheme.Colors.Battle_TextMVP;
+				_subFontColor = UIColorScheme.Colors.Battle_TextMVP2;
+			} else if (this.BackColor == UIColorScheme.Colors.Battle_HPBarsEscaped) {
+				_mainFontColor = UIColorScheme.Colors.Battle_TextEscaped;
+				_subFontColor = UIColorScheme.Colors.Battle_TextEscaped2;
+			} else if (this.BackColor == UIColorScheme.Colors.Battle_HPBarsBossDamaged) {
+				_mainFontColor = UIColorScheme.Colors.Battle_TextBossDamaged;
+				_subFontColor = UIColorScheme.Colors.Battle_TextBossDamaged2;
+			} else {
+				_mainFontColor = UIColorScheme.Colors.MainFG;
+				_subFontColor = UIColorScheme.Colors.SubFG;
+			}
+			this.Refresh();
+		}
 
 
 		public override Size GetPreferredSize(Size proposedSize)

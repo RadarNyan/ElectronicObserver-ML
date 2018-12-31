@@ -11,6 +11,7 @@ using ElectronicObserver.Resource;
 using ElectronicObserver.Data;
 using ElectronicObserver.Utility.Mathematics;
 using ElectronicObserver.Utility.Data;
+using ElectronicObserver.Utility;
 
 namespace ElectronicObserver.Window.Control
 {
@@ -101,11 +102,20 @@ namespace ElectronicObserver.Window.Control
 				UpdateText();
 				Label.ImageIndex = imageIndex;
 				Label.BackColor = backColor;
+				SetLabelForeColor();
 			}
 
 			public void SetInformation(FleetStates state, string text, string shortenedText, int imageIndex)
 			{
 				SetInformation(state, text, shortenedText, imageIndex, Color.Transparent);
+			}
+
+			private void SetLabelForeColor()
+			{
+				if (Label.BackColor == UIColorScheme.Colors.FleetOverview_ShipDamagedBG)
+					Label.ForeColor = UIColorScheme.Colors.FleetOverview_ShipDamagedFG;
+				else
+					Label.ForeColor = UIColorScheme.Colors.MainFG;
 			}
 
 			public void UpdateText()
@@ -192,7 +202,7 @@ namespace ElectronicObserver.Window.Control
 				(db.Fleet.CombinedFlag > 0 ? fleet.FleetID >= 3 : fleet.FleetID >= 2);
 			var displayMode = (FleetStateDisplayModes)Utility.Configuration.Config.FormFleet.FleetStateDisplayMode;
 
-			Color colorDanger = Color.LightCoral;
+			Color colorDanger = UIColorScheme.Colors.FleetOverview_ShipDamagedBG;
 			Color colorInPort = Color.Transparent;
 
 
@@ -592,7 +602,10 @@ namespace ElectronicObserver.Window.Control
 				for (int i = 0; i < index; i++)
 				{
 					if (StateLabels[i].Label.BackColor == Color.Transparent)
-						StateLabels[i].Label.BackColor = Color.LightGreen;
+					{
+						StateLabels[i].Label.ForeColor = UIColorScheme.Colors.FleetOverview_AlertNotInExpeditionFG;
+						StateLabels[i].Label.BackColor = UIColorScheme.Colors.FleetOverview_AlertNotInExpeditionBG;
+					}
 				}
 			}
 
@@ -631,6 +644,21 @@ namespace ElectronicObserver.Window.Control
 		}
 
 
+		private void SetLabelForeColor(ImageLabel label)
+		{
+			if (label.BackColor == UIColorScheme.Colors.FleetOverview_ShipDamagedBG)
+				label.ForeColor = UIColorScheme.Colors.FleetOverview_ShipDamagedFG;
+			else if (label.BackColor == UIColorScheme.Colors.Dock_RepairFinishedBG)
+				label.ForeColor = UIColorScheme.Colors.Dock_RepairFinishedFG;
+			else if (label.BackColor == UIColorScheme.Colors.FleetOverview_ExpeditionOverBG)
+				label.ForeColor = UIColorScheme.Colors.FleetOverview_ExpeditionOverFG;
+			else if (label.BackColor == UIColorScheme.Colors.FleetOverview_TiredRecoveredBG)
+				label.ForeColor = UIColorScheme.Colors.FleetOverview_TiredRecoveredFG;
+			else
+				label.ForeColor = UIColorScheme.Colors.MainFG;
+		}
+
+
 		public void RefreshFleetState()
 		{
 
@@ -645,11 +673,11 @@ namespace ElectronicObserver.Window.Control
 
 					case FleetStates.Damaged:
 						if (Utility.Configuration.Config.FormFleet.BlinkAtDamaged)
-							state.Label.BackColor = DateTime.Now.Second % 2 == 0 ? Color.LightCoral : Color.Transparent;
+							state.Label.BackColor = DateTime.Now.Second % 2 == 0 ? UIColorScheme.Colors.FleetOverview_ShipDamagedBG : Color.Transparent;
 						break;
 
 					case FleetStates.SortieDamaged:
-						state.Label.BackColor = DateTime.Now.Second % 2 == 0 ? Color.LightCoral : Color.Transparent;
+						state.Label.BackColor = DateTime.Now.Second % 2 == 0 ? UIColorScheme.Colors.FleetOverview_ShipDamagedBG : Color.Transparent;
 						break;
 
 					case FleetStates.Docking:
@@ -667,7 +695,7 @@ namespace ElectronicObserver.Window.Control
 						}
 						state.UpdateText();
 						if (Utility.Configuration.Config.FormFleet.BlinkAtCompletion && (state.Timer - DateTime.Now).TotalMilliseconds <= Utility.Configuration.Config.NotifierRepair.AccelInterval)
-							state.Label.BackColor = DateTime.Now.Second % 2 == 0 ? Color.LightGreen : Color.Transparent;
+							state.Label.BackColor = DateTime.Now.Second % 2 == 0 ? UIColorScheme.Colors.Dock_RepairFinishedBG : Color.Transparent;
 						break;
 
 					case FleetStates.Expedition:
@@ -685,7 +713,7 @@ namespace ElectronicObserver.Window.Control
 						}
 						state.UpdateText();
 						if (Utility.Configuration.Config.FormFleet.BlinkAtCompletion && (state.Timer - DateTime.Now).TotalMilliseconds <= Utility.Configuration.Config.NotifierExpedition.AccelInterval)
-							state.Label.BackColor = DateTime.Now.Second % 2 == 0 ? Color.LightGreen : Color.Transparent;
+							state.Label.BackColor = DateTime.Now.Second % 2 == 0 ? UIColorScheme.Colors.FleetOverview_ExpeditionOverBG : Color.Transparent;
 						break;
 
 					case FleetStates.Tired:
@@ -703,7 +731,7 @@ namespace ElectronicObserver.Window.Control
 						}
 						state.UpdateText();
 						if (Utility.Configuration.Config.FormFleet.BlinkAtCompletion && (state.Timer - DateTime.Now).TotalMilliseconds <= 0)
-							state.Label.BackColor = DateTime.Now.Second % 2 == 0 ? Color.LightGreen : Color.Transparent;
+							state.Label.BackColor = DateTime.Now.Second % 2 == 0 ? UIColorScheme.Colors.FleetOverview_TiredRecoveredBG : Color.Transparent;
 						break;
 
 					case FleetStates.AnchorageRepairing:
@@ -724,6 +752,7 @@ namespace ElectronicObserver.Window.Control
 
 				}
 
+				SetLabelForeColor(state.Label);
 			}
 
 		}

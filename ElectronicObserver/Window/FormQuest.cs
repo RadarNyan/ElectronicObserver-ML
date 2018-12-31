@@ -99,9 +99,9 @@ namespace ElectronicObserver.Window
 				Alignment = DataGridViewContentAlignment.MiddleLeft
 			};
 			CSDefaultLeft.BackColor =
-			CSDefaultLeft.SelectionBackColor = SystemColors.Control;
-			CSDefaultLeft.ForeColor = SystemColors.ControlText;
-			CSDefaultLeft.SelectionForeColor = SystemColors.ControlText;
+			CSDefaultLeft.SelectionBackColor = UIColorScheme.Colors.MainBG;
+			CSDefaultLeft.ForeColor =
+			CSDefaultLeft.SelectionForeColor = UIColorScheme.Colors.MainFG;
 			CSDefaultLeft.WrapMode = DataGridViewTriState.False;
 
 			CSDefaultCenter = new DataGridViewCellStyle(CSDefaultLeft)
@@ -115,35 +115,37 @@ namespace ElectronicObserver.Window
 				CSCategories[i] = new DataGridViewCellStyle(CSDefaultCenter);
 
 				Color c;
+				CSCategories[i].ForeColor = CSCategories[i].SelectionForeColor = UIColorScheme.Colors.Quest_TypeFG;
 				switch (i + 1)
 				{
 					case 1:     //編成
-						c = Color.FromArgb(0xAA, 0xFF, 0xAA);
+						c = UIColorScheme.Colors.Quest_Type1BG;
 						break;
 					case 2:     //出撃
-						c = Color.FromArgb(0xFF, 0xCC, 0xCC);
+						c = UIColorScheme.Colors.Quest_Type2BG;
 						break;
 					case 3:     //演習
-						c = Color.FromArgb(0xDD, 0xFF, 0xAA);
+						c = UIColorScheme.Colors.Quest_Type3BG;
 						break;
 					case 4:     //遠征
-						c = Color.FromArgb(0xCC, 0xFF, 0xFF);
+						c = UIColorScheme.Colors.Quest_Type4BG;
 						break;
 					case 5:     //補給/入渠
-						c = Color.FromArgb(0xFF, 0xFF, 0xCC);
+						c = UIColorScheme.Colors.Quest_Type5BG;
 						break;
 					case 6:     //工廠
-						c = Color.FromArgb(0xDD, 0xCC, 0xBB);
+						c = UIColorScheme.Colors.Quest_Type6BG;
 						break;
 					case 7:     //改装
-						c = Color.FromArgb(0xDD, 0xCC, 0xFF);
+						c = UIColorScheme.Colors.Quest_Type7BG;
 						break;
 					case 8:     //出撃(2)
-						c = Color.FromArgb(0xFF, 0xCC, 0xCC);
+						c = UIColorScheme.Colors.Quest_Type2BG;
 						break;
 					case 9:     //その他
 					default:
 						c = CSDefaultCenter.BackColor;
+						CSCategories[i].ForeColor = CSCategories[i].SelectionForeColor = UIColorScheme.Colors.MainFG;
 						break;
 				}
 
@@ -155,6 +157,14 @@ namespace ElectronicObserver.Window
 			QuestView_Category.DefaultCellStyle = CSCategories[CSCategories.Length - 1];
 			QuestView_Name.DefaultCellStyle = CSDefaultLeft;
 			QuestView_Progress.DefaultCellStyle = CSDefaultLeft;
+
+			QuestView.ColumnHeadersHeight = 21;
+			QuestView.EnableHeadersVisualStyles = false;
+			QuestView.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+			QuestView.ColumnHeadersDefaultCellStyle.ForeColor = UIColorScheme.Colors.MainFG;
+			QuestView.ColumnHeadersDefaultCellStyle.BackColor = UIColorScheme.Colors.SubBG;
+			QuestView.GridColor = UIColorScheme.Colors.SubBG;
+			QuestView.BackgroundColor = UIColorScheme.Colors.MainBG;
 
 			#endregion
 
@@ -547,23 +557,19 @@ namespace ElectronicObserver.Window
 
 				if (rate < 0.5)
 				{
-					col = Color.FromArgb(0xFF, 0x88, 0x00);
-
+					col = UIColorScheme.Colors.Quest_ProgressLT50;
 				}
 				else if (rate < 0.8)
 				{
-					col = Color.FromArgb(0x00, 0xCC, 0x00);
-
+					col = UIColorScheme.Colors.Quest_ProgressLT80;
 				}
 				else if (rate < 1.0)
 				{
-					col = Color.FromArgb(0x00, 0x88, 0x00);
-
+					col = UIColorScheme.Colors.Quest_ProgressLT100;
 				}
 				else
 				{
-					col = Color.FromArgb(0x00, 0x88, 0xFF);
-
+					col = UIColorScheme.Colors.Quest_ProgressDefault;
 				}
 
 				using (var bgauge = new SolidBrush(col))

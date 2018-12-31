@@ -12,6 +12,7 @@ using System.Drawing.Design;
 using ElectronicObserver.Resource;
 using ElectronicObserver.Utility.Data;
 using ElectronicObserver.Window.Support;
+using ElectronicObserver.Utility;
 
 namespace ElectronicObserver.Window.Control
 {
@@ -344,7 +345,7 @@ namespace ElectronicObserver.Window.Control
 
 
 
-		private Brush _overlayBrush = new SolidBrush(Color.FromArgb(0xC0, 0xF0, 0xF0, 0xF0));
+		private Brush _overlayBrush = UIColorScheme.Colors.Compass_OverlayBrush;
 
 
 		[System.Diagnostics.DebuggerDisplay("[{PreferredSize.Width}, {PreferredSize.Height}]")]
@@ -470,11 +471,11 @@ namespace ElectronicObserver.Window.Control
 			base.Font = new Font("Meiryo UI", 10, FontStyle.Regular, GraphicsUnit.Pixel);
 
 			_aircraftColorDisabled = Color.FromArgb(0xAA, 0xAA, 0xAA);
-			_aircraftColorLost = Color.FromArgb(0xFF, 0x00, 0xFF);
-			_aircraftColorDamaged = Color.FromArgb(0xFF, 0x00, 0x00);
-			_aircraftColorFull = Color.FromArgb(0x00, 0x00, 0x00);
+			_aircraftColorLost = UIColorScheme.Colors.Magenta;
+			_aircraftColorDamaged = UIColorScheme.Colors.Red;
+			_aircraftColorFull = UIColorScheme.Colors.MainFG;
 
-			_equipmentLevelColor = Color.FromArgb(0x00, 0x66, 0x66);
+			_equipmentLevelColor = UIColorScheme.Colors.Fleet_EquipmentLevel;
 			_aircraftLevelColorLow = Color.FromArgb(0x66, 0x99, 0xEE);
 			_aircraftLevelColorHigh = Color.FromArgb(0xFF, 0xAA, 0x00);
 
@@ -773,7 +774,12 @@ namespace ElectronicObserver.Window.Control
 				}
 
 
+				// goto maze: 熟練度 -> 改修レベル -> 機数
+				if (Configuration.Config.UI.UseOldAircraftLevelIcons)
+					goto DrawAircraftExpLevel;
+
 				// 艦載機数描画
+				DrawAircraftNumber:
 				if (drawAircraftSlot)
 				{
 
@@ -802,8 +808,11 @@ namespace ElectronicObserver.Window.Control
 
 					TextRenderer.DrawText(e.Graphics, slot.AircraftCurrent.ToString(), Font, textarea, aircraftColor, textformatBottomRight);
 				}
+				if (Configuration.Config.UI.UseOldAircraftLevelIcons)
+					goto DrawAircraftFinished;
 
 				// 改修レベル描画
+				DrawAircraftModLevel:
 				if (slot.Level > 0)
 				{
 
@@ -821,9 +830,11 @@ namespace ElectronicObserver.Window.Control
 					}
 
 				}
-
+				if (Configuration.Config.UI.UseOldAircraftLevelIcons)
+					goto DrawAircraftNumber;
 
 				// 艦載機熟練度描画
+				DrawAircraftExpLevel:
 				if (slot.AircraftLevel > 0)
 				{
 
@@ -845,7 +856,25 @@ namespace ElectronicObserver.Window.Control
 						{
 							var area = new Rectangle(origin.X + LayoutParam.ImageSize.Width, origin.Y,
 								LayoutParam.ImageSize.Width, LayoutParam.ImageSize.Height);
-							e.Graphics.DrawImage(ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.AircraftLevelTop0 + slot.AircraftLevel], area);
+							if (Configuration.Config.UI.UseOldAircraftLevelIcons) {
+								string leveltext;
+								switch (slot.AircraftLevel) {
+									case 1: leveltext = "|"; break;
+									case 2: leveltext = "||"; break;
+									case 3: leveltext = "|||"; break;
+									case 4: leveltext = "/"; break;
+									case 5: leveltext = "//"; break;
+									case 6: leveltext = "///"; break;
+									case 7: leveltext = ">>"; break;
+									default: leveltext = "x"; break;
+								}
+								Size aircraftLevelSize = TextRenderer.MeasureText(leveltext, Font);
+								Rectangle textarea = new Rectangle(origin.X + LayoutParam.ImageSize.Width, origin.Y, aircraftLevelSize.Width, aircraftLevelSize.Height);
+								e.Graphics.FillRectangle(_overlayBrush, textarea);
+								TextRenderer.DrawText(e.Graphics, leveltext, Font, textarea, GetAircraftLevelColor(slot.AircraftLevel), textformatTopLeft);
+							} else {
+								e.Graphics.DrawImage(ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.AircraftLevelTop0 + slot.AircraftLevel], area);
+							}
 						}
 
 
@@ -863,12 +892,33 @@ namespace ElectronicObserver.Window.Control
 						}
 						else
 						{
-							e.Graphics.FillRectangle(_overlayBrush, new Rectangle(origin.X, origin.Y, LayoutParam.ImageSize.Width, LayoutParam.ImageSize.Height / 2));
-							e.Graphics.DrawImage(ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.AircraftLevelTop0 + slot.AircraftLevel], new Rectangle(origin, LayoutParam.ImageSize));
+							if (Configuration.Config.UI.UseOldAircraftLevelIcons) {
+								string leveltext;
+								switch (slot.AircraftLevel) {
+									case 1: leveltext = "|"; break;
+									case 2: leveltext = "||"; break;
+									case 3: leveltext = "|||"; break;
+									case 4: leveltext = "/"; break;
+									case 5: leveltext = "//"; break;
+									case 6: leveltext = "///"; break;
+									case 7: leveltext = ">>"; break;
+									default: leveltext = "x"; break;
+								}
+								Size aircraftLevelSize = TextRenderer.MeasureText(leveltext, Font);
+								Rectangle textarea = new Rectangle(origin.X, origin.Y, aircraftLevelSize.Width, aircraftLevelSize.Height);
+								e.Graphics.FillRectangle(_overlayBrush, textarea);
+								TextRenderer.DrawText(e.Graphics, leveltext, Font, textarea, GetAircraftLevelColor(slot.AircraftLevel), textformatTopLeft);
+							} else {
+								e.Graphics.FillRectangle(_overlayBrush, new Rectangle(origin.X, origin.Y, LayoutParam.ImageSize.Width, LayoutParam.ImageSize.Height / 2));
+								e.Graphics.DrawImage(ResourceManager.Instance.Icons.Images[(int)ResourceManager.IconContent.AircraftLevelTop0 + slot.AircraftLevel], new Rectangle(origin, LayoutParam.ImageSize));
+							}
 						}
 					}
 
 				}
+				if (Configuration.Config.UI.UseOldAircraftLevelIcons)
+					goto DrawAircraftModLevel;
+				DrawAircraftFinished:;
 
 			}
 

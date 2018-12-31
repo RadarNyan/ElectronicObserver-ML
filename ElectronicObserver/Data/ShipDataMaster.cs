@@ -1,4 +1,5 @@
 ﻿using ElectronicObserver.Resource.Record;
+using ElectronicObserver.Utility;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -665,13 +666,13 @@ namespace ElectronicObserver.Data
 
 
 		private static readonly Color[] ShipNameColors = new Color[] {
-			Color.FromArgb( 0x00, 0x00, 0x00 ),
-			Color.FromArgb( 0xFF, 0x00, 0x00 ),
-			Color.FromArgb( 0xFF, 0x88, 0x00 ),
-			Color.FromArgb( 0x00, 0x66, 0x00 ),
-			Color.FromArgb( 0x88, 0x00, 0x00 ),
-			Color.FromArgb( 0x00, 0x88, 0xFF ),
-			Color.FromArgb( 0x00, 0x00, 0xFF ),
+			UIColorScheme.Colors.MainFG,
+			UIColorScheme.Colors.Compass_ShipName2,
+			UIColorScheme.Colors.Compass_ShipName3,
+			UIColorScheme.Colors.Compass_ShipName4,
+			UIColorScheme.Colors.Compass_ShipName5,
+			UIColorScheme.Colors.Compass_ShipName6,
+			UIColorScheme.Colors.Compass_ShipName7
 		};
 
 		public Color GetShipNameColor()
@@ -679,7 +680,7 @@ namespace ElectronicObserver.Data
 
 			if (!IsAbyssalShip)
 			{
-				return SystemColors.ControlText;
+				return UIColorScheme.Colors.MainFG;
 			}
 
 			bool isLateModel = Name.Contains("後期型");
@@ -694,7 +695,7 @@ namespace ElectronicObserver.Data
 
 
 			if (isDestroyed)
-				return Color.FromArgb(0xFF, 0x00, 0xFF);
+				return UIColorScheme.Colors.Compass_ShipNameDestroyed;
 
 			else if (isWaterPrincess)
 				return ShipNameColors[6];
@@ -704,8 +705,7 @@ namespace ElectronicObserver.Data
 				return ShipNameColors[4];
 			else if (isDemon)
 				return ShipNameColors[3];
-			else
-			{
+			else {
 
 				int tier;
 

@@ -112,7 +112,6 @@
 			// 
 			this.HQLevel.AutoSize = true;
 			this.HQLevel.Location = new System.Drawing.Point(142, 0);
-			this.HQLevel.MainFontColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
 			this.HQLevel.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
 			this.HQLevel.MaximumValue = 999;
 			this.HQLevel.Name = "HQLevel";
