@@ -4,3 +4,6 @@
 [submodule "SwfExtractor"]
 	path = SwfExtractor
 	url = https://github.com/andanteyk/SwfExtractor.git
+[submodule "EOBrowser-ML"]
+	path = EOBrowser-ML
+	url = https://github.com/RadarNyan/EOBrowser-ML
